@@ -1,6 +1,14 @@
-# Basic package template
+# Stormwater Monitoring datasheet extraction tool
 
-Just a basic package template. See the docs: https://crickets-and-comb.github.io/stormwater_monitoring_datasheet_extraction/.
+Extracts stormwater monitoring field observations from datasheet PDFs. See the docs: https://crickets-and-comb.github.io/stormwater_monitoring_datasheet_extraction/.
+
+[Friends of Salish Sea](https://friendsofsalishsea.org) and [RE Sources](https://www.re-sources.org) have been monitoring the quality of stormwater outfalls in the Salish Sea for a few years. They use a somewhat labor-intensive data entry process that [Cascade STEAM](https://cascadesteam.org) has offered to automate. This tool, `stormwater_monitoring_datasheet_extraction` aims to do that.
+
+Currently, data collectors in the field handwrite observations in a printed PDF, and then periodically someone manually enters these observations into the database. It takes quite a bit of time to do, so they batch it out, and so it can be a while before it gets done, costing volunteer and paid hours along with creating a lag in the availability of research data for analysis and reporting.
+
+Ultimately, we might like to create a mobile app for data collectors to enter observations into directly. But, for now, we've decided to start with their existing habits and build something smaller and perhaps more managable. So, we're using computer vision to read the hand-filled forms and extract the observations. This allows the users to continue to use pen and paper while shortening the time and labor needed to enter the data from the froms into the database.
+
+The intended workflow, then, is to pass the tool a path to the directory with images of the datasheets, and for each datasheet, the image will pop up along with the extracted data for the user to confirm or edit via a prompt.
 
 This is a [Crickets and Comb](https://cricketsandcomb.org) resource.
 
@@ -38,8 +46,8 @@ Unless you're developing, avoid importing directly from library, like `from stor
 
 Try the example CLI:
 
-    $ python -m example
-    $ python -m example --seconds 2
+    $ example
+    $ example --seconds 2
 
 ## Dev workflow
 
