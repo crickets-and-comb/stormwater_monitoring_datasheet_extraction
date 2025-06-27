@@ -51,7 +51,7 @@ Try the example CLI:
 
 ## Dev workflow
 
-Once you set up the shared tools (below), there are a number of dev tools in the `Makefile`. You can list all the make tools you might want to use:
+There are a number of dev tools in the `Makefile`. Once you set up the shared tools (below), you can list all the make tools you might want to use:
 
     $ make list-makes
 
