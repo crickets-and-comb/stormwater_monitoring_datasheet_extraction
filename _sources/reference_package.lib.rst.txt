@@ -1,0 +1,29 @@
+reference\_package.lib package
+==============================
+
+Submodules
+----------
+
+reference\_package.lib.constants module
+---------------------------------------
+
+.. automodule:: reference_package.lib.constants
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+reference\_package.lib.example module
+-------------------------------------
+
+.. automodule:: reference_package.lib.example
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: reference_package.lib
+   :members:
+   :show-inheritance:
+   :undoc-members:
