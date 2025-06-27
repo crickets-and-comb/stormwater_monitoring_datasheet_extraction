@@ -218,8 +218,6 @@ We run QC and installation tests on a Python matrix as well (3.11 - 3.13 at time
 
 See https://github.com/crickets-and-comb/shared `.github/workflows/CI.yml` and `.github/workflows/test_install.yml`. See also the workflows within this repo that call them.
 
-## Acknowledgement
+## Acknowledgments
 
-TODO: Switch to acknowledging reference_package.
-
-To start this reference package, I borrowed, modified, and added to some of the idiomatic structure and tools of IHME's Central Computation GBD team from when I worked with them in 2022-2024.
+This package is made from the Crickets and Comb `reference_package` template repo: https://github.com/crickets-and-comb/reference_package.
