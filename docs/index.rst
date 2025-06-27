@@ -26,7 +26,7 @@ To install the package, run:
 
     pip install stormwater_monitoring_datasheet_extraction
 
-See https://pypi.org/project/reference-package/.
+See https://pypi.org/project/stormwater-monitoring-datasheet-extraction/.
 
 
 Library
