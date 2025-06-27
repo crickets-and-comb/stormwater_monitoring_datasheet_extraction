@@ -7,8 +7,8 @@ power users and developers who may want to use an existing DB session or somethi
 
 from typeguard import typechecked
 
-from reference_package.lib import example
-from reference_package.lib.constants import DocStrings
+from stormwater_monitoring_datasheet_extraction.lib import example
+from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 
 
 @typechecked

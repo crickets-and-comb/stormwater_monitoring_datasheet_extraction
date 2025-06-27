@@ -4,7 +4,7 @@ import time
 
 from click.testing import CliRunner
 
-from reference_package.cli import example
+from stormwater_monitoring_datasheet_extraction.cli import example
 
 
 def test_example(cli_runner: CliRunner) -> None:

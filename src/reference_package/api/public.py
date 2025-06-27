@@ -6,8 +6,8 @@ separate from a more complex internal API with more options for power users.
 
 from typeguard import typechecked
 
-from reference_package.api.internal import example
-from reference_package.lib.constants import DocStrings
+from stormwater_monitoring_datasheet_extraction.api.internal import example
+from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 
 
 @typechecked

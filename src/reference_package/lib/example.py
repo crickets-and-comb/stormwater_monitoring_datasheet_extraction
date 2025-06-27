@@ -4,7 +4,7 @@ import time
 
 from typeguard import typechecked
 
-from reference_package.lib.constants import DocStrings
+from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 
 
 @typechecked
