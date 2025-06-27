@@ -2,7 +2,7 @@
 Stormwater Monitoring Datasheet Extraction
 ==========================================
 
-Includes typical CLI and library setup. Just the template with example structure for now.
+Includes typical CLI and library setup. For now, just the template with example structure.
 
 See also the GitHub repository: https://github.com/crickets-and-comb/stormwater_monitoring_datasheet_extraction
 
