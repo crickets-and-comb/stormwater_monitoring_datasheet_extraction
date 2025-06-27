@@ -1,8 +1,8 @@
-===========================================
-Reference Package: A basic package template
-===========================================
+==========================================
+Stormwater Monitoring Datasheet Extraction
+==========================================
 
-Includes typical CLI and library setup. To include service app setup at some point.
+Includes typical CLI and library setup. Just the template with example structure for now.
 
 See also the GitHub repository: https://github.com/crickets-and-comb/stormwater_monitoring_datasheet_extraction
 
