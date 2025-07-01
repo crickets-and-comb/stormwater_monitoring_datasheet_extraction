@@ -1,10 +1,10 @@
-===========================================
-Reference Package: A basic package template
-===========================================
+==========================================
+Stormwater Monitoring Datasheet Extraction
+==========================================
 
-Includes typical CLI and library setup. To include service app setup at some point.
+Includes typical CLI and library setup. For now, just the template with example structure.
 
-See also the GitHub repository: https://github.com/crickets-and-comb/reference_package
+See also the GitHub repository: https://github.com/crickets-and-comb/stormwater_monitoring_datasheet_extraction
 
 This is a `Crickets and Comb <https://cricketsandcomb.org>`_ resource.
 
@@ -24,9 +24,9 @@ To install the package, run:
 
 .. code:: bash
 
-    pip install reference_package
+    pip install stormwater_monitoring_datasheet_extraction
 
-See https://pypi.org/project/reference-package/.
+See https://pypi.org/project/stormwater-monitoring-datasheet-extraction/.
 
 
 Library
@@ -36,7 +36,7 @@ Avoid calling library functions directly and stick to the public API:
 
 .. code:: python
 
-    from reference_package import wait_a_second
+    from stormwater_monitoring_datasheet_extraction import wait_a_second
 
     wait_a_second()
 
@@ -44,7 +44,7 @@ If you're a power user, you can use the internal API:
 
 .. code:: python
 
-    from reference_package.api.internal import wait_a_second
+    from stormwater_monitoring_datasheet_extraction.api.internal import wait_a_second
 
     wait_a_second()
 
@@ -53,7 +53,7 @@ Nothing is stopping you from importing from lib directly, but you should avoid i
 
 .. code:: python
 
-    from reference_package.lib.example import wait_a_second
+    from stormwater_monitoring_datasheet_extraction.lib.example import wait_a_second
 
     wait_a_second()
 

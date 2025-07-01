@@ -1,0 +1,21 @@
+stormwater\_monitoring\_datasheet\_extraction.cli package
+=========================================================
+
+Submodules
+----------
+
+stormwater\_monitoring\_datasheet\_extraction.cli.example module
+----------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.cli.example
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.cli
+   :members:
+   :show-inheritance:
+   :undoc-members:

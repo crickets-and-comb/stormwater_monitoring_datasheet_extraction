@@ -1,0 +1,29 @@
+stormwater\_monitoring\_datasheet\_extraction.api package
+=========================================================
+
+Submodules
+----------
+
+stormwater\_monitoring\_datasheet\_extraction.api.internal module
+-----------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.api.internal
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+stormwater\_monitoring\_datasheet\_extraction.api.public module
+---------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.api.public
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.api
+   :members:
+   :show-inheritance:
+   :undoc-members:

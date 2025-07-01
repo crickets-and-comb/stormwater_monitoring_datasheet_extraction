@@ -1,0 +1,29 @@
+stormwater\_monitoring\_datasheet\_extraction.lib package
+=========================================================
+
+Submodules
+----------
+
+stormwater\_monitoring\_datasheet\_extraction.lib.constants module
+------------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.constants
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+stormwater\_monitoring\_datasheet\_extraction.lib.example module
+----------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.example
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib
+   :members:
+   :show-inheritance:
+   :undoc-members:

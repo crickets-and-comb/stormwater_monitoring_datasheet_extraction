@@ -1,0 +1,20 @@
+stormwater\_monitoring\_datasheet\_extraction package
+=====================================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   stormwater_monitoring_datasheet_extraction.api
+   stormwater_monitoring_datasheet_extraction.cli
+   stormwater_monitoring_datasheet_extraction.lib
+
+Module contents
+---------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction
+   :members:
+   :show-inheritance:
+   :undoc-members:
