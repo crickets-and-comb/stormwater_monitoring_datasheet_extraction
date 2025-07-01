@@ -1,6 +1,6 @@
 # Stormwater Monitoring datasheet extraction tool
 
-Extracts stormwater monitoring field observations from datasheet PDFs. See the docs: https://crickets-and-comb.github.io/stormwater_monitoring_datasheet_extraction/.
+This package extracts stormwater monitoring field observations from datasheet PDFs. See the docs: https://crickets-and-comb.github.io/stormwater_monitoring_datasheet_extraction/.
 
 [Friends of Salish Sea](https://friendsofsalishsea.org) and [RE Sources](https://www.re-sources.org) have been monitoring the quality of stormwater outfalls in the Salish Sea for a few years. They use a somewhat labor-intensive data entry process that [Cascade STEAM](https://cascadesteam.org) has offered to automate. This tool, `stormwater_monitoring_datasheet_extraction` aims to do that.
 
