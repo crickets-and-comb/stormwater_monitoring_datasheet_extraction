@@ -4,7 +4,7 @@ import time
 
 import pytest
 
-from reference_package.lib.example import wait_a_second
+from stormwater_monitoring_datasheet_extraction.lib.example import wait_a_second
 
 
 @pytest.mark.parametrize("seconds", [1, 2, 3])

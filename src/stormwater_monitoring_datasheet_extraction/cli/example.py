@@ -1,6 +1,6 @@
 # noqa: D100
 __doc__ = """
-.. click:: reference_package.cli.example:main
+.. click:: stormwater_monitoring_datasheet_extraction.cli.example:main
     :prog: example
     :nested: full
 """
@@ -8,8 +8,8 @@ __doc__ = """
 import click
 from typeguard import typechecked
 
-from reference_package.lib import example
-from reference_package.lib.constants import DocStrings
+from stormwater_monitoring_datasheet_extraction.lib import example
+from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 
 
 @click.command(help=DocStrings.EXAMPLE.cli_docstring)

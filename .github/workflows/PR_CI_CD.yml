@@ -13,7 +13,7 @@ jobs:
 
   ci-cd:
     needs: close-external-prs
-    uses: crickets-and-comb/reference_package/.github/workflows/CI_CD.yml@main
+    uses: crickets-and-comb/stormwater_monitoring_datasheet_extraction/.github/workflows/CI_CD.yml@main
     with:
       TEST_OR_PROD: 'dev'
     secrets:

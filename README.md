@@ -1,49 +1,57 @@
-# Basic package template
+# Stormwater Monitoring datasheet extraction tool
 
-Just a basic package template. See the docs: https://crickets-and-comb.github.io/reference_package/.
+This package extracts stormwater monitoring field observations from datasheet PDFs. See the docs: https://crickets-and-comb.github.io/stormwater_monitoring_datasheet_extraction/.
+
+[Friends of Salish Sea](https://friendsofsalishsea.org) and [RE Sources](https://www.re-sources.org) have been monitoring the quality of stormwater outfalls in the Salish Sea for a few years. They use a somewhat labor-intensive data entry process that [Cascade STEAM](https://cascadesteam.org) has offered to automate. This tool, `stormwater_monitoring_datasheet_extraction` aims to do that.
+
+Currently, data collectors in the field handwrite observations in a printed PDF, and then periodically someone manually enters these observations into the database. It takes quite a bit of time to do, so they batch it out, and so it can be a while before it gets done, costing volunteer and paid hours along with creating a lag in the availability of research data for analysis and reporting.
+
+Ultimately, we might like to create a mobile app for data collectors to enter observations into directly. But, for now, we've decided to start with their existing habits and build something smaller and perhaps more managable. So, we're using computer vision to read the hand-filled forms and extract the observations. This allows the users to continue to use pen and paper while shortening the time and labor needed to enter the data from the froms into the database.
+
+The intended workflow, then, is to pass the tool a path to the directory with images of the datasheets, and for each datasheet, the image will pop up along with the extracted data for the user to confirm or edit via a prompt.
 
 This is a [Crickets and Comb](https://cricketsandcomb.org) resource.
 
 ## Structure
 
-```bash
-    .github/workflows               GitHub Actions CI/CD workflows.
-    docs                            RST docs and doc build staging.
-    Makefile                        Dev tools and params. (includes shared/Makefile)
-    setup.cfg                       Metadata and dependencies.
-    shared                          Shared dev tools Git submodule.
-    src/reference_package/api       Public and internal API.
-    src/reference_package/cli       Command-line-interface.
-    src/reference_package/lib       Implementation.
-    tests/e2e                       End-to-end tests.
-    test/integration                Integration tests.
-    tests/unit                      Unit tests.
+```
+    .github/workflows                                       GitHub Actions CI/CD workflows.
+    docs                                                    RST docs and doc build staging.
+    Makefile                                                Dev tools and params. (includes shared/Makefile)
+    setup.cfg                                               Metadata and dependencies.
+    shared                                                  Shared dev tools Git submodule.
+    src/stormwater_monitoring_datasheet_extraction/api      Public and internal API.
+    src/stormwater_monitoring_datasheet_extraction/cli      Command-line-interface.
+    src/stormwater_monitoring_datasheet_extraction/lib      Implementation.
+    tests/e2e                                               End-to-end tests.
+    test/integration                                        Integration tests.
+    tests/unit                                              Unit tests.
 ```
 
 ## Installation
 
 To install the package, run:
 
-  $ pip install reference_package
+  $ pip install stormwater_monitoring_datasheet_extraction
 
-See https://pypi.org/project/reference-package/.
+See https://pypi.org/project/stormwater-monitoring-datasheet-extraction/.
 
 ## Library functions
 
-`reference_package` is a library from which you can import functions. Import the public example function like this: `from reference_package import wait_a_second`. Or, import the internal version like a power user like this: `from reference_package.api.internal import wait_a_second`.
+`stormwater_monitoring_datasheet_extraction` is a library from which you can import functions. Import the public example function like this: `from stormwater_monitoring_datasheet_extraction import wait_a_second`. Or, import the internal version like a power user like this: `from stormwater_monitoring_datasheet_extraction.api.internal import wait_a_second`.
 
-Unless you're developing, avoid importing directly from library, like `from reference_package.lib.example import wait_a_second`.
+Unless you're developing, avoid importing directly from library, like `from stormwater_monitoring_datasheet_extraction.lib.example import wait_a_second`.
 
 ## CLI
 
 Try the example CLI:
 
-    $ python -m example
-    $ python -m example --seconds 2
+    $ example
+    $ example --seconds 2
 
 ## Dev workflow
 
-There are a number of dev tools in the `Makefile`. You can list all the make tools you might want to use:
+There are a number of dev tools in the `Makefile`. Once you set up the shared tools (below), you can list all the make tools you might want to use:
 
     $ make list-makes
 
@@ -107,7 +115,7 @@ $
 
 #### Setting Personal Access Token
 
-The shared workflows rely on a Personal Access Token (PAT) (to checkout the submodule so they can use the make targets). You need to create a PAT with repo access and add it to the consuming repo's (`reference_package` in this case) action secrets as `CHECKOUT_SHARED`. See GitHub for how to set up PATs (hint: check the developer settings on your personal account) and how to add secrets to a repo's actions (hint: check the repo's settings).
+The shared workflows rely on a Personal Access Token (PAT) (to checkout the submodule so they can use the make targets). You need to create a PAT with repo access and add it to the consuming repo's (`stormwater_monitoring_datasheet_extraction` in this case) action secrets as `CHECKOUT_SHARED`. See GitHub for how to set up PATs (hint: check the developer settings on your personal account) and how to add secrets to a repo's actions (hint: check the repo's settings).
 
 Note: Using a PAT tied to a single user like this is less than ideal. Figuring out how to get around this is a welcome security upgrade.
 
@@ -120,7 +128,7 @@ First build and activate the env before installing this package:
     $ make build-env
     $ conda activate reference_package_py3.12
 
-Note, if you don't have Python installed, you need to pass the package name directly when you build the env: `make build-env PACKAGE_NAME=reference_package`. If you have Python installed (e.g., this conda env already activated), then you don't need to because it uses Python to grab the package name from the `setup.cfg` file.
+Note, if you don't have Python installed, you need to pass the package name directly when you build the env: `make build-env PACKAGE_NAME=stormwater_monitoring_datasheet_extraction`. If you have Python installed (e.g., this conda env already activated), then you don't need to because it uses Python to grab the package name from the `setup.cfg` file.
 
 Then, install this package and its dev dependencies:
 
@@ -218,6 +226,6 @@ We run QC and installation tests on a Python matrix as well (3.11 - 3.13 at time
 
 See https://github.com/crickets-and-comb/shared `.github/workflows/CI.yml` and `.github/workflows/test_install.yml`. See also the workflows within this repo that call them.
 
-## Acknowledgement
+## Acknowledgments
 
-To start this reference package, I borrowed, modified, and added to some of the idiomatic structure and tools of IHME's Central Computation GBD team from when I worked with them in 2022-2024.
+This package is made from the Crickets and Comb `reference_package` template repo: https://github.com/crickets-and-comb/reference_package.
