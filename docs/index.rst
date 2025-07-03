@@ -1,3 +1,5 @@
+TODO: Update to remove the example CLI and library functions, and replace with the actual ETL functionality.
+
 ==========================================
 Stormwater Monitoring Datasheet Extraction
 ==========================================

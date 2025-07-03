@@ -1,18 +1,16 @@
-"""Public functions wrap internal functions which wrap library functions.
+"""Public functions for the stormwater monitoring datasheet extraction API."""
 
-This allows separation of API from implementation. It also allows a simplified public API
-separate from a more complex internal API with more options for power users.
-"""
+from pathlib import Path
 
 from typeguard import typechecked
 
-from stormwater_monitoring_datasheet_extraction.api.internal import example
+from stormwater_monitoring_datasheet_extraction.api import internal
 from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 
 
 @typechecked
-def wait_a_second(seconds: int = 1) -> None:  # noqa: D103
-    example.wait_a_second(seconds=seconds)
+def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
+    return internal.run_etl(input_dir=input_dir, output_dir=output_dir)
 
 
-wait_a_second.__doc__ = DocStrings.EXAMPLE.api_docstring
+run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
