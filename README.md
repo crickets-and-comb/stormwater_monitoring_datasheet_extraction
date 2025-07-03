@@ -1,3 +1,9 @@
+# UNDER CONSTRUCTION
+
+This package is still being developed and only just entering alpha stage of development.
+
+TODO: Create GitHub issues from all to-dos, and tag the to-dos to those tickets. Add policy to CONTRIBUTING doc that no TODOs may be merged to main without being tagged to an open issue. Make a ticket to build a workflow that checks for that condition on PR.
+
 # Stormwater Monitoring datasheet extraction tool
 
 This package extracts stormwater monitoring field observations from datasheet PDFs. See the docs: https://crickets-and-comb.github.io/stormwater_monitoring_datasheet_extraction/.
