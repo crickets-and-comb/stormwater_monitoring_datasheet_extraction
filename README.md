@@ -36,18 +36,15 @@ To install the package, run:
 
 See https://pypi.org/project/stormwater-monitoring-datasheet-extraction/.
 
-## Library functions
-
-`stormwater_monitoring_datasheet_extraction` is a library from which you can import functions. Import the public example function like this: `from stormwater_monitoring_datasheet_extraction import wait_a_second`. Or, import the internal version like a power user like this: `from stormwater_monitoring_datasheet_extraction.api.internal import wait_a_second`.
-
-Unless you're developing, avoid importing directly from library, like `from stormwater_monitoring_datasheet_extraction.lib.example import wait_a_second`.
-
 ## CLI
 
-Try the example CLI:
+The user interface for running the ETL process is available as a command-line interface (CLI). See the docs: [https://cricketsandcomb.org/stormwater_monitoring_datasheet_extraction/CLI.html](https://cricketsandcomb.org/stormwater_monitoring_datasheet_extraction/CLI.html)
 
-    $ example
-    $ example --seconds 2
+## Library functions
+
+`stormwater_monitoring_datasheet_extraction` is a library from which you can import functions. Import the main public function like this: `from stormwater_monitoring_datasheet_extraction import run_etl`. Or, import the internal version like a power user like this: `from stormwater_monitoring_datasheet_extraction.api.internal import run_etl`.
+
+Unless you're developing, avoid importing directly from library, like `from stormwater_monitoring_datasheet_extraction.lib.load_datasheets import run_etl`.
 
 ## Dev workflow
 
