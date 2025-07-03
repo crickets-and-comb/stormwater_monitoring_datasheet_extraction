@@ -33,6 +33,3 @@ def main(input_dir: str, output_dir: str) -> None:  # noqa: D103
     final_output_path = run_etl(input_dir=Path(input_dir), output_dir=Path(output_dir))
     click.echo(f"ETL process completed. Final output saved to: {final_output_path}")
     # TODO: See `bfb_delivery` for how to return path and test CLI.
-
-
-main.__doc__ = DocStrings.RUN_ETL.cli_docstring
