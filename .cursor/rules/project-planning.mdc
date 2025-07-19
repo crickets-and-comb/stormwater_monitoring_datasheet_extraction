@@ -1,5 +1,5 @@
 ---
-description: Project planning and roadmap management guidelines for strategic development decisions
+description: Project planning and roadmap management guidelines for strategic development decisions.
 alwaysApply: false
 ---
 
@@ -11,15 +11,14 @@ alwaysApply: false
 
 - Use MoSCoW method (Must have, Should have, Could have, Won't have).
 - Consider business value, technical complexity, and user impact.
-- Prioritize environmental data quality and regulatory compliance.
+- Prioritize environmental data quality.
 - Balance new features with technical debt reduction.
 
 ### Milestone Planning
 
 - Break large features into 2-4 week milestones.
-- Include testing and documentation time in estimates.
-- Plan for environmental data validation cycles.
-- Account for regulatory review periods.
+- Break milestones into issues and/or sub-issues that are estimated to take as little as 15 minutes each but no more than 5 days each.
+- Include testing, review, and documentation time in estimates.
 
 ### Risk Assessment
 
@@ -34,7 +33,6 @@ alwaysApply: false
 
 - Plan for data scalability and performance.
 - Consider integration with environmental monitoring systems.
-- Design for regulatory compliance from the start.
 - Plan for data backup and disaster recovery.
 
 ### Technology Selection
@@ -42,7 +40,6 @@ alwaysApply: false
 - Choose technologies that support environmental data standards.
 - Consider long-term maintenance and support.
 - Evaluate security implications for sensitive environmental data.
-- Plan for future regulatory requirements.
 
 ## Resource Planning
 
@@ -57,7 +54,6 @@ alwaysApply: false
 
 - Build in buffer time for unexpected issues.
 - Plan for seasonal environmental data collection cycles.
-- Account for regulatory review and approval processes.
 - Include user acceptance testing for environmental workflows.
 
 ## Success Metrics
@@ -74,7 +70,6 @@ alwaysApply: false
 - Define clear, measurable success criteria.
 - Include both technical and business metrics.
 - Plan for user feedback and iteration.
-- Set regulatory compliance targets.
 
 ## Documentation Requirements
 
@@ -83,11 +78,9 @@ alwaysApply: false
 - Maintain clear project roadmaps.
 - Document technical decisions and rationale.
 - Keep stakeholder requirements current.
-- Update environmental compliance requirements.
 
 ### Communication Plans
 
 - Regular stakeholder updates.
 - Environmental data quality reports.
 - Technical progress reviews.
-- Regulatory compliance status updates.
