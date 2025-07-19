@@ -9,12 +9,10 @@ alwaysApply: false
 ## Code Documentation
 
 - Add comprehensive docstrings for all public functions and classes.
-- Use Google or NumPy docstring format consistently.
-- Include parameter types and return types in docstrings.
-- Provide usage examples in docstrings.
-- Document any complex algorithms or business logic.
-- Explain environmental data processing steps.
 - Follow coding standards for docstring format (see `coding-standards.mdc`).
+- *Do not* include parameter types and return types in docstrings (typehints should render in docs).
+- Provide usage examples in docstrings (optional).
+- Document any complex algorithms or business logic in the `docs` folder.
 
 ## API Documentation
 
@@ -90,8 +88,8 @@ alwaysApply: false
 
 ## Documentation Tools
 
-- Use Sphinx for technical documentation.
-- Use Markdown for user documentation.
+- Use Sphinx and reStructuredText for technical and user documentation.
+- Use Markdown for repository documentation.
 - Include code examples in documentation.
 - Use diagrams and charts when helpful.
 - Include links to external resources.
