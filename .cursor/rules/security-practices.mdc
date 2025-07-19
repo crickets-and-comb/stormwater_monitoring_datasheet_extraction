@@ -10,7 +10,7 @@ alwaysApply: true
 
 - Validate all input data before processing.
 - Sanitize user inputs to prevent injection attacks.
-- Use type hints to enforce data types.
+- Enforce data types.
 - Validate file uploads and check file types.
 - Implement proper error handling for invalid inputs.
 
@@ -24,15 +24,13 @@ alwaysApply: true
 
 ## Dependency Security
 
-- Run `make security` to check for vulnerabilities.
-- Use `safety scan` to check Python dependencies.
-- Use `bandit` for static security analysis.
+- Run `make clean security` to check for vulnerabilities.
 - Keep dependencies updated and patched.
 - Monitor for known vulnerabilities in dependencies.
 
 ## File Processing Security
 
-- Validate PDF files before processing.
+- Validate files before processing.
 - Check file size limits to prevent DoS attacks.
 - Scan uploaded files for malicious content.
 - Use secure file handling practices.
