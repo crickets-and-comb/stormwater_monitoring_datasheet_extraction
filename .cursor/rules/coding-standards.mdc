@@ -42,6 +42,7 @@ alwaysApply: false
 - Use dataclasses for simple data structures.
 - Functions should have a single exit point (one return statement).
 - Functions should only modify objects within their own scope.
+- Type constants as constants: `typing.Final`.
 
 ## Self-Documenting Code
 
@@ -66,7 +67,7 @@ alwaysApply: false
 - Include parameter types and return types in docstrings.
 - Provide usage examples in docstrings.
 - Document any complex algorithms or business logic.
-- Follow Google Python style guide for docstrings.
+- Follow [Google Python style guide](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings) for docstrings.
 - Copy edit all prose: spelling, grammar, fact check, link check.
 
 ## Constants & Immutability

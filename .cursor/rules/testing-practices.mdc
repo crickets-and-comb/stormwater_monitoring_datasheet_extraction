@@ -55,7 +55,7 @@ alwaysApply: false
 - Run unit tests: `make unit`.
 - Run integration tests: `make integration`.
 - Run e2e tests: `make e2e`.
-- Run all tests: `make full-test`.
+- Run all tests: `make full-test` (see coding-standards.mdc for complete testing workflow).
 - Run specific test markers: `make run-test MARKER=slow`.
 
 ## Test Quality

@@ -24,7 +24,7 @@ alwaysApply: false
 
 - Make atomic commits (one logical change per commit).
 - Commit frequently to avoid large, complex commits.
-- Test before committing (run `make full`).
+- Test before committing (run `make full` from coding-standards.mdc).
 - Include relevant files only.
 - Use `git add -p` to review changes before committing.
 
@@ -54,7 +54,7 @@ alwaysApply: false
 
 ## Pre-commit Checklist
 
-- Run `make clean format full` before pushing.
+- Run `make clean format full` before pushing (see coding-standards.mdc for details).
 - Ensure all tests pass locally.
 - Check that linting passes (`make lint`).
 - Verify type checking passes (`make typecheck`).
@@ -90,7 +90,5 @@ alwaysApply: false
 - Keep commits focused and logical.
 - Write clear, descriptive commit messages.
 - Use branches for experimental work.
-- Regular commits help with code review.
-- Document complex changes thoroughly.
 - Regular commits help with code review.
 - Document complex changes thoroughly.
