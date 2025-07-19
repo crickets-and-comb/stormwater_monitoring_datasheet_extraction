@@ -1,0 +1,163 @@
+
+---
+description: Environmental data processing and validation standards for regulatory compliance
+alwaysApply: false
+---
+
+# Environmental Data Workflow Standards
+
+## Data Quality Standards
+
+### Data Validation
+
+- Validate all environmental data against established standards.
+- Check for data completeness and accuracy.
+- Verify measurement units and conversions.
+- Validate against regulatory limits and thresholds.
+- Include quality control checks throughout processing.
+
+### Data Quality Metrics
+
+- Track data completeness rates.
+- Monitor accuracy and precision metrics.
+- Measure data timeliness and availability.
+- Track data consistency across sources.
+- Monitor regulatory compliance rates.
+
+## Regulatory Compliance
+
+### Environmental Standards
+
+- Follow EPA and state environmental regulations.
+- Comply with Clean Water Act requirements.
+- Adhere to stormwater monitoring standards.
+- Follow laboratory accreditation requirements.
+- Meet data reporting and retention requirements.
+
+### Documentation Requirements
+
+- Document all data collection methods.
+- Record quality assurance procedures.
+- Maintain calibration and validation records.
+- Document data processing and analysis methods.
+- Keep regulatory compliance documentation current.
+
+## Data Processing Workflows
+
+### Data Collection
+
+- Use standardized collection procedures.
+- Include proper sampling techniques.
+- Document field conditions and parameters.
+- Include quality control samples.
+- Record metadata for all measurements.
+
+### Data Analysis
+
+- Use validated analytical methods.
+- Include statistical quality control.
+- Apply appropriate data transformations.
+- Include uncertainty calculations.
+- Document all analysis procedures.
+
+### Data Reporting
+
+- Generate regulatory compliance reports.
+- Include data quality assessments.
+- Provide trend analysis and interpretation.
+- Include recommendations for action.
+- Ensure timely reporting to stakeholders.
+
+## Quality Assurance
+
+### Laboratory Procedures
+
+- Follow standard operating procedures.
+- Include quality control samples.
+- Maintain proper calibration schedules.
+- Document all analytical procedures.
+- Include proficiency testing programs.
+
+### Field Procedures
+
+- Use standardized field protocols.
+- Include quality control checks.
+- Document field conditions and parameters.
+- Include proper sample handling procedures.
+- Maintain field equipment calibration.
+
+## Data Management
+
+### Data Storage
+
+- Use secure, backed-up storage systems.
+- Include proper data organization.
+- Maintain data version control.
+- Include metadata management.
+- Plan for long-term data retention.
+
+### Data Access
+
+- Implement proper access controls.
+- Include audit logging for data access.
+- Provide appropriate user permissions.
+- Include data export capabilities.
+- Plan for regulatory data requests.
+
+## Environmental Monitoring
+
+### Monitoring Networks
+
+- Design appropriate monitoring networks.
+- Include representative sampling locations.
+- Plan for seasonal variations.
+- Include emergency monitoring capabilities.
+- Design for regulatory compliance.
+
+### Data Collection Frequency
+
+- Follow regulatory monitoring requirements.
+- Plan for seasonal sampling schedules.
+- Include event-based monitoring.
+- Consider continuous monitoring options.
+- Plan for data transmission and storage.
+
+## Reporting and Communication
+
+### Regulatory Reporting
+
+- Generate required regulatory reports.
+- Include data quality assessments.
+- Provide trend analysis and interpretation.
+- Include compliance status reporting.
+- Ensure timely submission to agencies.
+
+### Stakeholder Communication
+
+- Provide clear data summaries.
+- Include data quality information.
+- Explain regulatory implications.
+- Include recommendations for action.
+- Plan for public communication.
+
+## Continuous Improvement
+
+### Performance Monitoring
+
+- Track data quality metrics over time.
+- Monitor regulatory compliance rates.
+- Assess stakeholder satisfaction.
+- Track system performance metrics.
+- Plan for continuous improvement.
+
+### Process Optimization
+
+- Identify opportunities for efficiency gains.
+- Plan for technology improvements.
+- Include automation where appropriate.
+- Consider new analytical methods.
+- Plan for regulatory requirement updates.
+
+- Include automation where appropriate.
+- Consider new analytical methods.
+- Plan for regulatory requirement updates.
