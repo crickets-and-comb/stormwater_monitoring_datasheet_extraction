@@ -14,6 +14,9 @@
 - Use Optional[T] for nullable types
 - Use Union[T1, T2] for multiple possible types
 - Use List[T], Dict[K, V], Tuple[T, ...] for collections
+- Where helpful, use type hints in variable/member declarations
+- Use `typing.Final` to typehint constants
+- Use runtime typechecking of arguments and returns, like `typeguard.typechecked` decorator, `pandera.schema`, `pandera.check_types`, or something similar
 
 ## Import Organization
 - Group imports: standard library, third-party, local imports
@@ -58,6 +61,7 @@
 - Use `typing.Final` to typehint constants
 - Treat constants as immutable
 - Avoid externalities like the plague
+- Functions should only modify objects within their own scope
 
 ## TODO Management
 - Avoid leaving TODOs in code
