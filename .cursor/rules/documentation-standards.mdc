@@ -1,0 +1,99 @@
+---
+description: Documentation standards for the stormwater monitoring project
+globs: ["**/*.py", "**/*.md", "**/*.rst", "docs/**/*"]
+alwaysApply: false
+---
+
+# Documentation Standards
+
+## Code Documentation
+- Add comprehensive docstrings for all public functions and classes
+- Use Google or NumPy docstring format consistently
+- Include parameter types and return types in docstrings
+- Provide usage examples in docstrings
+- Document any complex algorithms or business logic
+- Explain environmental data processing steps
+
+## API Documentation
+- Document all public API endpoints
+- Include request/response examples
+- Document error codes and messages
+- Provide authentication requirements
+- Include rate limiting information
+- Document data formats and schemas
+
+## Project Documentation
+- Keep README.md updated with installation and usage
+- Document CLI commands and options
+- Include setup instructions for development
+- Document environment configuration
+- Provide troubleshooting guides
+- Include contribution guidelines
+
+## Scientific Documentation
+- Document environmental data processing methods
+- Explain data validation and quality checks
+- Document measurement units and conversions
+- Include data source information
+- Document calibration procedures
+- Explain statistical methods used
+
+## User Documentation
+- Provide clear installation instructions
+- Include step-by-step usage guides
+- Document common use cases
+- Provide troubleshooting information
+- Include examples with sample data
+- Document configuration options
+
+## Developer Documentation
+- Document development setup process
+- Include testing procedures and requirements
+- Document deployment processes
+- Provide code style guidelines
+- Include architecture decisions
+- Document API design decisions
+
+## Environmental Data Documentation
+- Document data collection methods
+- Explain data quality standards
+- Document data validation procedures
+- Include regulatory compliance information
+- Document data retention policies
+- Explain data processing workflows
+
+## Technical Documentation
+- Document system architecture
+- Include database schemas
+- Document API specifications
+- Provide configuration documentation
+- Include performance considerations
+- Document security measures
+
+## Maintenance
+- Keep documentation current with code changes
+- Review documentation regularly
+- Update examples when APIs change
+- Remove outdated information
+- Ensure documentation accuracy
+- Test documentation examples
+
+## Documentation Tools
+- Use Sphinx for technical documentation
+- Use Markdown for user documentation
+- Include code examples in documentation
+- Use diagrams and charts when helpful
+- Include links to external resources
+- Maintain consistent formatting
+
+## Quality Standards
+- Write clear, concise documentation
+- Use consistent terminology
+- Include appropriate examples
+- Test documentation examples
+- Review documentation for accuracy
+- Keep documentation accessible
+description:
+globs:
+alwaysApply: false
+---

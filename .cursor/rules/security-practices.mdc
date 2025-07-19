@@ -1,0 +1,84 @@
+---
+description: Security best practices for the stormwater monitoring project
+globs: ["src/**/*.py", "tests/**/*.py", "**/*.yml", "**/*.yaml"]
+alwaysApply: true
+---
+
+# Security Practices
+
+## Input Validation
+- Validate all input data before processing
+- Sanitize user inputs to prevent injection attacks
+- Use type hints to enforce data types
+- Validate file uploads and check file types
+- Implement proper error handling for invalid inputs
+
+## Data Protection
+- Handle sensitive environmental data appropriately
+- Use environment variables for API keys and secrets
+- Never hardcode credentials in source code
+- Encrypt sensitive data in transit and at rest
+- Implement proper access controls for data
+
+## Dependency Security
+- Run `make security` to check for vulnerabilities
+- Use `safety scan` to check Python dependencies
+- Use `bandit` for static security analysis
+- Keep dependencies updated and patched
+- Monitor for known vulnerabilities in dependencies
+
+## File Processing Security
+- Validate PDF files before processing
+- Check file size limits to prevent DoS attacks
+- Scan uploaded files for malicious content
+- Use secure file handling practices
+- Implement proper file cleanup
+
+## API Security
+- Validate all API inputs and outputs
+- Implement proper authentication and authorization
+- Use HTTPS for all external communications
+- Rate limit API endpoints to prevent abuse
+- Log security-relevant events
+
+## Error Handling
+- Don't expose sensitive information in error messages
+- Log errors appropriately for debugging
+- Use generic error messages for users
+- Implement proper exception handling
+- Avoid information leakage in stack traces
+
+## Code Quality Security
+- Follow secure coding practices
+- Avoid common vulnerabilities (SQL injection, XSS, etc.)
+- Use parameterized queries for database operations
+- Implement proper input sanitization
+- Review code for security issues
+
+## Environmental Data Security
+- Protect environmental monitoring data
+- Implement data retention policies
+- Ensure compliance with environmental regulations
+- Secure data transmission and storage
+- Audit access to sensitive environmental data
+
+## Development Security
+- Use secure development practices
+- Review code for security vulnerabilities
+- Test security controls regularly
+- Keep development tools updated
+- Use secure development environments
+
+## Monitoring & Logging
+- Log security-relevant events
+- Monitor for suspicious activities
+- Implement proper audit trails
+- Use secure logging practices
+- Monitor system access and usage
+
+## Incident Response
+- Have a plan for security incidents
+- Know how to report security issues
+- Document security procedures
+- Train team on security practices
+- Regular security reviews and updates

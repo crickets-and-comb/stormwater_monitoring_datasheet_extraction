@@ -1,0 +1,31 @@
+---
+description: PDF processing and computer vision rules for datasheet extraction
+globs: ["src/**/pdf*.py", "src/**/ocr*.py", "src/**/vision*.py"]
+alwaysApply: false
+---
+
+# PDF Processing Rules
+
+## Computer Vision Standards
+- Use OpenCV for image preprocessing
+- Implement proper error handling for corrupted images
+- Validate image quality before OCR processing
+- Handle various PDF formats and resolutions
+
+## OCR Processing
+- Use Tesseract for text extraction
+- Preprocess images to improve OCR accuracy
+- Implement confidence scoring for extracted text
+- Provide fallback options for low-confidence results
+
+## Data Validation
+- Validate extracted data against expected ranges
+- Handle missing or incomplete form fields
+- Implement data quality flags
+- Log processing errors for debugging
+
+## Performance Considerations
+- Process large PDFs in chunks
+- Use efficient image processing algorithms
+- Cache processed results when appropriate
+- Monitor memory usage for large files

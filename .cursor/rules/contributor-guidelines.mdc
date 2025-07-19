@@ -1,0 +1,45 @@
+# Contributor Guidelines
+
+These rules summarize and enforce the project's contributor guidelines. For full details, see [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md).
+
+## General Principles
+- Read and follow the [Code of Conduct](./CODE_OF_CONDUCT.md).
+- Open an issue before submitting a PR. Only open a PR after explicit admin approval.
+- Keep each issue/PR focused and limited in scope.
+- Avoid sprawling PRs; small, focused changes are preferred.
+
+## Bug Reports
+- Provide a minimal reproducible example.
+- Include environment details (OS, Python version, etc.).
+- Attach the full stack trace and failing call.
+
+## Pull Request Process
+- Add test coverage for all expected behavior (bug fixes and new features).
+- Each function/method should do a discrete thing and/or wrap a set of discrete calls.
+- Limit functions to <= 50 lines when possible.
+- Functions should have a single exit point (one return statement), unless a clear exception is justified.
+- Avoid externalities:
+  - Functions should only modify objects within their own scope.
+  - Use `typing.Final` for constants, and treat them as immutable.
+
+## Code Quality Requirements
+- Follow coding standards defined in `coding-standards.mdc`.
+- Write self-documenting code with meaningful naming.
+- Use docstrings for functions, classes, methods, and modules.
+- Comments should provide context, not explain what code does.
+- Copy edit all prose: spelling, grammar, fact check, link check.
+
+## TODO Management
+- Avoid leaving TODOs in code.
+- All remaining TODOs should be tagged to an open issue.
+- Link TODOs to specific GitHub issues when possible.
+- Clean up TODOs when implementing features or fixes.
+
+## Etiquette
+- Be respectful and constructive in all communications.
+- Collaborate with maintainers to refine requests and avoid duplicate work.
+- Understand that workflow runs cost money; be considerate with PRs.
+
+## Reference
+- For the full contributor guidelines, see [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md).
+- For coding standards, see `coding-standards.mdc`.
