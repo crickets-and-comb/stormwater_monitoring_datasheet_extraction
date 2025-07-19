@@ -11,7 +11,8 @@ These rules summarize and enforce the project's contributor guidelines. For full
 ## General Principles
 
 - Read and follow the [Code of Conduct](./CODE_OF_CONDUCT.md).
-- Open an issue before submitting a PR. Only open a PR after explicit admin approval.
+- All pull requests (PRs) must be connected to an open issue. You may open an issue if one does not already exist for your issue.
+- Only open a PR after explicit admin approval.
 - Keep each issue/PR focused and limited in scope.
 - Avoid sprawling PRs; small, focused changes are preferred.
 
