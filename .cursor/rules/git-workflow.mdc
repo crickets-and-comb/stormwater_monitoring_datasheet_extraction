@@ -1,8 +1,7 @@
 ---
 description: Git workflow and version control practices.
-alwaysApply: true
+alwaysApply: false
 ---
-
 # Git Workflow
 
 ## Branching Strategy
