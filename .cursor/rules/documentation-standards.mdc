@@ -13,6 +13,7 @@ alwaysApply: false
 - *Do not* include parameter types and return types in docstrings (typehints should render in docs).
 - Provide usage examples in docstrings (optional).
 - Document any complex algorithms or business logic in the `docs` folder.
+- Run `make clean format lint`.
 
 ## API Documentation
 
