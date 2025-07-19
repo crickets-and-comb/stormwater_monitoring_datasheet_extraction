@@ -15,5 +15,10 @@
     - Avoid externalities like the plague:
       - Functions should only modify the objects limited to the function scope.
       - Use `typing.Final` to typehint constants. Constants shoud be treated as constants.
+    - Code should be "self-documenting." In other words:
+      - Use meaningful naming conventions.
+      - Use docstrings for functions, classes, methods, and modules.
+      - Comments should never say what the code is doing. Comments are for adding context that is not otherwise given. So, comments should be few and far between.
+    - Avoid leaving TODOs, and all TODOs remaining should be tagged to an open issue.
     - Function/method docstrings follow Google Python styleguide (or close to it for other languages): https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings
     - Copy edit your prose (spelling, grammar, fact check, link check, etc.). This includes comments and error/warning/logging messages, not just docstrings and formal documentation. Code is for humans.
