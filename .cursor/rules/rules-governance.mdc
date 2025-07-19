@@ -82,3 +82,4 @@ This rule governs the creation, structure, and maintenance of all Cursor rules i
 ## References
 
 - [Cursor Rules Documentation](https://docs.cursor.com/context/rules)
+- For documentation standards, see `documentation-standards.mdc`

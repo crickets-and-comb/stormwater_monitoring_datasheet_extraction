@@ -2,84 +2,93 @@
 # Testing Practices
 
 ## Test Organization
-- Unit tests in `tests/unit/`
-- Integration tests in `tests/integration/`
-- End-to-end tests in `tests/e2e/`
-- Test files should start with `test_`
-- Test classes should start with `Test`
-- Test methods should start with `test_`
+
+- Unit tests in `tests/unit/`.
+- Integration tests in `tests/integration/`.
+- End-to-end tests in `tests/e2e/`.
+- Test files should start with `test_`.
+- Test classes should start with `Test`.
+- Test methods should start with `test_`.
 
 ## Test Standards
-- Use descriptive test names that explain the scenario
-- Follow AAA pattern: Arrange, Act, Assert
-- Mock external dependencies (APIs, databases, file systems)
-- Use fixtures for common test data and setup
-- Aim for >80% test coverage
-- Keep tests focused and independent
-- Write unit tests for all new functions
-- Add test coverage for every piece of expected behavior
+
+- Use descriptive test names that explain the scenario.
+- Follow AAA pattern: Arrange, Act, Assert.
+- Mock external dependencies (APIs, databases, file systems).
+- Use fixtures for common test data and setup.
+- Aim for >80% test coverage.
+- Keep tests focused and independent.
+- Write unit tests for all new functions.
+- Add test coverage for every piece of expected behavior.
 
 ## Pytest Configuration
-- Use pytest fixtures for setup and teardown
-- Group related tests in classes when appropriate
-- Use parametrized tests for multiple scenarios
-- Mark slow tests with `@pytest.mark.slow`
-- Use `@pytest.mark.unit`, `@pytest.mark.integration`, `@pytest.mark.e2e`
+
+- Use pytest fixtures for setup and teardown.
+- Group related tests in classes when appropriate.
+- Use parametrized tests for multiple scenarios.
+- Mark slow tests with `@pytest.mark.slow`.
+- Use `@pytest.mark.unit`, `@pytest.mark.integration`, `@pytest.mark.e2e`.
 
 ## Test Data Management
-- Use factories for creating test data
-- Avoid hardcoded test data
-- Use realistic but minimal test datasets
-- Clean up test data after tests
-- Use separate test databases when needed
+
+- Use factories for creating test data.
+- Avoid hardcoded test data.
+- Use realistic but minimal test datasets.
+- Clean up test data after tests.
+- Use separate test databases when needed.
 
 ## Mocking & Stubbing
-- Mock external services and APIs
-- Use `unittest.mock` or `pytest-mock`
-- Mock file system operations for unit tests
-- Stub time-dependent operations
-- Mock network calls and external dependencies
+
+- Mock external services and APIs.
+- Use `unittest.mock` or `pytest-mock`.
+- Mock file system operations for unit tests.
+- Stub time-dependent operations.
+- Mock network calls and external dependencies.
 
 ## Test Execution
-- Run unit tests: `make unit`
-- Run integration tests: `make integration`
-- Run e2e tests: `make e2e`
-- Run all tests: `make full-test`
-- Run specific test markers: `make run-test MARKER=slow`
+
+- Run unit tests: `make unit`.
+- Run integration tests: `make integration`.
+- Run e2e tests: `make e2e`.
+- Run all tests: `make full-test`.
+- Run specific test markers: `make run-test MARKER=slow`.
 
 ## Test Quality
-- Tests should be deterministic (no random data)
-- Tests should be fast (unit tests < 1s each)
-- Tests should be isolated (no shared state)
-- Tests should be readable and maintainable
-- Tests should catch regressions effectively
+
+- Tests should be deterministic (no random data).
+- Tests should be fast (unit tests < 1s each).
+- Tests should be isolated (no shared state).
+- Tests should be readable and maintainable.
+- Tests should catch regressions effectively.
 
 ## Coverage & Reporting
-- Aim for >80% code coverage
-- Focus on critical business logic
-- Exclude boilerplate and configuration code
-- Generate coverage reports for analysis
-- Use coverage to identify untested code
+
+- Aim for >80% code coverage.
+- Focus on critical business logic.
+- Exclude boilerplate and configuration code.
+- Generate coverage reports for analysis.
+- Use coverage to identify untested code.
 
 ## Performance Testing
-- Test PDF processing performance with large files
-- Monitor memory usage during tests
-- Test OCR accuracy with various image qualities
-- Benchmark critical data processing functions
-- Test with realistic dataset sizes
+
+- Test PDF processing performance with large files.
+- Monitor memory usage during tests.
+- Test OCR accuracy with various image qualities.
+- Benchmark critical data processing functions.
+- Test with realistic dataset sizes.
 
 ## Integration Testing
-- Test complete data extraction workflows
-- Test CLI commands end-to-end
-- Test error handling and recovery
-- Test with actual PDF samples
-- Test data validation and transformation
+
+- Test complete data extraction workflows.
+- Test CLI commands end-to-end.
+- Test error handling and recovery.
+- Test with actual PDF samples.
+- Test data validation and transformation.
 
 ## Test Maintenance
-- Update tests when requirements change
-- Refactor tests to improve maintainability
-- Remove obsolete tests
-- Keep test data current with schema changes
-- Document complex test scenarios
-- Keep test data current with schema changes
-- Document complex test scenarios
+
+- Update tests when requirements change.
+- Refactor tests to improve maintainability.
+- Remove obsolete tests.
+- Keep test data current with schema changes.
+- Document complex test scenarios.
