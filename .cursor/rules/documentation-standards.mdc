@@ -93,7 +93,3 @@ alwaysApply: false
 - Test documentation examples
 - Review documentation for accuracy
 - Keep documentation accessible
-description:
-globs:
-alwaysApply: false
----
