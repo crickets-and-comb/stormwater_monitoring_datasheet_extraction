@@ -13,16 +13,18 @@ alwaysApply: false
 - Provide minimal reproducible example.
 - Include environment details (OS, Python version, dependencies).
 - Attach full stack trace and error messages.
-- Describe expected vs actual behavior.
+- Describe expected vs. actual behavior.
 - Include relevant environmental data context.
 
 ### Feature Requests
 
 - Describe the problem being solved.
 - Explain the business value and user impact.
+- Detail implementation plan.
 - Consider environmental data implications.
 - Include acceptance criteria.
 - Reference related issues or requirements.
+- Create issue dependency links and sub-issues.
 
 ### Enhancement Proposals
 
@@ -31,6 +33,8 @@ alwaysApply: false
 - Consider regulatory compliance impact.
 - Include technical feasibility assessment.
 - Plan for backward compatibility.
+- Reference related issues or requirements.
+- Create issue dependency links and sub-issues.
 
 ## Issue Templates
 
@@ -43,7 +47,7 @@ alwaysApply: false
 - Dependencies: [relevant package versions]
 
 **Description:**
-[Clear description of the bug]
+[Clear description of the bug.]
 
 **Steps to Reproduce:**
 1. [Step 1]
@@ -51,31 +55,34 @@ alwaysApply: false
 3. [Step 3]
 
 **Expected Behavior:**
-[What should happen]
+[What should happen.]
 
 **Actual Behavior:**
-[What actually happens]
+[What actually happens.]
 
 **Additional Context:**
-[Any other relevant information]
+[Any other relevant information.]
 ```
 
 ### Feature Request Template
 
 ```
 **Problem Statement:**
-[Describe the problem being solved]
+[Describe the problem being solved.]
 
 **Proposed Solution:**
-[Describe the proposed feature]
+[Describe the proposed feature.]
+
+**Implementation Details:**
+[Describe changes to implement.]
 
 **Acceptance Criteria:**
-- [ ] Criterion 1
-- [ ] Criterion 2
-- [ ] Criterion 3
+- [ ] Criterion 1.
+- [ ] Criterion 2.
+- [ ] Criterion 3.
 
 **Business Value:**
-[Explain the value this provides]
+[Explain the value this provides.]
 
 **Environmental Data Impact:**
 [Consider data quality, compliance, etc.]
@@ -97,7 +104,7 @@ alwaysApply: false
 - Set realistic due dates and milestones.
 - Track progress with regular updates.
 - Link related issues and pull requests.
-- Update status when blocked or resolved.
+- Update status when started, in review, blocked, or resolved.
 
 ### Issue Lifecycle
 
@@ -148,7 +155,7 @@ alwaysApply: false
 ### Issue-PR Linking
 
 - Link issues to relevant pull requests.
-- Use issue references in commit messages.
+- Use issue references in pull-request descriptions and titles.
 - Update issues when PRs are merged.
 - Close issues when features are complete.
 - Track issue resolution in release notes.
