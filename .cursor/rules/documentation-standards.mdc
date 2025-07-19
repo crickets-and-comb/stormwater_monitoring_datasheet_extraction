@@ -109,4 +109,4 @@ alwaysApply: true
 - Use Google style secondarily, deferring to AP style.
 - Use Microsoft style tertiarily, deferring primarily to AP style, secondarily to Google style.
 - End bullet points with proper punctuation, except when each item is simply a word or two expressing a single thing (a noun, verb, adjective, etc.).
-- Add a space after headers and subheaders (e.g., in markdown) for better legibility of unrendered docs.
+- Add a space after headings and subheadings (e.g., in markdown) for better legibility of unrendered docs.
