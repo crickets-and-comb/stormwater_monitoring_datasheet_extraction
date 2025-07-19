@@ -1,6 +1,6 @@
 ---
-description: Rules Governance for Cursor Project Rules
-globs: ["**/*.mdc"]
+description: Governance and best practices for creating and maintaining Cursor rules
+globs: [".cursor/rules/**/*.mdc"]
 alwaysApply: true
 ---
 
@@ -21,19 +21,10 @@ This rule governs the creation, structure, and maintenance of all Cursor rules i
   - `description`: Brief summary of the rule's purpose.
   - `globs`: File patterns the rule applies to.
   - `alwaysApply`: true/false (controls if always included).
-- Example:
-
-  ```mdc
-  ---
-  description: Example rule
-  globs: ["src/**/*.py"]
-  alwaysApply: false
-  ---
-  
-  # Example Rule
-
-  - Use snake_case for all variable names.
-  ```
+- Overall structure:
+  - Start with YAML metadata block (description, globs, alwaysApply).
+  - Follow with markdown content.
+  - Keep focused and actionable.
 
 - Use referenced files (e.g., `@template.ts`) for additional context if needed.
 
@@ -59,6 +50,22 @@ This rule governs the creation, structure, and maintenance of all Cursor rules i
 - Avoid vague guidance; write rules like clear internal docs.
 - Reuse rules when repeating prompts in chat.
 - Use descriptive, concise metadata.
+
+## Good vs. Bad Rules
+
+### ✅ Good Rule:
+
+- Focused scope (specific file patterns).
+- Clear, actionable guidance.
+- Descriptive metadata.
+- Under 500 lines.
+
+### ❌ Bad Rule:
+
+- Vague, broad scope.
+- Unclear guidance.
+- Poor metadata.
+- Too long or unfocused.
 
 ## Maintenance
 
