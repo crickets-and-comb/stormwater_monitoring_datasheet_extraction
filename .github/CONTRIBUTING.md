@@ -14,7 +14,12 @@
     - Functions should be "properly structured." That essentially means that there is only one exit to a function, a single return statement. This is somewhat a matter of the repo owner's taste, but it is also an old-school standard that has stood the test of time, and while there are legitimate cases for relaxing this standard, adhering to it (along with other coding standards) at least does no harm, and improves legibility for those accustomed to it. As such, please adhere to it.
     - Avoid externalities like the plague:
       - Functions should only modify the objects limited to the function scope.
-      - Use `typing.Final` to typehint constants. Constants shoud be treated as constants.
+    - Use strict typing:
+      - In Python:
+        - Use typehints in function/method signatures and returns.
+        - Where helpful, use typhints in variable/member declarations.
+        - Use `typing.Final` to typehint constants. Constants shoud be treated as constants.
+        - Use runtime typechecking of arguments and returns, like `typeguard.typechecked` decorator, `pandera.schema`, `pandera.check_types`, or something similar.
     - Code should be "self-documenting." In other words:
       - Use meaningful naming conventions.
       - Use docstrings for functions, classes, methods, and modules.
