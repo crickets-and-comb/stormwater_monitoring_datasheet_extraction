@@ -1,3 +1,8 @@
+---
+description: Python coding standards and best practices for the stormwater monitoring project
+globs: ["src/**/*.py", "tests/**/*.py"]
+alwaysApply: true
+---
 
 # Python Coding Standards
 

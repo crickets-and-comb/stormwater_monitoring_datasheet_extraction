@@ -1,3 +1,9 @@
+---
+description: Contributor guidelines for stormwater_monitoring_datasheet_extraction
+globs: ["**/*.py", "**/*.md", "**/*.rst", "**/*.yml", "**/*.yaml"]
+alwaysApply: true
+---
+
 # Contributor Guidelines
 
 These rules summarize and enforce the project's contributor guidelines. For full details, see [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md).
