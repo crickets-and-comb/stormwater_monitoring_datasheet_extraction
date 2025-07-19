@@ -1,7 +1,9 @@
 ---
 description: Documentation standards.
-alwaysApply: true
+globs: ["**/*.md", "**/*.rst", "docs/**/*", "src/**/*.py", "tests/**/*.py"]
+alwaysApply: false
 ---
+
 # Documentation Standards
 
 ## Code Documentation
