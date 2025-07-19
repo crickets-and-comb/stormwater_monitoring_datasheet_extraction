@@ -20,7 +20,6 @@ alwaysApply: false
 - Design robust data models for environmental data.
 - Plan for data validation and quality checks.
 - Consider data lineage and provenance tracking.
-- Design for regulatory reporting requirements.
 - Include data backup and recovery procedures.
 
 ## API Design Standards

@@ -63,7 +63,6 @@ alwaysApply: false
 
 - Protect environmental monitoring data.
 - Implement data retention policies.
-- Ensure compliance with environmental regulations.
 - Secure data transmission and storage.
 - Audit access to sensitive environmental data.
 
