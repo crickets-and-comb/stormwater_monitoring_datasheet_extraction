@@ -93,3 +93,11 @@ alwaysApply: false
 - Test documentation examples
 - Review documentation for accuracy
 - Keep documentation accessible
+
+## Style Guide
+
+- Use AP style primarily.
+- Use Google style secondarily, deferring to AP style.
+- Use Microsoft style teriarily, deferring primarily to AP style, secondarily to Goodle style.
+- End bullet points with proper puncuation, except when each item is simply a word or two expressing a single thing (a noun, verb, adjective, etc.).
+- Add a space after headers (e.g., in markdown) for better legibility of unrendered docs.
