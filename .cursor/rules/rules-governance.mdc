@@ -1,7 +1,7 @@
 ---
-description: Governance and best practices for creating and maintaining Cursor rules
+description: Governance and best practices for creating and maintaining Cursor rules.
 globs: [".cursor/rules/**/*.mdc"]
-alwaysApply: true
+alwaysApply: false
 ---
 
 # Rules Governance for Cursor Project Rules

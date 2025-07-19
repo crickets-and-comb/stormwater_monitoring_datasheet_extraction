@@ -1,9 +1,7 @@
 ---
-description: Documentation standards for the stormwater monitoring project
-globs: ["**/*.py", "**/*.md", "**/*.rst", "docs/**/*"]
-alwaysApply: false
+description: Documentation standards.
+alwaysApply: true
 ---
-
 # Documentation Standards
 
 ## Code Documentation

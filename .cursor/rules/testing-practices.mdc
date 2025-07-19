@@ -1,6 +1,6 @@
 ---
-description: Testing standards and practices for the stormwater monitoring project
-globs: ["tests/**/*.py", "**/test_*.py", "**/*_test.py"]
+description: Testing standards and practices.
+globs: ["tests/**/*.py"]
 alwaysApply: false
 ---
 

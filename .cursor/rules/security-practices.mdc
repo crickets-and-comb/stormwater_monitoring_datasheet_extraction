@@ -1,6 +1,5 @@
 ---
-description: Security best practices for the stormwater monitoring project
-globs: ["src/**/*.py", "tests/**/*.py", "**/*.yml", "**/*.yaml"]
+description: Security best practices.
 alwaysApply: true
 ---
 

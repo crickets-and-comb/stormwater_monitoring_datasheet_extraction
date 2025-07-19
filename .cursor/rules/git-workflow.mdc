@@ -1,7 +1,6 @@
 ---
-description: Git workflow and version control practices for the stormwater monitoring project
-globs: ["**/*.py", "**/*.md", "**/*.yml", "**/*.yaml", "**/*.toml", "**/*.cfg"]
-alwaysApply: false
+description: Git workflow and version control practices.
+alwaysApply: true
 ---
 
 # Git Workflow

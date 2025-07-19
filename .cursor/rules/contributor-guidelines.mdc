@@ -1,7 +1,6 @@
 ---
-description: Contributor guidelines for stormwater_monitoring_datasheet_extraction
-globs: ["**/*.py", "**/*.md", "**/*.rst", "**/*.yml", "**/*.yaml"]
-alwaysApply: true
+description: GitHub contributor guidelines.
+alwaysApply: false
 ---
 
 # Contributor Guidelines
