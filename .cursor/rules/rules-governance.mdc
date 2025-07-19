@@ -1,0 +1,67 @@
+---
+description: Rules Governance for Cursor Project Rules
+globs: ["**/*.mdc"]
+alwaysApply: true
+---
+
+# Rules Governance for Cursor Project Rules
+
+## Purpose
+This rule governs the creation, structure, and maintenance of all Cursor rules in this project. It ensures rules are actionable, maintainable, and follow Cursor's official best practices ([see docs](https://docs.cursor.com/context/rules)).
+
+## Rule Types
+- **Project Rules**: Store in `.cursor/rules/`, version-controlled, scoped to the codebase or subdirectories.
+- **User Rules**: Set in Cursor Settings → Rules, global to your environment.
+- **Legacy Rules**: `.cursorrules` in project root is deprecated; migrate to Project Rules.
+
+## Rule Anatomy
+- Write each rule in MDC (`.mdc`) format with YAML metadata at the top:
+  - `description`: Brief summary of the rule's purpose
+  - `globs`: File patterns the rule applies to
+  - `alwaysApply`: true/false (controls if always included)
+- Example:
+  ```mdc
+  ---
+  description: Example rule
+  globs: ["src/**/*.py"]
+  alwaysApply: false
+  ---
+  
+  # Example Rule
+  - Use snake_case for all variable names.
+  ```
+- Use referenced files (e.g., `@template.ts`) for additional context if needed.
+
+## Rule Types and Application
+- **Always**: Always included in model context
+- **Auto Attached**: Included when files matching a glob pattern are referenced
+- **Agent Requested**: Available to AI, included as needed (must provide a description)
+- **Manual**: Only included when explicitly mentioned using `@ruleName`
+
+## Directory Structure
+- Place project-wide rules in `.cursor/rules/`
+- For subdirectory-specific rules, add `.cursor/rules/` in that subdirectory
+- Nested rules auto-attach when files in their directory are referenced
+
+## Best Practices
+- Keep rules focused, actionable, and scoped
+- Keep rules under 500 lines
+- Split large rules into multiple, composable files
+- Provide concrete examples or referenced files
+- Avoid vague guidance; write rules like clear internal docs
+- Reuse rules when repeating prompts in chat
+- Use descriptive, concise metadata
+
+## Maintenance
+- Review rules regularly for relevance and clarity
+- Remove or update outdated rules
+- Ensure metadata is accurate and globs are correct
+- Prefer project rules over legacy `.cursorrules`
+
+## FAQ
+- If a rule isn't being applied, check its type and glob patterns
+- Reference other rules or files using `@filename`
+- Rules only apply to Agent and Inline Edit, not Cursor Tab
+
+## References
+- [Cursor Rules Documentation](https://docs.cursor.com/context/rules)
