@@ -6,6 +6,8 @@ alwaysApply: false
 
 # Python Coding Standards
 
+Consult available codebases to learn patterns and idioms.
+
 ## Code Style & Formatting
 
 - Follow PEP 8 style guidelines strictly.
@@ -26,6 +28,7 @@ alwaysApply: false
 - Use absolute imports for project modules.
 - Avoid wildcard imports (*).
 - Import specific functions/classes rather than entire modules.
+- Avoid importing from within functions; import at the top of a file.
 
 ## Function & Class Design
 
