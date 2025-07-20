@@ -162,7 +162,7 @@ def restructure_extraction(
 
 
 # TODO: Implement this.
-@pa.check_types(with_pydantic=True, lazy=True)
+@typechecked
 def load(restructured_json: Dict[str, Any], output_dir: Path) -> Path:
     """Load the cleaned data into the output directory.
 
