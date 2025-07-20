@@ -42,7 +42,13 @@ alwaysApply: false
 - Code should be "self-documenting" through clear naming and structure.
 - Use meaningful naming conventions for variables, functions, classes, and modules.
 - Use docstrings for functions, classes, methods, and modules.
-- Use `#:` comments to add docstrings for class member declarations.
+- Use `#:` comments to add docstrings for class member declarations. The `#:` syntax is specific to Sphinx documentation and is used to document attributes within a class. For more details, refer to the [Sphinx documentation](https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#python-domain).
+    Example:
+    ```python
+    class Example:
+        #: This is a docstring for the `attribute` member.
+        attribute: int
+    ```
 - Other than class member doctring comments, comments:
     - Should never say what the code is doing.
     - Are for adding context that is not otherwise given.
