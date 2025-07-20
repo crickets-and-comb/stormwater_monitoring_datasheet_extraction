@@ -19,7 +19,7 @@ alwaysApply: false
 
 - Describe the problem being solved.
 - Explain the business value and user impact.
-- Detail implementation plan.
+- Detail implementation plan (optional, but helpful if possible).
 - Consider environmental data implications.
 - Include acceptance criteria.
 - Reference related issues or requirements.
