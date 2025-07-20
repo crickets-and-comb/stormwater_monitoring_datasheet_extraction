@@ -15,7 +15,7 @@ alwaysApply: false
 ## Type Hints
 
 - Use type hints for all function parameters and return values.
-- Import types from typing module and elsewhere when needed.
+- Import types from the `typing` module and elsewhere when needed.
 - Where helpful, use type hints in variable/member declarations.
 - Be as specific as possible with typehints.
 - Use `typing.Final` to typehint constants.
