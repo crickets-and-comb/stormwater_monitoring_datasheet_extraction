@@ -72,7 +72,7 @@ alwaysApply: false
 
 - Update documentation as appropriate.
 - Update tests as appropriate.
-- Run `make full`, and ensure you've passed all stesp, before opening a PR or pushing to an open PR.
+- Run `make full`, and ensure you've passed all steps, before opening a PR or pushing to an open PR.
 - Create PRs for all changes to main branch.
 - Use descriptive PR titles and descriptions.
 - Include context about the change and why it's needed.
