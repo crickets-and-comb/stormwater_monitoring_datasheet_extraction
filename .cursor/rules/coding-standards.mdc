@@ -1,6 +1,6 @@
 ---
 description: Python coding standards and best practices.
-globs: ["src/**/*.py", "tests/**/*.py"]
+globs: ["**/*.py"]
 alwaysApply: false
 ---
 
@@ -9,53 +9,49 @@ alwaysApply: false
 ## Code Style & Formatting
 
 - Follow PEP 8 style guidelines strictly.
-- Use Black for code formatting (configured in shared/pyproject.toml).
-- Use isort for import sorting (configured in shared/pyproject.toml).
-- Maximum line length: 88 characters (Black default).
-- Use 4 spaces for indentation, never tabs.
+- Use `make clean format` to apply style and import sorting.
+- Use `make clean lint` to check style.
 
 ## Type Hints
 
 - Use type hints for all function parameters and return values.
-- Import types from typing module when needed.
-- Use Optional[T] for nullable types.
-- Use Union[T1, T2] for multiple possible types.
-- Use List[T], Dict[K, V], Tuple[T, ...] for collections.
+- Import types from typing module and elsewhere when needed.
 - Where helpful, use type hints in variable/member declarations.
+- Be as specific as possible with typehints.
 - Use `typing.Final` to typehint constants.
-- Use runtime typechecking of arguments and returns, like `typeguard.typechecked` decorator, `pandera.schema`, `pandera.check_types`, or something similar.
+- Use runtime typechecking of arguments and returns, e.g. `typeguard.typechecked` decorator, `pandera.schema` to typehint parameters and returns, `pandera.check_types` decorator when parameters and returns include pandera schema (so the other parameters and returns also get checked by `pydantic`), or something similar.
 
 ## Import Organization
 
-- Group imports: standard library, third-party, local imports.
 - Use absolute imports for project modules.
 - Avoid wildcard imports (*).
 - Import specific functions/classes rather than entire modules.
-- Use isort to maintain consistent import ordering.
 
 ## Function & Class Design
 
 - Keep functions focused and under 50 lines when possible.
-- Use descriptive variable and function names (snake_case).
+- Use descriptive variable and function names, with snake_case.
 - Add comprehensive docstrings for all public functions and classes.
 - Follow single responsibility principle.
 - Use dataclasses for simple data structures.
 - Functions should have a single exit point (one return statement).
 - Functions should only modify objects within their own scope.
-- Type constants as constants: `typing.Final`.
 
 ## Self-Documenting Code
 
-- Use meaningful naming conventions for variables, functions, and classes.
-- Use docstrings for functions, classes, methods, and modules.
-- Comments should never say what the code is doing.
-- Comments are for adding context that is not otherwise given.
-- Comments should be few and far between.
 - Code should be "self-documenting" through clear naming and structure.
+- Use meaningful naming conventions for variables, functions, classes, and modules.
+- Use docstrings for functions, classes, methods, and modules.
+- Use `#:` comments to add docstrings for class member declarations.
+- Other than class member doctring comments, comments:
+    - Should never say what the code is doing.
+    - Are for adding context that is not otherwise given.
+    - Should be few and far between.
 
 ## Error Handling
 
 - Use specific exception types rather than bare `except:`.
+- Create custom error classes as needed.
 - Provide meaningful error messages.
 - Log errors appropriately for debugging.
 - Handle edge cases gracefully.
@@ -63,10 +59,12 @@ alwaysApply: false
 
 ## Documentation
 
-- Add docstrings for all public APIs.
-- Include parameter types and return types in docstrings.
-- Provide usage examples in docstrings.
-- Document any complex algorithms or business logic.
+- Add comprehensive docstrings for all public functions and classes.
+- *Do not* include parameter types and return types in docstrings (typehints should render in docs).
+- Use docstrings for functions, classes, methods, and modules.
+- Use `#:` comments to add docstrings for class member declarations.
+- Provide usage examples in docstrings (optional).
+- Document any complex algorithms or business logic in the external docs.
 - Follow [Google Python style guide](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings) for docstrings.
 - Copy edit all prose: spelling, grammar, fact check, link check.
 
@@ -84,27 +82,10 @@ alwaysApply: false
 - Link TODOs to specific GitHub issues when possible.
 - Clean up TODOs when implementing features or fixes.
 
-## QC Tools Integration
-
-- Run `make lint` before committing (Black, isort, flake8).
-- Run `make typecheck` for type checking (pytype).
-- Run `make security` for vulnerability scanning (bandit, safety).
-- Run `make format` to auto-format code.
-- Run `make clean` to clear caches before testing.
-
-## Development Workflow
-
-- Use conda environments for development.
-- Install package in editable mode: `make install`.
-- Run `make full` for complete QC and testing.
-- Use `make full-qc` for quality checks only.
-- Use `make full-test` for testing only.
-- Run `make clean format full` before pushing.
-
 ## Performance Considerations
 
 - Use efficient data structures for large datasets.
-- Consider memory usage for large PDF processing.
+- Consider memory usage for large image processing.
 - Profile code when performance is critical.
 - Use async/await for I/O operations when appropriate.
 - Cache expensive computations when possible.
