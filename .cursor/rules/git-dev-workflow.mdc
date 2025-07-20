@@ -36,6 +36,15 @@ alwaysApply: false
 - Follow shared repository conventions.
 - Keep shared submodule up to date.
 
+## Dev environment setup
+
+- Use conda environments for development:
+```bash
+    make build-env
+    conda activate <package name>_py<python major.minor version>
+    make install
+```
+
 ## Commit Standards
 
 - Make atomic commits (one logical change per commit).
