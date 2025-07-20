@@ -1,0 +1,140 @@
+---
+description: Technical design and architecture decision guidelines for system development.
+alwaysApply: false
+---
+
+# Technical Design Standards
+
+## Architecture Principles
+
+### System Design
+
+- Design for environmental data quality and integrity.
+- Consider data scalability and performance requirements.
+- Design for maintainability and long-term support.
+- Include security and privacy considerations.
+
+### Data Architecture
+
+- Design robust data models for environmental data.
+- Plan for data validation and quality checks.
+- Consider data lineage and provenance tracking.
+- Include data backup and recovery procedures.
+
+## API Design Standards
+
+### RESTful API Design
+
+- Use consistent naming conventions.
+- Design for environmental data workflows.
+- Include proper error handling and status codes.
+- Plan for versioning and backward compatibility.
+- Consider rate limiting and security measures.
+
+### Data Exchange Formats
+
+- Use standardized formats for environmental data.
+- Include metadata for data quality and provenance.
+- Design for interoperability with other systems.
+- Include validation schemas and documentation.
+
+## Performance Considerations
+
+### Data Processing Performance
+
+- Optimize for large environmental datasets.
+- Plan for real-time data processing requirements.
+- Consider memory and storage constraints.
+- Design for parallel processing where appropriate.
+- Include performance monitoring and metrics.
+
+### Scalability Planning
+
+- Design for horizontal and vertical scaling.
+- Plan for seasonal data collection variations.
+- Consider peak load scenarios.
+- Design for geographic distribution if needed.
+- Include capacity planning and monitoring.
+
+## Security and Privacy
+
+### Data Security
+
+- Encrypt sensitive environmental data.
+- Implement proper access controls.
+- Plan for audit logging and monitoring.
+- Design for data retention and disposal.
+
+### Privacy Protection
+
+- Minimize data collection to necessary fields.
+- Implement data anonymization where appropriate.
+- Plan for user consent and data rights.
+- Design for data portability and deletion.
+
+## Integration Patterns
+
+### External System Integration
+
+- Design for environmental monitoring system integration.
+- Consider third-party data provider integrations.
+- Design for laboratory information system connections.
+- Include error handling and retry mechanisms.
+
+### Data Pipeline Design
+
+- Design robust data ingestion pipelines.
+- Plan for data transformation and validation.
+- Consider real-time vs. batch processing requirements.
+- Design for data quality monitoring and alerting.
+- Include data lineage tracking throughout pipeline.
+
+## Technology Selection
+
+### Framework and Library Choices
+
+- Choose technologies that support environmental data standards.
+- Consider long-term maintenance and community support.
+- Evaluate security and compliance capabilities.
+- Plan for integration with existing systems.
+- Consider licensing and cost implications.
+
+### Database and Storage
+
+- Choose appropriate storage for environmental data types.
+- Plan for data retention and archival requirements.
+- Design for backup and disaster recovery.
+- Plan for data migration and versioning.
+
+## Documentation Requirements
+
+### Technical Specifications
+
+- Document system architecture and design decisions.
+- Include data flow diagrams and system interactions.
+- Document API specifications and data models.
+- Include security and compliance considerations.
+- Plan for maintenance and operational procedures.
+
+### Design Reviews
+
+- Conduct technical design reviews for major changes.
+- Include environmental data experts in reviews.
+- Document design decisions and rationale.
+- Include security and privacy reviews.
+
+## Quality Assurance
+
+### Design Validation
+
+- Validate designs against environmental data requirements.
+- Include performance and scalability testing.
+- Plan for security and privacy testing.
+- Include user acceptance testing for workflows.
+
+### Continuous Improvement
+
+- Monitor system performance and usage patterns.
+- Gather feedback from environmental data users.
+- Consider emerging technologies and standards.
+- Update designs based on lessons learned.
