@@ -22,6 +22,7 @@ Consult existing tests in available codebase to learn test patterns and idioms.
 - Use descriptive test names that explain the scenario.
 - Follow AAA pattern: Arrange, Act, Assert.
 - Almost all tests should have a single assert statement. Break up multiple asserts into multiple separate tests.
+- Use test case parametrization rather than looping through test cases or creating many similar tests.
 - Mock external dependencies (APIs, databases, file systems).
 - Use fixtures for common test data and setup.
 - Yield context from context managers in test fixtures to aid proper clean up.
