@@ -28,36 +28,38 @@ To install the package, run:
 
 See https://pypi.org/project/stormwater-monitoring-datasheet-extraction/.
 
+CLI
+---
 
-Library
--------
+The user interface for this tool is the command-line interface (CLI). When this package is installed, it comes with a CLI tool. See :doc:`CLI` for more information.
+
+
+Python Library
+--------------
+
+You can use this package as a Python library. The public API is available in the `stormwater_monitoring_datasheet_extraction` module.
 
 Avoid calling library functions directly and stick to the public API:
 
 .. code:: python
 
-    from stormwater_monitoring_datasheet_extraction import wait_a_second
+    from stormwater_monitoring_datasheet_extraction import run_etl
 
-    wait_a_second()
+    run_etl(input_dir="path/to/input", output_dir="path/to/output")
 
 If you're a power user, you can use the internal API:
 
 .. code:: python
 
-    from stormwater_monitoring_datasheet_extraction.api.internal import wait_a_second
+    from stormwater_monitoring_datasheet_extraction.api.internal import run_etl
 
-    wait_a_second()
+    run_etl(input_dir="path/to/input", output_dir="path/to/output")
 
 
 Nothing is stopping you from importing from lib directly, but you should avoid it unless you're developing:
 
 .. code:: python
 
-    from stormwater_monitoring_datasheet_extraction.lib.example import wait_a_second
+    from stormwater_monitoring_datasheet_extraction.lib.load_datasheets import run_etl
 
-    wait_a_second()
-
-CLI
----
-
-When this package is installed, it comes with CLI tools. See :doc:`CLI` for more information.
+    run_etl(input_dir="path/to/input", output_dir="path/to/output")
