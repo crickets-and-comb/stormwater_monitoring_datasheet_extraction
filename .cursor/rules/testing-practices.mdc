@@ -6,6 +6,8 @@ alwaysApply: false
 
 # Testing Practices
 
+Consult existing tests in available codebase to learn test patterns and idioms.
+
 ## Test Organization
 
 - Unit tests in `tests/unit/`.
@@ -19,8 +21,10 @@ alwaysApply: false
 
 - Use descriptive test names that explain the scenario.
 - Follow AAA pattern: Arrange, Act, Assert.
+- Almost all tests should have a single assert statement. Break up multiple asserts into multiple separate tests.
 - Mock external dependencies (APIs, databases, file systems).
 - Use fixtures for common test data and setup.
+- Yield context from context managers in test fixtures to aid proper clean up.
 - Aim for >99% test coverage.
 - Keep tests focused and independent.
 - Write unit tests for all new functions.
@@ -48,6 +52,7 @@ alwaysApply: false
 - Mock external services and APIs.
 - Use `unittest.mock` or `pytest-mock`.
 - Mock file system operations for unit tests.
+- Use `tmp_path` and other fixtures to avoid writing test output to the repo.
 - Stub time-dependent operations.
 - Mock network calls and external dependencies.
 
@@ -57,6 +62,7 @@ alwaysApply: false
 - Run integration tests: `make integration`.
 - Run e2e tests: `make e2e`.
 - Run all tests: `make full-test`.
+- Debug specific tests with `pytest` CLI, like with `pytest --pdb`.
 
 ## Test Quality
 
@@ -72,14 +78,6 @@ alwaysApply: false
 - Focus on critical business logic.
 - Generate coverage reports for analysis.
 - Use coverage to identify untested code.
-
-## Performance Testing
-
-- Test image processing performance with large files.
-- Monitor memory usage during tests.
-- Test OCR accuracy with various image qualities.
-- Benchmark critical data processing functions.
-- Test with realistic dataset sizes.
 
 ## Integration Testing
 
