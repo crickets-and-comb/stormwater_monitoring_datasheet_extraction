@@ -1,0 +1,168 @@
+---
+description: GitHub issue creation and management standards for effective project tracking.
+alwaysApply: false
+---
+
+# Issue Management Standards
+
+## Issue Creation Guidelines
+
+### Bug Reports
+
+- Provide minimal reproducible example.
+- Include environment details (OS, Python version, dependencies).
+- Attach full stack trace and error messages.
+- Describe expected vs. actual behavior.
+- Include relevant environmental data context.
+
+### Feature Requests
+
+- Describe the problem being solved.
+- Explain the business value and user impact.
+- Detail implementation plan (optional, but helpful if possible).
+- Consider environmental data implications.
+- Include acceptance criteria.
+- Reference related issues or requirements.
+- Create issue dependency links and sub-issues.
+
+### Enhancement Proposals
+
+- Document current limitations.
+- Propose specific improvements.
+- Consider regulatory compliance impact.
+- Include technical feasibility assessment.
+- Plan for backward compatibility.
+- Reference related issues or requirements.
+- Create issue dependency links and sub-issues.
+
+## Issue Templates
+
+### Standard Bug Report Template
+
+```
+**Environment:**
+- OS: [e.g., macOS 14.0]
+- Python: [e.g., 3.11.0]
+- Dependencies: [relevant package versions]
+
+**Description:**
+[Clear description of the bug.]
+
+**Steps to Reproduce:**
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+**Expected Behavior:**
+[What should happen.]
+
+**Actual Behavior:**
+[What actually happens.]
+
+**Additional Context:**
+[Any other relevant information.]
+```
+
+### Feature Request Template
+
+```
+**Problem Statement:**
+[Describe the problem being solved.]
+
+**Proposed Solution:**
+[Describe the proposed feature.]
+
+**Implementation Details:**
+[Describe changes to implement.]
+
+**Acceptance Criteria:**
+- [ ] Criterion 1.
+- [ ] Criterion 2.
+- [ ] Criterion 3.
+
+**Business Value:**
+[Explain the value this provides.]
+
+**Environmental Data Impact:**
+[Consider data quality, compliance, etc.]
+```
+
+## Issue Management Process
+
+### Labeling Strategy
+
+- Use descriptive labels for issue types.
+- Include priority and severity labels.
+- Tag environmental data related issues.
+- Label regulatory compliance requirements.
+- Mark issues for specific milestones.
+
+### Assignment and Tracking
+
+- Assign issues to appropriate team members.
+- Set realistic due dates and milestones.
+- Track progress with regular updates.
+- Link related issues and pull requests.
+- Update status when started, in review, blocked, or resolved.
+
+### Issue Lifecycle
+
+- **Open**: Initial creation and triage.
+- **In Progress**: Active development.
+- **Review**: Ready for testing or review.
+- **Blocked**: Waiting for dependencies.
+- **Closed**: Resolved and verified.
+
+## Quality Standards
+
+### Issue Completeness
+
+- All required fields completed.
+- Clear and actionable descriptions.
+- Appropriate labels and assignments.
+- Realistic estimates and timelines.
+- Proper linking to related items.
+
+### Communication Standards
+
+- Use clear, professional language.
+- Provide context for environmental data issues.
+- Include relevant technical details.
+- Update stakeholders on progress.
+- Document decisions and rationale.
+
+## Environmental Data Considerations
+
+### Data Quality Issues
+
+- Document data quality problems clearly.
+- Include validation and verification steps.
+- Consider regulatory compliance impact.
+- Plan for data correction procedures.
+- Track data lineage and provenance.
+
+### Compliance Requirements
+
+- Identify regulatory requirements.
+- Document compliance deadlines.
+- Plan for audit and review processes.
+- Include stakeholder notification procedures.
+- Track compliance status updates.
+
+## Integration with Development Workflow
+
+### Issue-PR Linking
+
+- Link issues to relevant pull requests.
+- Use issue references in pull-request descriptions and titles.
+- Update issues when PRs are merged.
+- Close issues when features are complete.
+- Track issue resolution in release notes.
+
+### Milestone Planning
+
+- Group related issues into milestones.
+- Plan for testing and validation cycles.
+- Include documentation requirements.
+- Account for regulatory review time.
+- Set realistic milestone deadlines.
