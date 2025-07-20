@@ -26,7 +26,7 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
     type=str,
     required=False,
     default="",
-    help=DocStrings.RUN_ETL.args["input_dir"],
+    help=DocStrings.RUN_ETL.args["output_dir"],
 )
 @typechecked
 def main(input_dir: str, output_dir: str) -> None:  # noqa: D103
