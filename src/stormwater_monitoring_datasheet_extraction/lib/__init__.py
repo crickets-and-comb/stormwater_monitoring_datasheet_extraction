@@ -1,1 +1,1 @@
-"""lib init."""
+"""Library for loading stormwater monitoring datasheets."""

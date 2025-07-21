@@ -1,3 +1,9 @@
+# UNDER CONSTRUCTION
+
+This package is still being developed and only just entering alpha stage of development.
+
+TODO: Create GitHub issues from all to-dos, and tag the to-dos to those tickets. Add policy to CONTRIBUTING doc that no TODOs may be merged to main without being tagged to an open issue. Make a ticket to build a workflow that checks for that condition on PR.
+
 # Stormwater Monitoring datasheet extraction tool
 
 This package extracts stormwater monitoring field observations from datasheet PDFs. See the docs: https://crickets-and-comb.github.io/stormwater_monitoring_datasheet_extraction/.
@@ -36,18 +42,15 @@ To install the package, run:
 
 See https://pypi.org/project/stormwater-monitoring-datasheet-extraction/.
 
-## Library functions
-
-`stormwater_monitoring_datasheet_extraction` is a library from which you can import functions. Import the public example function like this: `from stormwater_monitoring_datasheet_extraction import wait_a_second`. Or, import the internal version like a power user like this: `from stormwater_monitoring_datasheet_extraction.api.internal import wait_a_second`.
-
-Unless you're developing, avoid importing directly from library, like `from stormwater_monitoring_datasheet_extraction.lib.example import wait_a_second`.
-
 ## CLI
 
-Try the example CLI:
+The user interface for running the ETL process is available as a command-line interface (CLI). See the docs: [https://cricketsandcomb.org/stormwater_monitoring_datasheet_extraction/CLI.html](https://cricketsandcomb.org/stormwater_monitoring_datasheet_extraction/CLI.html)
 
-    $ example
-    $ example --seconds 2
+## Library functions
+
+`stormwater_monitoring_datasheet_extraction` is a library from which you can import functions. Import the main public function like this: `from stormwater_monitoring_datasheet_extraction import run_etl`. Or, import the internal version like a power user like this: `from stormwater_monitoring_datasheet_extraction.api.internal import run_etl`.
+
+Unless you're developing, avoid importing directly from library, like `from stormwater_monitoring_datasheet_extraction.lib.load_datasheets import run_etl`.
 
 ## Dev workflow
 

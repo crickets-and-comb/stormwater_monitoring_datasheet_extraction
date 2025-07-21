@@ -6,27 +6,23 @@ from comb_utils import DocString
 
 
 class DocStrings:
-    """Docstrings for the `example` module."""
+    """Docstrings for top-level modules."""
 
-    EXAMPLE: Final[DocString] = DocString(
-        opening="""Just wait a second, or however many seconds you want.
+    RUN_ETL: Final[DocString] = DocString(
+        opening="""Extracts, verifies, cleans, and loads datasheet images.
 
-    Also prints a message with the number you passed.
-""",
-        args={"seconds": "How many seconds to wait."},
-        raises=[],
-        returns=[],
-    )
-
-    EXAMPLE_INTERNAL: Final[DocString] = DocString(
-        opening="""Just wait a second, or however many seconds you want.
-
-    Also prints a message with the number you passed.
+    Extracts data from the images in the input directory, verifies the extraction with the
+    user, cleans and validates the data, and loads it into the output directory.
 """,
         args={
-            "seconds": "How many seconds to wait.",
-            "extra_string": "Extra message to add on tail of existing message.",
+            "input_dir": "Path to the input directory containing datasheet images.",
+            "output_dir": (
+                "Path to the output directory where processed data will be saved."
+                " If empty path, defaults to a dated directory in the current working"
+                " directory."
+            ),
         },
+        # TODO: Create custom errors module.
         raises=[],
-        returns=[],
+        returns=["Path to the saved cleaned data file."],
     )
