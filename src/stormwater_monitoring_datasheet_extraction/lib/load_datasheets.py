@@ -187,7 +187,7 @@ def load(restructured_json: Dict[str, Any], output_dir: Path) -> Path:
         raise ValueError("restructured_json cannot be empty or None.")
 
     # Create output directory if it doesn't exist
-    if not output_dir:
+    if output_dir == Path(""):
         # Default to a dated directory in the current working directory
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_dir = Path.cwd() / f"stormwater_extraction_{timestamp}"
