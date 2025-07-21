@@ -1,5 +1,7 @@
 """Top-level module for stormwater monitoring datasheet ETL."""
 
+import json
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
@@ -176,9 +178,32 @@ def load(restructured_json: Dict[str, Any], output_dir: Path) -> Path:
 
     Returns:
         Path to the saved cleaned data file.
-    """
-    final_output_path = Path()
 
-    ...
+    Raises:
+        ValueError: If restructured_json is empty or None.
+        OSError: If there are issues creating the output directory or writing the file.
+    """
+    if not restructured_json:
+        raise ValueError("restructured_json cannot be empty or None.")
+
+    # Create output directory if it doesn't exist
+    if not output_dir:
+        # Default to a dated directory in the current working directory
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_dir = Path.cwd() / f"stormwater_extraction_{timestamp}"
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create filename with timestamp
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"stormwater_extraction_{timestamp}.json"
+    final_output_path = output_dir / filename
+
+    # Write JSON data to file
+    try:
+        with open(final_output_path, "w", encoding="utf-8") as f:
+            json.dump(restructured_json, f, indent=2, ensure_ascii=False)
+    except OSError as e:
+        raise OSError(f"Failed to write data to {final_output_path}: {e}") from e
 
     return final_output_path
