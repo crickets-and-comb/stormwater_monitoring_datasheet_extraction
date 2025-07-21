@@ -71,40 +71,45 @@ def sample_json_data() -> Dict[str, Any]:
 class TestLoad:
     """Test the load function."""
 
+    @pytest.mark.parametrize(
+        "output_dir,expected_dir_name",
+        [
+            (Path("test_output"), "test_output"),
+            (Path(""), "stormwater_extraction_"),  # Will contain timestamp
+        ],
+    )
     @typechecked
-    def test_load_creates_output_directory_when_not_exists(
-        self, sample_json_data: Dict[str, Any], tmp_path: Path
+    def test_load_creates_output_directory_and_file(
+        self,
+        sample_json_data: Dict[str, Any],
+        output_dir: Path,
+        expected_dir_name: str,
+        tmp_path: Path,
     ) -> None:
-        """Test that load creates the output directory if it doesn't exist."""
-        output_dir = tmp_path / "new_output_dir"
-        result_path = load(sample_json_data, output_dir)
+        """Test that load creates the output directory and file correctly."""
+        if output_dir == Path(""):
+            # Change to tmp_path directory to control where the file is created
+            original_cwd = Path.cwd()
+            try:
+                os.chdir(tmp_path)
+                result_path = load(sample_json_data, output_dir)
+                result_path = result_path.resolve()  # Make absolute
+            finally:
+                os.chdir(original_cwd)
+        else:
+            result_path = load(sample_json_data, output_dir)
 
-        assert output_dir.exists()
+        # Verify the file was created with expected properties
         assert result_path.exists()
-
-    @typechecked
-    def test_load_returns_path_to_json_file(
-        self, sample_json_data: Dict[str, Any], tmp_path: Path
-    ) -> None:
-        """Test that load returns a path to a JSON file."""
-        result_path = load(sample_json_data, tmp_path)
-
         assert result_path.suffix == ".json"
-
-    @typechecked
-    def test_load_creates_file_with_timestamp_name(
-        self, sample_json_data: Dict[str, Any], tmp_path: Path
-    ) -> None:
-        """Test that load creates a file with timestamp in the name."""
-        result_path = load(sample_json_data, tmp_path)
-
         assert result_path.name.startswith("stormwater_extraction_")
+        assert result_path.parent.name.startswith(expected_dir_name)
 
     @typechecked
-    def test_load_writes_json_data_to_file(
+    def test_load_writes_correct_json_data_to_file(
         self, sample_json_data: Dict[str, Any], tmp_path: Path
     ) -> None:
-        """Test that load writes the JSON data to the file."""
+        """Test that load writes the correct JSON data to the file."""
         result_path = load(sample_json_data, tmp_path)
 
         with open(result_path, "r", encoding="utf-8") as f:
@@ -117,36 +122,6 @@ class TestLoad:
         """Test that load raises ValueError for empty JSON data."""
         with pytest.raises(ValueError, match="restructured_json cannot be empty or None"):
             load({}, tmp_path)
-
-    @typechecked
-    def test_load_uses_specified_output_directory(
-        self, sample_json_data: Dict[str, Any], tmp_path: Path
-    ) -> None:
-        """Test that load uses the specified output directory."""
-        output_dir = tmp_path / "test_output"
-        result_path = load(sample_json_data, output_dir)
-
-        assert result_path.parent == output_dir
-
-    @typechecked
-    def test_load_uses_default_directory_when_output_dir_empty(
-        self, sample_json_data: Dict[str, Any], tmp_path: Path
-    ) -> None:
-        """Test that load uses default directory when output_dir is empty."""
-        # Change to tmp_path directory to control where the file is created
-        original_cwd = Path.cwd()
-        try:
-            os.chdir(tmp_path)
-            result_path = load(sample_json_data, Path(""))
-            # Make the path absolute so it works after changing back to original directory
-            result_path = result_path.resolve()
-        finally:
-            os.chdir(original_cwd)
-
-        # Verify the file was created with the expected name pattern
-        assert result_path.name.startswith("stormwater_extraction_")
-        assert result_path.suffix == ".json"
-        assert result_path.exists()
 
     @typechecked
     def test_load_raises_os_error_on_write_failure(
