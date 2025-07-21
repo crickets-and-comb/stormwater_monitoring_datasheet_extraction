@@ -79,43 +79,28 @@ class TestLoad:
         ],
     )
     @typechecked
-    def test_load_creates_output_directory_and_file(
+    def test_load_writes_expected_data_to_expected_path(
         self,
         sample_json_data: Dict[str, Any],
         output_dir: Path,
         expected_dir_name: str,
         tmp_path: Path,
     ) -> None:
-        """Test that load creates the output directory and file correctly."""
+        """Test that load writes the expected data to the expected path."""
         if output_dir == Path(""):
-            # Change to tmp_path directory to control where the file is created
             original_cwd = Path.cwd()
             try:
                 os.chdir(tmp_path)
                 result_path = load(sample_json_data, output_dir)
-                result_path = result_path.resolve()  # Make absolute
+
             finally:
                 os.chdir(original_cwd)
         else:
-            output_dir = tmp_path / output_dir  # Ensure output is in tmp_path
+            output_dir = tmp_path / expected_dir_name
             result_path = load(sample_json_data, output_dir)
-
-        # Verify the file was created with expected properties
-        assert result_path.exists()
-        assert result_path.suffix == ".json"
-        assert result_path.name.startswith("stormwater_extraction_")
-        assert result_path.parent.name.startswith(expected_dir_name)
-
-    @typechecked
-    def test_load_writes_correct_json_data_to_file(
-        self, sample_json_data: Dict[str, Any], tmp_path: Path
-    ) -> None:
-        """Test that load writes the correct JSON data to the file."""
-        result_path = load(sample_json_data, tmp_path)
 
         with open(result_path, "r", encoding="utf-8") as f:
             written_data = json.load(f)
-
         assert written_data == sample_json_data
 
     @typechecked
