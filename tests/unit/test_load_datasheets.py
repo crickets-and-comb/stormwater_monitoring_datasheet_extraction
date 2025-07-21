@@ -97,6 +97,7 @@ class TestLoad:
             finally:
                 os.chdir(original_cwd)
         else:
+            output_dir = tmp_path / output_dir  # Ensure output is in tmp_path
             result_path = load(sample_json_data, output_dir)
 
         # Verify the file was created with expected properties
