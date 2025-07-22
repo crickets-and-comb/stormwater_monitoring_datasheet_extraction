@@ -19,15 +19,25 @@ _UNIQUE_FIELD = partial(_COERCE_FIELD, unique=True)
 # NOTE: We can add form_type and form_version when we add other forms.
 # May need to add dataframe checks at that point, or create new schema,
 # or completely refactor how we handle the data.
+FORM_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FORM_ID)
+FORM_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
+FORM_ID_FIELD_UNQ = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
+
+# Form metadata.
 CITY_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.CITY)
 CITY_FIELD = partial(_COERCE_FIELD, alias=Columns.CITY)
 DATE_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DATE)
 DATE_FIELD = partial(_COERCE_FIELD, alias=Columns.DATE)
-FORM_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FORM_ID)
-FORM_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
-FORM_ID_FIELD_UNQ = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
 NOTES_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.NOTES)
 NOTES_FIELD = partial(_COERCE_FIELD, alias=Columns.NOTES)
+
+# Investigators.
+INVESTIGATOR_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.INVESTIGATOR)
+INVESTIGATOR_FIELD = partial(_COERCE_FIELD, alias=Columns.INVESTIGATOR)
+START_TIME_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.START_TIME)
+START_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.START_TIME)
+END_TIME_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.END_TIME)
+END_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.END_TIME)
 
 
 # TODO: Implement this.
@@ -50,6 +60,9 @@ class InvestigatorsExtracted(pa.DataFrameSchema):
     """Schema for the investigators extracted from the datasheets."""
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
+    investigator: Series[str] = INVESTIGATOR_FIELD_LAX()
+    start_time: Series[str] = START_TIME_FIELD_LAX()
+    end_time: Series[str] = END_TIME_FIELD_LAX()
 
     class Config:
         """The configuration for the schema."""
@@ -101,6 +114,9 @@ class InvestigatorsPrecleaned(pa.DataFrameSchema):
     """Schema for the investigators precleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+    investigator: Series[str] = INVESTIGATOR_FIELD()
+    start_time: Series[str] = START_TIME_FIELD()
+    end_time: Series[str] = END_TIME_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -151,6 +167,9 @@ class InvestigatorsVerified(pa.DataFrameSchema):
     """Schema for the investigators verified by the user."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+    investigator: Series[str] = INVESTIGATOR_FIELD()
+    start_time: Series[str] = START_TIME_FIELD()
+    end_time: Series[str] = END_TIME_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -196,11 +215,15 @@ class FormMetadataCleaned(pa.DataFrameSchema):
 
         strict = True
 
+
 # TODO: Implement this.
 class InvestigatorsCleaned(pa.DataFrameSchema):
     """Schema for the investigators cleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+    investigator: Series[str] = INVESTIGATOR_FIELD()
+    start_time: Series[str] = START_TIME_FIELD()
+    end_time: Series[str] = END_TIME_FIELD()
 
     class Config:
         """The configuration for the schema."""
