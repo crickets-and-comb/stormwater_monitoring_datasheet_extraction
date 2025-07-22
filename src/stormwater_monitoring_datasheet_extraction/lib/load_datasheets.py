@@ -109,6 +109,7 @@ def extract(
     field_field_observations = DataFrame()
     site_observations = DataFrame()
     qualitative_site_observations = DataFrame()
+    # TODO: Use data definition as source of truth rather than schema.
     ...
 
     return (
@@ -149,7 +150,7 @@ def preclean(
     """
     # TODO: Light cleaning before user verification.
     # E.g., strip whitespace, try to cast, check range, but warn don't fail.
-    # Could warn from the schema?
+    # Use data definition as source of truth rather than schema.
     precleaned_metadata = raw_metadata.copy()
     precleaned_investigators = raw_investigators.copy()
     precleaned_field_observations = raw_field_field_observations.copy()
@@ -209,6 +210,7 @@ def verify(
     # Highlight invalid extracted fields as they come to user's focus.
     # Ask for reentry if entered/verified can't be typed correctly or is out of range.
     # Warn if out of expected but valid range.
+    # Use data definition as source of truth rather than schema.
 
     return (
         verified_metadata,
@@ -262,6 +264,7 @@ def clean(
     # TODO: Inferred/courtesy imputations? (nulls/empties, don't overstep)
     # TODO: Final validations schema can't accomplish.
     # TODO: If still invalid, alert to the problem, and re-call `verify()`.
+    # Use data definition as source of truth rather than schema.
 
     return (
         cleaned_metadata,
