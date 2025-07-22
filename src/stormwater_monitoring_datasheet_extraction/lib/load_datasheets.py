@@ -104,11 +104,11 @@ def extract(
         Raw extraction split into form metadata, investigators, field observations,
             and site observations.
     """
-    form_metadata = DataFrame[schema.FormMetadataExtracted]()
-    investigators = DataFrame[schema.InvestigatorsExtracted]()
-    field_field_observations = DataFrame[schema.FieldObservationsExtracted]()
-    site_observations = DataFrame[schema.SiteObservationsExtracted]()
-    qualitative_site_observations = DataFrame[schema.QualitativeSiteObservationsExtracted]()
+    form_metadata = DataFrame()
+    investigators = DataFrame()
+    field_field_observations = DataFrame()
+    site_observations = DataFrame()
+    qualitative_site_observations = DataFrame()
     ...
 
     return (
@@ -148,13 +148,11 @@ def preclean(
     """
     # TODO: Light cleaning before user verification.
     # E.g., strip whitespace, try to cast, check range, but warn don't fail.
-    precleaned_metadata = DataFrame[schema.FormMetadataPrecleaned]()
-    precleaned_investigators = DataFrame[schema.InvestigatorsPrecleaned]()
-    precleaned_field_observations = DataFrame[schema.FieldObservationsPrecleaned]()
-    precleaned_site_observations = DataFrame[schema.SiteObservationsPrecleaned]()
-    precleaned_qualitative_site_observations = DataFrame[
-        schema.QualitativeSiteObservationsPrecleaned
-    ]()
+    precleaned_metadata = raw_metadata.copy()
+    precleaned_investigators = raw_investigators.copy()
+    precleaned_field_observations = raw_field_field_observations.copy()
+    precleaned_site_observations = raw_site_observations.copy()
+    precleaned_qualitative_site_observations = raw_qualitative_site_observations.copy()
     ...
 
     return (
@@ -198,13 +196,11 @@ def verify(
     Returns:
         User-verified metadata, investigators, field observations, and site observations.
     """
-    verified_metadata = DataFrame[schema.FormMetadataVerified]()
-    verified_investigators = DataFrame[schema.InvestigatorsVerified]()
-    verified_field_observations = DataFrame[schema.FieldObservationsVerified]()
-    verified_site_observations = DataFrame[schema.SiteObservationsVerified]()
-    verified_qualitative_site_observations = DataFrame[
-        schema.QualitativeSiteObservationsVerified
-    ]()
+    verified_metadata = precleaned_metadata.copy()
+    verified_investigators = precleaned_investigators.copy()
+    verified_field_observations = precleaned_field_observations.copy()
+    verified_site_observations = precleaned_site_observations.copy()
+    verified_qualitative_site_observations = precleaned_qualitative_site_observations.copy()
     ...
 
     return (
@@ -249,13 +245,11 @@ def clean(
     Returns:
         Cleaned metadata, investigators, field observations, and site observations.
     """
-    cleaned_metadata = DataFrame[schema.FormMetadataCleaned]()
-    cleaned_investigators = DataFrame[schema.InvestigatorsCleaned]()
-    cleaned_field_observations = DataFrame[schema.FieldObservationsCleaned]()
-    cleaned_site_observations = DataFrame[schema.SiteObservationsCleaned]()
-    cleaned_qualitative_site_observations = DataFrame[
-        schema.QualitativeSiteObservationsCleaned
-    ]()
+    cleaned_metadata = verified_metadata.copy()
+    cleaned_investigators = verified_investigators.copy()
+    cleaned_field_observations = verified_field_observations.copy()
+    cleaned_site_observations = verified_site_observations.copy()
+    cleaned_qualitative_site_observations = verified_qualitative_site_observations.copy()
     ...
     # TODO: Validate referential integrity. (Among other things to do here.)
 
