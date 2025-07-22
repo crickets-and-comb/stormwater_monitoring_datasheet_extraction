@@ -8,6 +8,10 @@ from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (
+    FieldObservationsCleaned,
+    FieldObservationsExtracted,
+    FieldObservationsPrecleaned,
+    FieldObservationsVerified,
     FormMetadataCleaned,
     FormMetadataExtracted,
     FormMetadataPrecleaned,
@@ -16,10 +20,10 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (
     InvestigatorsExtracted,
     InvestigatorsPrecleaned,
     InvestigatorsVerified,
-    ObservationsCleaned,
-    ObservationsExtracted,
-    ObservationsPrecleaned,
-    ObservationsVerified,
+    SiteObservationsCleaned,
+    SiteObservationsExtracted,
+    SiteObservationsPrecleaned,
+    SiteObservationsVerified,
 )
 
 
@@ -31,30 +35,51 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
     # We may need to adjust the steps based on the actual implementation details.
     # For instance, we may want to add a cleaning step between raw extraction and user
     # verification.
-    raw_metadata, raw_investigators, raw_observations = extract(input_dir=input_dir)
+    raw_metadata, raw_investigators, raw_field_field_observations, raw_site_observations = (
+        extract(input_dir=input_dir)
+    )
 
-    precleaned_metadata, precleaned_investigators, precleaned_observations = preclean(
+    (
+        precleaned_metadata,
+        precleaned_investigators,
+        precleaned_field_observations,
+        precleaned_site_observations,
+    ) = preclean(
         raw_metadata=raw_metadata,
         raw_investigators=raw_investigators,
-        raw_observations=raw_observations,
+        raw_field_field_observations=raw_field_field_observations,
+        raw_site_observations=raw_site_observations,
     )
 
-    verified_metadata, verified_investigators, verified_observations = verify(
+    (
+        verified_metadata,
+        verified_investigators,
+        verified_field_observations,
+        verified_site_observations,
+    ) = verify(
         precleaned_metadata=precleaned_metadata,
         precleaned_investigators=precleaned_investigators,
-        precleaned_observations=precleaned_observations,
+        precleaned_field_observations=precleaned_field_observations,
+        precleaned_site_observations=precleaned_site_observations,
     )
 
-    cleaned_metadata, cleaned_investigators, cleaned_observations = clean(
+    (
+        cleaned_metadata,
+        cleaned_investigators,
+        cleaned_field_observations,
+        cleaned_site_observations,
+    ) = clean(
         verified_metadata=verified_metadata,
         verified_investigators=verified_investigators,
-        verified_observations=verified_observations,
+        verified_field_observations=verified_field_observations,
+        verified_site_observations=verified_site_observations,
     )
 
     restructured_json = restructure_extraction(
         cleaned_metadata=cleaned_metadata,
         cleaned_investigators=cleaned_investigators,
-        cleaned_observations=cleaned_observations,
+        cleaned_field_observations=cleaned_field_observations,
+        cleaned_site_observations=cleaned_site_observations,
     )
 
     final_output_path = load(restructured_json=restructured_json, output_dir=output_dir)
@@ -69,7 +94,12 @@ run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 @pa.check_types(with_pydantic=True, lazy=True)
 def extract(
     input_dir: Path,
-) -> Tuple[FormMetadataExtracted, InvestigatorsExtracted, ObservationsExtracted]:
+) -> Tuple[
+    FormMetadataExtracted,
+    InvestigatorsExtracted,
+    FieldObservationsExtracted,
+    SiteObservationsExtracted,
+]:
     """Extracts data from the images in the input directory.
 
     Using computer vision, extracts data from datasheets.
@@ -78,43 +108,58 @@ def extract(
         input_dir: Path to the directory containing the datasheet images.
 
     Returns:
-        Raw extraction split into form metadata, investigators, and observations.
+        Raw extraction split into form metadata, investigators, field observations,
+            and site observations.
     """
     # TODO: Index all to form/image name.
     form_metadata = FormMetadataExtracted()
     investigators = InvestigatorsExtracted()
-    observations = ObservationsExtracted()
+    field_field_observations = FieldObservationsExtracted()
+    site_observations = SiteObservationsExtracted()
 
     ...
 
-    return form_metadata, investigators, observations
+    return form_metadata, investigators, field_field_observations, site_observations
 
 
 def preclean(
     raw_metadata: FormMetadataExtracted,
     raw_investigators: InvestigatorsExtracted,
-    raw_observations: ObservationsExtracted,
-) -> Tuple[FormMetadataPrecleaned, InvestigatorsPrecleaned, ObservationsPrecleaned]:
+    raw_field_field_observations: FieldObservationsExtracted,
+    raw_site_observations: SiteObservationsExtracted,
+) -> Tuple[
+    FormMetadataPrecleaned,
+    InvestigatorsPrecleaned,
+    FieldObservationsPrecleaned,
+    SiteObservationsPrecleaned,
+]:
     """Preclean the raw extraction.
 
     Ligth cleaning before user verification. E.g., strip whitespace, try to cast to type,
     check for within range, but warn don't fail.
 
     Args:
-        raw_metadata: The raw metadata extracted from the datasheets.
-        raw_investigators: The raw investigators extracted from the datasheets.
-        raw_observations: The raw observations extracted from the datasheets.
+        raw_metadata: Metadata extracted from the datasheets.
+        raw_investigators: Investigators extracted from the datasheets.
+        raw_field_field_observations: Field observations extracted from the datasheets.
+        raw_site_observations: Site observations extracted from the datasheets.
 
     Returns:
-        Precleaned metadata, investigators, and observations.
+        Precleaned metadata, investigators, field observations, and site observations.
     """
     precleaned_metadata = FormMetadataPrecleaned()
     precleaned_investigators = InvestigatorsPrecleaned()
-    precleaned_observations = ObservationsPrecleaned()
+    precleaned_field_observations = FieldObservationsPrecleaned()
+    precleaned_site_observations = SiteObservationsPrecleaned()
 
     ...
 
-    return precleaned_metadata, precleaned_investigators, precleaned_observations
+    return (
+        precleaned_metadata,
+        precleaned_investigators,
+        precleaned_field_observations,
+        precleaned_site_observations,
+    )
 
 
 # TODO: Implement this.
@@ -122,8 +167,14 @@ def preclean(
 def verify(
     precleaned_metadata: FormMetadataPrecleaned,
     precleaned_investigators: InvestigatorsPrecleaned,
-    precleaned_observations: ObservationsPrecleaned,
-) -> Tuple[FormMetadataVerified, InvestigatorsVerified, ObservationsVerified]:
+    precleaned_field_observations: FieldObservationsPrecleaned,
+    precleaned_site_observations: SiteObservationsPrecleaned,
+) -> Tuple[
+    FormMetadataVerified,
+    InvestigatorsVerified,
+    FieldObservationsVerified,
+    SiteObservationsVerified,
+]:
     """Verifies the raw extraction with the user.
 
     Prompts user to check each image against each extraction and edit as needed.
@@ -131,18 +182,25 @@ def verify(
     Args:
         precleaned_metadata: The precleaned metadata.
         precleaned_investigators: The precleaned investigators.
-        precleaned_observations: The precleaned observations.
+        precleaned_field_observations: The precleaned field observations.
+        precleaned_site_observations: The precleaned site observations.
 
     Returns:
-        User-verified metadata, investigators, and observations.
+        User-verified metadata, investigators, field observations, and site observations.
     """
     verified_metadata = FormMetadataVerified()
     verified_investigators = InvestigatorsVerified()
-    verified_observations = ObservationsVerified()
+    verified_field_observations = FieldObservationsVerified()
+    verified_site_observations = SiteObservationsVerified()
 
     ...
 
-    return verified_metadata, verified_investigators, verified_observations
+    return (
+        verified_metadata,
+        verified_investigators,
+        verified_field_observations,
+        verified_site_observations,
+    )
 
 
 # TODO: Implement this.
@@ -150,28 +208,41 @@ def verify(
 def clean(
     verified_metadata: FormMetadataVerified,
     verified_investigators: InvestigatorsVerified,
-    verified_observations: ObservationsVerified,
-) -> Tuple[FormMetadataCleaned, InvestigatorsCleaned, ObservationsCleaned]:
-    """Clean the user verified extraction.
+    verified_field_observations: FieldObservationsVerified,
+    verified_site_observations: SiteObservationsVerified,
+) -> Tuple[
+    FormMetadataCleaned,
+    InvestigatorsCleaned,
+    FieldObservationsCleaned,
+    SiteObservationsCleaned,
+]:
+    """Clean the user-verified extraction.
 
-    Clean and validates the user verified extraction data, ensuring it is in a consistent
+    Clean and validates the user-verified extraction data, ensuring it is in a consistent
     format, appropriate data types, within specified ranges, etc., and ready to load.
 
     Args:
-        verified_metadata: The user verified metadata.
-        verified_investigators: The user verified investigators.
-        verified_observations: The user verified observations.
+        verified_metadata: The user-verified metadata.
+        verified_investigators: The user-verified investigators.
+        verified_field_observations: The user-verified field observations.
+        verified_site_observations: The user-verified site observations.
 
     Returns:
-        Cleaned metadata, investigators, and observations.
+        Cleaned metadata, investigators, field observations, and site observations.
     """
     cleaned_metadata = FormMetadataCleaned()
     cleaned_investigators = InvestigatorsCleaned()
-    cleaned_observations = ObservationsCleaned()
+    cleaned_field_observations = FieldObservationsCleaned()
+    cleaned_site_observations = SiteObservationsCleaned()
 
     ...
 
-    return cleaned_metadata, cleaned_investigators, cleaned_observations
+    return (
+        cleaned_metadata,
+        cleaned_investigators,
+        cleaned_field_observations,
+        cleaned_site_observations,
+    )
 
 
 # TODO: Implement this.
@@ -179,14 +250,16 @@ def clean(
 def restructure_extraction(
     cleaned_metadata: FormMetadataCleaned,
     cleaned_investigators: InvestigatorsCleaned,
-    cleaned_observations: ObservationsCleaned,
+    cleaned_field_observations: FieldObservationsCleaned,
+    cleaned_site_observations: SiteObservationsCleaned,
 ) -> Dict[str, Any]:
     """Restructure the cleaned extraction into a JSON schema.
 
     Args:
         cleaned_metadata: The cleaned metadata.
         cleaned_investigators: The cleaned investigators.
-        cleaned_observations: The cleaned observations.
+        cleaned_field_observations: The cleaned field observations.
+        cleaned_site_observations: The cleaned site observations.
 
     Returns:
         Restructured JSON schema.

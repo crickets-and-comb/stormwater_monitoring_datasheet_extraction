@@ -1,4 +1,4 @@
-"""Pandera schemas for the stormwater monitoring datasheet extraction."""
+"""Pandera schemas for ETL steps."""
 
 import pandera as pa
 
@@ -22,7 +22,14 @@ class InvestigatorsExtracted(pa.DataFrameSchema):
 
 
 # TODO: Implement this.
-class ObservationsExtracted(pa.DataFrameSchema):
+class FieldObservationsExtracted(pa.DataFrameSchema):
+    """Schema for the observations precleaned."""
+
+    pass
+
+
+# TODO: Implement this.
+class SiteObservationsExtracted(pa.DataFrameSchema):
     """Schema for the observations precleaned."""
 
     pass
@@ -43,7 +50,13 @@ class InvestigatorsPrecleaned(pa.DataFrameSchema):
 
 
 # TODO: Implement this.
-class ObservationsPrecleaned(pa.DataFrameSchema):
+class FieldObservationsPrecleaned(pa.DataFrameSchema):
+    """Schema for the observations extracted from the datasheets."""
+
+    pass
+
+
+class SiteObservationsPrecleaned(pa.DataFrameSchema):
     """Schema for the observations extracted from the datasheets."""
 
     pass
@@ -64,7 +77,14 @@ class InvestigatorsVerified(pa.DataFrameSchema):
 
 
 # TODO: Implement this.
-class ObservationsVerified(pa.DataFrameSchema):
+class FieldObservationsVerified(pa.DataFrameSchema):
+    """Schema for the observations verified by the user."""
+
+    pass
+
+
+# TODO: Implement this.
+class SiteObservationsVerified(pa.DataFrameSchema):
     """Schema for the observations verified by the user."""
 
     pass
@@ -85,7 +105,14 @@ class InvestigatorsCleaned(pa.DataFrameSchema):
 
 
 # TODO: Implement this.
-class ObservationsCleaned(pa.DataFrameSchema):
+class FieldObservationsCleaned(pa.DataFrameSchema):
+    """Schema for the observations cleaned."""
+
+    pass
+
+
+# TODO: Implement this.
+class SiteObservationsCleaned(pa.DataFrameSchema):
     """Schema for the observations cleaned."""
 
     pass
