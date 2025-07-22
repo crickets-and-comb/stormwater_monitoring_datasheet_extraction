@@ -12,6 +12,7 @@ class Columns:
     FORM_ID: Final[str] = "form_id"
     CITY: Final[str] = "city"
     DATE: Final[str] = "date"
+    NOTES: Final[str] = "notes"
 
     # Investigators.
     INVESTIGATOR: Final[str] = "investigator"

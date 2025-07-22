@@ -26,6 +26,8 @@ DATE_FIELD = partial(_COERCE_FIELD, alias=Columns.DATE)
 FORM_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD_UNQ = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
+NOTES_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.NOTES)
+NOTES_FIELD = partial(_COERCE_FIELD, alias=Columns.NOTES)
 
 
 # TODO: Implement this.
@@ -35,6 +37,7 @@ class FormMetadataExtracted(pa.DataFrameSchema):
     form_id: Series[str] = FORM_ID_FIELD_LAX()
     city: Series[str] = CITY_FIELD_LAX()
     date: Series[str] = DATE_FIELD_LAX()
+    notes: Series[str] = NOTES_FIELD_LAX()
 
     class Config:
         """The configuration for the schema."""
@@ -85,6 +88,7 @@ class FormMetadataPrecleaned(pa.DataFrameSchema):
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
     city: Series[str] = CITY_FIELD()
     date: Series[str] = DATE_FIELD()
+    notes: Series[str] = NOTES_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -134,6 +138,7 @@ class FormMetadataVerified(pa.DataFrameSchema):
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
     city: Series[str] = CITY_FIELD()
     date: Series[str] = DATE_FIELD()
+    notes: Series[str] = NOTES_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -184,7 +189,12 @@ class FormMetadataCleaned(pa.DataFrameSchema):
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
     city: Series[str] = CITY_FIELD()
     date: Series[str] = DATE_FIELD()
+    notes: Series[str] = NOTES_FIELD()
 
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
 
 # TODO: Implement this.
 class InvestigatorsCleaned(pa.DataFrameSchema):

@@ -440,6 +440,7 @@
                 "form_version": "4.4-1-29-2025",
                 "city": "BELLINGHAM",
                 "date": "2025-04-17",
+                "notes": "C ST: MICROBIAL MAT RETREATED ...",
                 "investigators": {
                     "CIARA H": {
                         "start_time": "14:40",
@@ -454,7 +455,6 @@
                         "end_time": "15:23"
                     }
                 },
-                "notes": "C ST: MICROBIAL MAT RETREATED ...",
                 "observations": {
                     "field": {
                         "tide_height": -0.7,
@@ -549,6 +549,7 @@
                 "form_version": "4.4-1-29-2025",
                 "city": "BELLINGHAM",
                 "date": "2025-04-21",
+                "notes": "Padden - DO%",
                 "investigators": {
                     "ANNA": {
                         "start_time": "17:10"
@@ -560,7 +561,6 @@
                         "start_time": "17:10"
                     }
                 },
-                "notes": "Padden - DO%",
                 "observations": {
                     "field": {
                         "tide_height": 0.22,
