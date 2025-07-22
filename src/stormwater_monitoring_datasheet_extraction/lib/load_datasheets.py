@@ -20,6 +20,10 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (
     InvestigatorsExtracted,
     InvestigatorsPrecleaned,
     InvestigatorsVerified,
+    QualitativeSiteObservationsCleaned,
+    QualitativeSiteObservationsExtracted,
+    QualitativeSiteObservationsPrecleaned,
+    QualitativeSiteObservationsVerified,
     SiteObservationsCleaned,
     SiteObservationsExtracted,
     SiteObservationsPrecleaned,
@@ -35,20 +39,26 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
     # We may need to adjust the steps based on the actual implementation details.
     # For instance, we may want to add a cleaning step between raw extraction and user
     # verification.
-    raw_metadata, raw_investigators, raw_field_field_observations, raw_site_observations = (
-        extract(input_dir=input_dir)
-    )
+    (
+        raw_metadata,
+        raw_investigators,
+        raw_field_field_observations,
+        raw_site_observations,
+        raw_qualitative_site_observations,
+    ) = extract(input_dir=input_dir)
 
     (
         precleaned_metadata,
         precleaned_investigators,
         precleaned_field_observations,
         precleaned_site_observations,
+        precleaned_qualitative_site_observations,
     ) = preclean(
         raw_metadata=raw_metadata,
         raw_investigators=raw_investigators,
         raw_field_field_observations=raw_field_field_observations,
         raw_site_observations=raw_site_observations,
+        raw_qualitative_site_observations=raw_qualitative_site_observations,
     )
 
     (
@@ -56,11 +66,13 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
         verified_investigators,
         verified_field_observations,
         verified_site_observations,
+        verified_qualitative_site_observations,
     ) = verify(
         precleaned_metadata=precleaned_metadata,
         precleaned_investigators=precleaned_investigators,
         precleaned_field_observations=precleaned_field_observations,
         precleaned_site_observations=precleaned_site_observations,
+        precleaned_qualitative_site_observations=precleaned_qualitative_site_observations,
     )
 
     (
@@ -68,11 +80,13 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
         cleaned_investigators,
         cleaned_field_observations,
         cleaned_site_observations,
+        cleaned_qualitative_site_observations,
     ) = clean(
         verified_metadata=verified_metadata,
         verified_investigators=verified_investigators,
         verified_field_observations=verified_field_observations,
         verified_site_observations=verified_site_observations,
+        verified_qualitative_site_observations=verified_qualitative_site_observations,
     )
 
     restructured_json = restructure_extraction(
@@ -80,6 +94,7 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
         cleaned_investigators=cleaned_investigators,
         cleaned_field_observations=cleaned_field_observations,
         cleaned_site_observations=cleaned_site_observations,
+        cleaned_qualitative_site_observations=cleaned_qualitative_site_observations,
     )
 
     final_output_path = load(restructured_json=restructured_json, output_dir=output_dir)
@@ -99,6 +114,7 @@ def extract(
     InvestigatorsExtracted,
     FieldObservationsExtracted,
     SiteObservationsExtracted,
+    QualitativeSiteObservationsExtracted,
 ]:
     """Extracts data from the images in the input directory.
 
@@ -116,10 +132,16 @@ def extract(
     investigators = InvestigatorsExtracted()
     field_field_observations = FieldObservationsExtracted()
     site_observations = SiteObservationsExtracted()
-
+    qualitative_site_observations = QualitativeSiteObservationsExtracted()
     ...
 
-    return form_metadata, investigators, field_field_observations, site_observations
+    return (
+        form_metadata,
+        investigators,
+        field_field_observations,
+        site_observations,
+        qualitative_site_observations,
+    )
 
 
 def preclean(
@@ -127,11 +149,13 @@ def preclean(
     raw_investigators: InvestigatorsExtracted,
     raw_field_field_observations: FieldObservationsExtracted,
     raw_site_observations: SiteObservationsExtracted,
+    raw_qualitative_site_observations: QualitativeSiteObservationsExtracted,
 ) -> Tuple[
     FormMetadataPrecleaned,
     InvestigatorsPrecleaned,
     FieldObservationsPrecleaned,
     SiteObservationsPrecleaned,
+    QualitativeSiteObservationsPrecleaned,
 ]:
     """Preclean the raw extraction.
 
@@ -143,6 +167,8 @@ def preclean(
         raw_investigators: Investigators extracted from the datasheets.
         raw_field_field_observations: Field observations extracted from the datasheets.
         raw_site_observations: Site observations extracted from the datasheets.
+        raw_qualitative_site_observations:
+            Qualitative site observations extracted from the datasheets.
 
     Returns:
         Precleaned metadata, investigators, field observations, and site observations.
@@ -151,7 +177,7 @@ def preclean(
     precleaned_investigators = InvestigatorsPrecleaned()
     precleaned_field_observations = FieldObservationsPrecleaned()
     precleaned_site_observations = SiteObservationsPrecleaned()
-
+    precleaned_qualitative_site_observations = QualitativeSiteObservationsPrecleaned()
     ...
 
     return (
@@ -159,6 +185,7 @@ def preclean(
         precleaned_investigators,
         precleaned_field_observations,
         precleaned_site_observations,
+        precleaned_qualitative_site_observations,
     )
 
 
@@ -169,11 +196,13 @@ def verify(
     precleaned_investigators: InvestigatorsPrecleaned,
     precleaned_field_observations: FieldObservationsPrecleaned,
     precleaned_site_observations: SiteObservationsPrecleaned,
+    precleaned_qualitative_site_observations: QualitativeSiteObservationsPrecleaned,
 ) -> Tuple[
     FormMetadataVerified,
     InvestigatorsVerified,
     FieldObservationsVerified,
     SiteObservationsVerified,
+    QualitativeSiteObservationsVerified,
 ]:
     """Verifies the raw extraction with the user.
 
@@ -184,6 +213,8 @@ def verify(
         precleaned_investigators: The precleaned investigators.
         precleaned_field_observations: The precleaned field observations.
         precleaned_site_observations: The precleaned site observations.
+        precleaned_qualitative_site_observations:
+            The precleaned qualitative site observations.
 
     Returns:
         User-verified metadata, investigators, field observations, and site observations.
@@ -192,7 +223,7 @@ def verify(
     verified_investigators = InvestigatorsVerified()
     verified_field_observations = FieldObservationsVerified()
     verified_site_observations = SiteObservationsVerified()
-
+    verified_qualitative_site_observations = QualitativeSiteObservationsVerified()
     ...
 
     return (
@@ -200,6 +231,7 @@ def verify(
         verified_investigators,
         verified_field_observations,
         verified_site_observations,
+        verified_qualitative_site_observations,
     )
 
 
@@ -210,11 +242,13 @@ def clean(
     verified_investigators: InvestigatorsVerified,
     verified_field_observations: FieldObservationsVerified,
     verified_site_observations: SiteObservationsVerified,
+    verified_qualitative_site_observations: QualitativeSiteObservationsVerified,
 ) -> Tuple[
     FormMetadataCleaned,
     InvestigatorsCleaned,
     FieldObservationsCleaned,
     SiteObservationsCleaned,
+    QualitativeSiteObservationsCleaned,
 ]:
     """Clean the user-verified extraction.
 
@@ -226,6 +260,8 @@ def clean(
         verified_investigators: The user-verified investigators.
         verified_field_observations: The user-verified field observations.
         verified_site_observations: The user-verified site observations.
+        verified_qualitative_site_observations:
+            The user-verified qualitative site observations.
 
     Returns:
         Cleaned metadata, investigators, field observations, and site observations.
@@ -234,7 +270,7 @@ def clean(
     cleaned_investigators = InvestigatorsCleaned()
     cleaned_field_observations = FieldObservationsCleaned()
     cleaned_site_observations = SiteObservationsCleaned()
-
+    cleaned_qualitative_site_observations = QualitativeSiteObservationsCleaned()
     ...
 
     return (
@@ -242,6 +278,7 @@ def clean(
         cleaned_investigators,
         cleaned_field_observations,
         cleaned_site_observations,
+        cleaned_qualitative_site_observations,
     )
 
 
@@ -252,6 +289,7 @@ def restructure_extraction(
     cleaned_investigators: InvestigatorsCleaned,
     cleaned_field_observations: FieldObservationsCleaned,
     cleaned_site_observations: SiteObservationsCleaned,
+    cleaned_qualitative_site_observations: QualitativeSiteObservationsCleaned,
 ) -> Dict[str, Any]:
     """Restructure the cleaned extraction into a JSON schema.
 
@@ -260,6 +298,7 @@ def restructure_extraction(
         cleaned_investigators: The cleaned investigators.
         cleaned_field_observations: The cleaned field observations.
         cleaned_site_observations: The cleaned site observations.
+        cleaned_qualitative_site_observations: The cleaned qualitative site observations.
 
     Returns:
         Restructured JSON schema.

@@ -158,6 +158,22 @@ class SiteObservationsExtracted(pa.DataFrameSchema):
 
 
 # TODO: Implement this.
+class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
+    """Schema for the qualitative site observations extracted from the datasheets."""
+
+    form_id: Series[str] = FORM_ID_FIELD_LAX()
+    bottle_no: Series[str] = BOTTLE_NO_FIELD_LAX()
+    color: Series[str] = TYPE_FIELD_LAX()
+    odor: Series[str] = TYPE_FIELD_LAX()
+    visual: Series[str] = TYPE_FIELD_LAX()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = False
+
+
+# TODO: Implement this.
 class FormMetadataPrecleaned(pa.DataFrameSchema):
     """Schema for the form metadata precleaned."""
 
@@ -218,6 +234,21 @@ class SiteObservationsPrecleaned(pa.DataFrameSchema):
     SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD()
     salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
     pH: Series[float] = PH_FIELD()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
+
+
+class QualitativeSiteObservationsPrecleaned(pa.DataFrameSchema):
+    """Schema for the qualitative site observations precleaned."""
+
+    form_id: Series[str] = FORM_ID_FIELD()
+    bottle_no: Series[str] = BOTTLE_NO_FIELD()
+    color: Series[str] = TYPE_FIELD()
+    odor: Series[str] = TYPE_FIELD()
+    visual: Series[str] = TYPE_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -294,6 +325,21 @@ class SiteObservationsVerified(pa.DataFrameSchema):
         strict = True
 
 
+class QualitativeSiteObservationsVerified(pa.DataFrameSchema):
+    """Schema for the qualitative site observations verified by the user."""
+
+    form_id: Series[str] = FORM_ID_FIELD()
+    bottle_no: Series[str] = BOTTLE_NO_FIELD()
+    color: Series[str] = TYPE_FIELD()
+    odor: Series[str] = TYPE_FIELD()
+    visual: Series[str] = TYPE_FIELD()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
+
+
 # TODO: Implement this.
 class FormMetadataCleaned(pa.DataFrameSchema):
     """Schema for the form metadata cleaned."""
@@ -356,6 +402,21 @@ class SiteObservationsCleaned(pa.DataFrameSchema):
     SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD()
     salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
     pH: Series[float] = PH_FIELD()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
+
+
+class QualitativeSiteObservationsCleaned(pa.DataFrameSchema):
+    """Schema for the qualitative site observations cleaned."""
+
+    form_id: Series[str] = FORM_ID_FIELD()
+    bottle_no: Series[str] = BOTTLE_NO_FIELD()
+    color: Series[str] = TYPE_FIELD()
+    odor: Series[str] = TYPE_FIELD()
+    visual: Series[str] = TYPE_FIELD()
 
     class Config:
         """The configuration for the schema."""
