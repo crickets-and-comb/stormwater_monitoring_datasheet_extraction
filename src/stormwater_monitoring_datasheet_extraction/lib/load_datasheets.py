@@ -4,31 +4,11 @@ from pathlib import Path
 from typing import Any, Dict, Tuple
 
 import pandera as pa
+from pandera.typing import DataFrame
 from typeguard import typechecked
 
+from stormwater_monitoring_datasheet_extraction.lib import schema
 from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
-from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (
-    FieldObservationsCleaned,
-    FieldObservationsExtracted,
-    FieldObservationsPrecleaned,
-    FieldObservationsVerified,
-    FormMetadataCleaned,
-    FormMetadataExtracted,
-    FormMetadataPrecleaned,
-    FormMetadataVerified,
-    InvestigatorsCleaned,
-    InvestigatorsExtracted,
-    InvestigatorsPrecleaned,
-    InvestigatorsVerified,
-    QualitativeSiteObservationsCleaned,
-    QualitativeSiteObservationsExtracted,
-    QualitativeSiteObservationsPrecleaned,
-    QualitativeSiteObservationsVerified,
-    SiteObservationsCleaned,
-    SiteObservationsExtracted,
-    SiteObservationsPrecleaned,
-    SiteObservationsVerified,
-)
 
 
 # TODO: Set up logging.
@@ -107,11 +87,11 @@ run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 def extract(
     input_dir: Path,
 ) -> Tuple[
-    FormMetadataExtracted,
-    InvestigatorsExtracted,
-    FieldObservationsExtracted,
-    SiteObservationsExtracted,
-    QualitativeSiteObservationsExtracted,
+    DataFrame[schema.FormMetadataExtracted],
+    DataFrame[schema.InvestigatorsExtracted],
+    DataFrame[schema.FieldObservationsExtracted],
+    DataFrame[schema.SiteObservationsExtracted],
+    DataFrame[schema.QualitativeSiteObservationsExtracted],
 ]:
     """Extracts data from the images in the input directory.
 
@@ -124,11 +104,11 @@ def extract(
         Raw extraction split into form metadata, investigators, field observations,
             and site observations.
     """
-    form_metadata = FormMetadataExtracted()
-    investigators = InvestigatorsExtracted()
-    field_field_observations = FieldObservationsExtracted()
-    site_observations = SiteObservationsExtracted()
-    qualitative_site_observations = QualitativeSiteObservationsExtracted()
+    form_metadata = schema.FormMetadataExtracted()
+    investigators = schema.InvestigatorsExtracted()
+    field_field_observations = schema.FieldObservationsExtracted()
+    site_observations = schema.SiteObservationsExtracted()
+    qualitative_site_observations = schema.QualitativeSiteObservationsExtracted()
     ...
 
     return (
@@ -141,22 +121,19 @@ def extract(
 
 
 def preclean(
-    raw_metadata: FormMetadataExtracted,
-    raw_investigators: InvestigatorsExtracted,
-    raw_field_field_observations: FieldObservationsExtracted,
-    raw_site_observations: SiteObservationsExtracted,
-    raw_qualitative_site_observations: QualitativeSiteObservationsExtracted,
+    raw_metadata: DataFrame[schema.FormMetadataExtracted],
+    raw_investigators: DataFrame[schema.InvestigatorsExtracted],
+    raw_field_field_observations: DataFrame[schema.FieldObservationsExtracted],
+    raw_site_observations: DataFrame[schema.SiteObservationsExtracted],
+    raw_qualitative_site_observations: DataFrame[schema.QualitativeSiteObservationsExtracted],
 ) -> Tuple[
-    FormMetadataPrecleaned,
-    InvestigatorsPrecleaned,
-    FieldObservationsPrecleaned,
-    SiteObservationsPrecleaned,
-    QualitativeSiteObservationsPrecleaned,
+    DataFrame[schema.FormMetadataPrecleaned],
+    DataFrame[schema.InvestigatorsPrecleaned],
+    DataFrame[schema.FieldObservationsPrecleaned],
+    DataFrame[schema.SiteObservationsPrecleaned],
+    DataFrame[schema.QualitativeSiteObservationsPrecleaned],
 ]:
     """Preclean the raw extraction.
-
-    Ligth cleaning before user verification. E.g., strip whitespace, try to cast to type,
-    check for within range, but warn don't fail.
 
     Args:
         raw_metadata: Metadata extracted from the datasheets.
@@ -169,11 +146,15 @@ def preclean(
     Returns:
         Precleaned metadata, investigators, field observations, and site observations.
     """
-    precleaned_metadata = FormMetadataPrecleaned()
-    precleaned_investigators = InvestigatorsPrecleaned()
-    precleaned_field_observations = FieldObservationsPrecleaned()
-    precleaned_site_observations = SiteObservationsPrecleaned()
-    precleaned_qualitative_site_observations = QualitativeSiteObservationsPrecleaned()
+    # TODO: Light cleaning before user verification.
+    # E.g., strip whitespace, try to cast, check range, but warn don't fail.
+    precleaned_metadata = DataFrame[schema.FormMetadataPrecleaned]()
+    precleaned_investigators = DataFrame[schema.InvestigatorsPrecleaned]()
+    precleaned_field_observations = DataFrame[schema.FieldObservationsPrecleaned]()
+    precleaned_site_observations = DataFrame[schema.SiteObservationsPrecleaned]()
+    precleaned_qualitative_site_observations = DataFrame[
+        schema.QualitativeSiteObservationsPrecleaned
+    ]()
     ...
 
     return (
@@ -188,17 +169,19 @@ def preclean(
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def verify(
-    precleaned_metadata: FormMetadataPrecleaned,
-    precleaned_investigators: InvestigatorsPrecleaned,
-    precleaned_field_observations: FieldObservationsPrecleaned,
-    precleaned_site_observations: SiteObservationsPrecleaned,
-    precleaned_qualitative_site_observations: QualitativeSiteObservationsPrecleaned,
+    precleaned_metadata: DataFrame[schema.FormMetadataPrecleaned],
+    precleaned_investigators: DataFrame[schema.InvestigatorsPrecleaned],
+    precleaned_field_observations: DataFrame[schema.FieldObservationsPrecleaned],
+    precleaned_site_observations: DataFrame[schema.SiteObservationsPrecleaned],
+    precleaned_qualitative_site_observations: DataFrame[
+        schema.QualitativeSiteObservationsPrecleaned
+    ],
 ) -> Tuple[
-    FormMetadataVerified,
-    InvestigatorsVerified,
-    FieldObservationsVerified,
-    SiteObservationsVerified,
-    QualitativeSiteObservationsVerified,
+    DataFrame[schema.FormMetadataVerified],
+    DataFrame[schema.InvestigatorsVerified],
+    DataFrame[schema.FieldObservationsVerified],
+    DataFrame[schema.SiteObservationsVerified],
+    DataFrame[schema.QualitativeSiteObservationsVerified],
 ]:
     """Verifies the raw extraction with the user.
 
@@ -215,11 +198,13 @@ def verify(
     Returns:
         User-verified metadata, investigators, field observations, and site observations.
     """
-    verified_metadata = FormMetadataVerified()
-    verified_investigators = InvestigatorsVerified()
-    verified_field_observations = FieldObservationsVerified()
-    verified_site_observations = SiteObservationsVerified()
-    verified_qualitative_site_observations = QualitativeSiteObservationsVerified()
+    verified_metadata = DataFrame[schema.FormMetadataVerified]()
+    verified_investigators = DataFrame[schema.InvestigatorsVerified]()
+    verified_field_observations = DataFrame[schema.FieldObservationsVerified]()
+    verified_site_observations = DataFrame[schema.SiteObservationsVerified]()
+    verified_qualitative_site_observations = DataFrame[
+        schema.QualitativeSiteObservationsVerified
+    ]()
     ...
 
     return (
@@ -234,17 +219,19 @@ def verify(
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def clean(
-    verified_metadata: FormMetadataVerified,
-    verified_investigators: InvestigatorsVerified,
-    verified_field_observations: FieldObservationsVerified,
-    verified_site_observations: SiteObservationsVerified,
-    verified_qualitative_site_observations: QualitativeSiteObservationsVerified,
+    verified_metadata: DataFrame[schema.FormMetadataVerified],
+    verified_investigators: DataFrame[schema.InvestigatorsVerified],
+    verified_field_observations: DataFrame[schema.FieldObservationsVerified],
+    verified_site_observations: DataFrame[schema.SiteObservationsVerified],
+    verified_qualitative_site_observations: DataFrame[
+        schema.QualitativeSiteObservationsVerified
+    ],
 ) -> Tuple[
-    FormMetadataCleaned,
-    InvestigatorsCleaned,
-    FieldObservationsCleaned,
-    SiteObservationsCleaned,
-    QualitativeSiteObservationsCleaned,
+    DataFrame[schema.FormMetadataCleaned],
+    DataFrame[schema.InvestigatorsCleaned],
+    DataFrame[schema.FieldObservationsCleaned],
+    DataFrame[schema.SiteObservationsCleaned],
+    DataFrame[schema.QualitativeSiteObservationsCleaned],
 ]:
     """Clean the user-verified extraction.
 
@@ -262,11 +249,13 @@ def clean(
     Returns:
         Cleaned metadata, investigators, field observations, and site observations.
     """
-    cleaned_metadata = FormMetadataCleaned()
-    cleaned_investigators = InvestigatorsCleaned()
-    cleaned_field_observations = FieldObservationsCleaned()
-    cleaned_site_observations = SiteObservationsCleaned()
-    cleaned_qualitative_site_observations = QualitativeSiteObservationsCleaned()
+    cleaned_metadata = DataFrame[schema.FormMetadataCleaned]()
+    cleaned_investigators = DataFrame[schema.InvestigatorsCleaned]()
+    cleaned_field_observations = DataFrame[schema.FieldObservationsCleaned]()
+    cleaned_site_observations = DataFrame[schema.SiteObservationsCleaned]()
+    cleaned_qualitative_site_observations = DataFrame[
+        schema.QualitativeSiteObservationsCleaned
+    ]()
     ...
     # TODO: Validate referential integrity. (Among other things to do here.)
 
@@ -282,11 +271,13 @@ def clean(
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def restructure_extraction(
-    cleaned_metadata: FormMetadataCleaned,
-    cleaned_investigators: InvestigatorsCleaned,
-    cleaned_field_observations: FieldObservationsCleaned,
-    cleaned_site_observations: SiteObservationsCleaned,
-    cleaned_qualitative_site_observations: QualitativeSiteObservationsCleaned,
+    cleaned_metadata: DataFrame[schema.FormMetadataCleaned],
+    cleaned_investigators: DataFrame[schema.InvestigatorsCleaned],
+    cleaned_field_observations: DataFrame[schema.FieldObservationsCleaned],
+    cleaned_site_observations: DataFrame[schema.SiteObservationsCleaned],
+    cleaned_qualitative_site_observations: DataFrame[
+        schema.QualitativeSiteObservationsCleaned
+    ],
 ) -> Dict[str, Any]:
     """Restructure the cleaned extraction into a JSON schema.
 
