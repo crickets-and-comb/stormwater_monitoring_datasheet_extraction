@@ -193,7 +193,7 @@ class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
         strict = False
 
 
-class FormMetadataPrecleaned(pa.DataFrameSchema):
+class FormMetadataPrecleaned(FormMetadataExtracted):
     """Schema for the form metadata precleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
@@ -207,7 +207,7 @@ class FormMetadataPrecleaned(pa.DataFrameSchema):
         strict = True
 
 
-class InvestigatorsPrecleaned(pa.DataFrameSchema):
+class InvestigatorsPrecleaned(InvestigatorsExtracted):
     """Schema for the investigators precleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD()
@@ -221,7 +221,7 @@ class InvestigatorsPrecleaned(pa.DataFrameSchema):
         strict = True
 
 
-class FieldObservationsPrecleaned(pa.DataFrameSchema):
+class FieldObservationsPrecleaned(FieldObservationsExtracted):
     """Schema for the observations extracted from the datasheets."""
 
     form_id: Series[str] = FORM_ID_FIELD()
@@ -236,7 +236,7 @@ class FieldObservationsPrecleaned(pa.DataFrameSchema):
         strict = True
 
 
-class SiteObservationsPrecleaned(pa.DataFrameSchema):
+class SiteObservationsPrecleaned(SiteObservationsExtracted):
     """Schema for the observations extracted from the datasheets."""
 
     form_id: Series[str] = FORM_ID_FIELD()
@@ -258,7 +258,7 @@ class SiteObservationsPrecleaned(pa.DataFrameSchema):
         strict = True
 
 
-class QualitativeSiteObservationsPrecleaned(pa.DataFrameSchema):
+class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted):
     """Schema for the qualitative site observations precleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD()
@@ -273,161 +273,41 @@ class QualitativeSiteObservationsPrecleaned(pa.DataFrameSchema):
         strict = True
 
 
-class FormMetadataVerified(pa.DataFrameSchema):
+class FormMetadataVerified(FormMetadataPrecleaned):
     """Schema for the form metadata verified by the user."""
 
-    form_id: Series[str] = FORM_ID_FIELD_UNQ()
-    city: Series[str] = CITY_FIELD()
-    date: Series[str] = DATE_FIELD()
-    notes: Series[str] = NOTES_FIELD()
 
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class InvestigatorsVerified(pa.DataFrameSchema):
+class InvestigatorsVerified(InvestigatorsPrecleaned):
     """Schema for the investigators verified by the user."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
-    investigator: Series[str] = INVESTIGATOR_FIELD()
-    start_time: Series[str] = START_TIME_FIELD()
-    end_time: Series[str] = END_TIME_FIELD()
 
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class FieldObservationsVerified(pa.DataFrameSchema):
+class FieldObservationsVerified(FieldObservationsPrecleaned):
     """Schema for the observations verified by the user."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
-    tide_height: Series[float] = TIDE_HEIGHT_FIELD()
-    tide_time: Series[str] = TIDE_TIME_FIELD()
-    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD()
-    weather: Series[str] = WEATHER_FIELD()
 
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class SiteObservationsVerified(pa.DataFrameSchema):
+class SiteObservationsVerified(SiteObservationsPrecleaned):
     """Schema for the observations verified by the user."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
-    bottle_no: Series[str] = BOTTLE_NO_FIELD()
-    dry_outfall: Series[bool] = DRY_OUTFALL_FIELD()
-    arrival_time: Series[str] = ARRIVAL_TIME_FIELD()
-    flow: Series[str] = FLOW_FIELD()
-    flow_compared_to_expected: Series[str] = FLOW_COMPARED_TO_EXPECTED_FIELD()
-    air_temp: Series[float] = AIR_TEMP_FIELD()
-    water_temp: Series[float] = WATER_TEMP_FIELD()
-    DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD()
-    SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD()
-    salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
-    pH: Series[float] = PH_FIELD()
 
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class QualitativeSiteObservationsVerified(pa.DataFrameSchema):
+class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned):
     """Schema for the qualitative site observations verified by the user."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
-    bottle_no: Series[str] = BOTTLE_NO_FIELD()
-    color: Series[str] = TYPE_FIELD()
-    odor: Series[str] = TYPE_FIELD()
-    visual: Series[str] = TYPE_FIELD()
 
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class FormMetadataCleaned(pa.DataFrameSchema):
+class FormMetadataCleaned(FormMetadataVerified):
     """Schema for the form metadata cleaned."""
 
-    form_id: Series[str] = FORM_ID_FIELD_UNQ()
-    city: Series[str] = CITY_FIELD()
-    date: Series[str] = DATE_FIELD()
-    notes: Series[str] = NOTES_FIELD()
 
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class InvestigatorsCleaned(pa.DataFrameSchema):
+class InvestigatorsCleaned(InvestigatorsVerified):
     """Schema for the investigators cleaned."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
-    investigator: Series[str] = INVESTIGATOR_FIELD()
-    start_time: Series[str] = START_TIME_FIELD()
-    end_time: Series[str] = END_TIME_FIELD()
 
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class FieldObservationsCleaned(pa.DataFrameSchema):
+class FieldObservationsCleaned(FieldObservationsVerified):
     """Schema for the observations cleaned."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
-    tide_height: Series[float] = TIDE_HEIGHT_FIELD()
-    tide_time: Series[str] = TIDE_TIME_FIELD()
-    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD()
-    weather: Series[str] = WEATHER_FIELD()
 
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class SiteObservationsCleaned(pa.DataFrameSchema):
+class SiteObservationsCleaned(SiteObservationsVerified):
     """Schema for the observations cleaned."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
-    bottle_no: Series[str] = BOTTLE_NO_FIELD()
-    dry_outfall: Series[bool] = DRY_OUTFALL_FIELD()
-    arrival_time: Series[str] = ARRIVAL_TIME_FIELD()
-    flow: Series[str] = FLOW_FIELD()
-    flow_compared_to_expected: Series[str] = FLOW_COMPARED_TO_EXPECTED_FIELD()
-    air_temp: Series[float] = AIR_TEMP_FIELD()
-    water_temp: Series[float] = WATER_TEMP_FIELD()
-    DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD()
-    SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD()
-    salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
-    pH: Series[float] = PH_FIELD()
 
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class QualitativeSiteObservationsCleaned(pa.DataFrameSchema):
+class QualitativeSiteObservationsCleaned(QualitativeSiteObservationsVerified):
     """Schema for the qualitative site observations cleaned."""
-
-    form_id: Series[str] = FORM_ID_FIELD()
-    bottle_no: Series[str] = BOTTLE_NO_FIELD()
-    color: Series[str] = TYPE_FIELD()
-    odor: Series[str] = TYPE_FIELD()
-    visual: Series[str] = TYPE_FIELD()
-
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
