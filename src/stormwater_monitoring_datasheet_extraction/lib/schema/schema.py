@@ -17,6 +17,8 @@ _NULLABLE_FIELD = partial(_COERCE_FIELD, nullable=True)
 _UNIQUE_FIELD = partial(_COERCE_FIELD, unique=True)
 
 # NOTE: We can add form_type and form_version when we add other forms.
+# May need to add dataframe checks at that point, or create new shcema,
+# or completely refactor how we handle the data.
 FORM_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD_UNQ = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
@@ -28,12 +30,22 @@ class FormMetadataExtracted(pa.DataFrameSchema):
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
 
+    class Config:
+        """The configuration for the schema."""
+
+        strict = False
+
 
 # TODO: Implement this.
 class InvestigatorsExtracted(pa.DataFrameSchema):
     """Schema for the investigators extracted from the datasheets."""
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = False
 
 
 # TODO: Implement this.
@@ -42,12 +54,22 @@ class FieldObservationsExtracted(pa.DataFrameSchema):
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
 
+    class Config:
+        """The configuration for the schema."""
+
+        strict = False
+
 
 # TODO: Implement this.
 class SiteObservationsExtracted(pa.DataFrameSchema):
     """Schema for the observations precleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = False
 
 
 # TODO: Implement this.
@@ -56,12 +78,22 @@ class FormMetadataPrecleaned(pa.DataFrameSchema):
 
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
 
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
+
 
 # TODO: Implement this.
 class InvestigatorsPrecleaned(pa.DataFrameSchema):
     """Schema for the investigators precleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
 
 
 # TODO: Implement this.
@@ -70,11 +102,21 @@ class FieldObservationsPrecleaned(pa.DataFrameSchema):
 
     form_id: Series[str] = FORM_ID_FIELD()
 
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
+
 
 class SiteObservationsPrecleaned(pa.DataFrameSchema):
     """Schema for the observations extracted from the datasheets."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
 
 
 # TODO: Implement this.
@@ -83,12 +125,22 @@ class FormMetadataVerified(pa.DataFrameSchema):
 
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
 
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
+
 
 # TODO: Implement this.
 class InvestigatorsVerified(pa.DataFrameSchema):
     """Schema for the investigators verified by the user."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
 
 
 # TODO: Implement this.
@@ -97,12 +149,22 @@ class FieldObservationsVerified(pa.DataFrameSchema):
 
     form_id: Series[str] = FORM_ID_FIELD()
 
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
+
 
 # TODO: Implement this.
 class SiteObservationsVerified(pa.DataFrameSchema):
     """Schema for the observations verified by the user."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
 
 
 # TODO: Implement this.
@@ -118,6 +180,11 @@ class InvestigatorsCleaned(pa.DataFrameSchema):
 
     form_id: Series[str] = FORM_ID_FIELD()
 
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
+
 
 # TODO: Implement this.
 class FieldObservationsCleaned(pa.DataFrameSchema):
@@ -125,9 +192,19 @@ class FieldObservationsCleaned(pa.DataFrameSchema):
 
     form_id: Series[str] = FORM_ID_FIELD()
 
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
+
 
 # TODO: Implement this.
 class SiteObservationsCleaned(pa.DataFrameSchema):
     """Schema for the observations cleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+
+    class Config:
+        """The configuration for the schema."""
+
+        strict = True
