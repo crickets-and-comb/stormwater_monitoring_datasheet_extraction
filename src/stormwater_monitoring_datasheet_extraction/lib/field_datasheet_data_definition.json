@@ -29,6 +29,7 @@
                 "site": [
                     {
                         "site_id": "str",
+                        "bacteria_bottle_no": "str",
                         "dry_outfall": "bool",
                         "arrival_time": "str",
                         "flow": "str",
@@ -51,7 +52,6 @@
                             "rank": "int",
                             "description": "str"
                         },
-                        "bacteria_bottle_no": "str"
                     }
                 ]
             }
@@ -465,6 +465,7 @@
                     "site": [
                         {
                             "site_id": "C ST",
+                            "bacteria_bottle_no": "B1",
                             "dry_outfall": false,
                             "arrival_time": "14:41",
                             "flow": "M",
@@ -486,11 +487,11 @@
                             "visual": {
                                 "rank": null,
                                 "description": null
-                            },
-                            "bacteria_bottle_no": "B1"
+                            }
                         },
                         {
                             "site_id": "C ST",
+                            "bacteria_bottle_no": "B2",
                             "dry_outfall": false,
                             "arrival_time": "14:41",
                             "flow": "M",
@@ -512,11 +513,11 @@
                             "visual": {
                                 "rank": null,
                                 "description": null
-                            },
-                            "bacteria_bottle_no": "B2"
+                            }
                         },
                         {
                             "site_id": "BROADWAY",
+                            "bacteria_bottle_no": "B3",
                             "dry_outfall": false,
                             "arrival_time": "15:09",
                             "flow": "M",
@@ -538,8 +539,7 @@
                             "visual": {
                                 "rank": null,
                                 "description": null
-                            },
-                            "bacteria_bottle_no": "B3"
+                            }
                         }
                     ]
                 }
@@ -571,6 +571,7 @@
                     "site": [
                         {
                             "site_id": "PADDEN",
+                            "bacteria_bottle_no": "B5",
                             "dry_outfall": false,
                             "arrival_time": "17:10",
                             "flow": "H",
@@ -592,11 +593,11 @@
                             "visual": {
                                 "rank": 0,
                                 "description": null
-                            },
-                            "bacteria_bottle_no": "B5"
+                            }
                         },
                         {
                             "site_id": "BENASFASDF",
+                            "bacteria_bottle_no": "B6",
                             "dry_outfall": false,
                             "arrival_time": "17:33",
                             "flow": "H",
@@ -618,11 +619,11 @@
                             "visual": {
                                 "rank": null,
                                 "description": null
-                            },
-                            "bacteria_bottle_no": "B6"
+                            }
                         },
                         {
                             "site_id": "BEPSODF72",
+                            "bacteria_bottle_no": "B7",
                             "dry_outfall": false,
                             "arrival_time": "17:40",
                             "flow": "H",
@@ -644,8 +645,7 @@
                             "visual": {
                                 "rank": null,
                                 "description": null
-                            },
-                            "bacteria_bottle_no": "B7"
+                            }
                         }
                     ]
                 }

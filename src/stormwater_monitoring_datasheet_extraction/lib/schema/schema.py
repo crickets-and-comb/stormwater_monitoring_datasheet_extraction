@@ -49,6 +49,44 @@ PAST_24HR_RAINFALL_FIELD = partial(_COERCE_FIELD, alias=Columns.PAST_24HR_RAINFA
 WEATHER_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.WEATHER)
 WEATHER_FIELD = partial(_COERCE_FIELD, alias=Columns.WEATHER)
 
+# Site observations.
+SITE_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.SITE_ID)
+SITE_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.SITE_ID)
+BOTTLE_NO_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.BOTTLE_NO)
+BOTTLE_NO_FIELD = partial(_COERCE_FIELD, alias=Columns.BOTTLE_NO)
+DRY_OUTFALL_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DRY_OUTFALL)
+DRY_OUTFALL_FIELD = partial(_COERCE_FIELD, alias=Columns.DRY_OUTFALL)
+ARRIVAL_TIME_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.ARRIVAL_TIME)
+ARRIVAL_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.ARRIVAL_TIME)
+FLOW_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FLOW)
+FLOW_FIELD = partial(_COERCE_FIELD, alias=Columns.FLOW)
+FLOW_COMPARED_TO_EXPECTED_FIELD_LAX = partial(
+    _LAX_FIELD, alias=Columns.FLOW_COMPARED_TO_EXPECTED
+)
+FLOW_COMPARED_TO_EXPECTED_FIELD = partial(
+    _COERCE_FIELD, alias=Columns.FLOW_COMPARED_TO_EXPECTED
+)
+AIR_TEMP_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.AIR_TEMP)
+AIR_TEMP_FIELD = partial(_COERCE_FIELD, alias=Columns.AIR_TEMP)
+WATER_TEMP_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.WATER_TEMP)
+WATER_TEMP_FIELD = partial(_COERCE_FIELD, alias=Columns.WATER_TEMP)
+DO_MG_PER_L_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DO_MG_PER_L)
+DO_MG_PER_L_FIELD = partial(_COERCE_FIELD, alias=Columns.DO_MG_PER_L)
+SPS_MICRO_S_PER_CM_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.SPS_MICRO_S_PER_CM)
+SPS_MICRO_S_PER_CM_FIELD = partial(_COERCE_FIELD, alias=Columns.SPS_MICRO_S_PER_CM)
+SALINITY_PPT_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.SALINITY_PPT)
+SALINITY_PPT_FIELD = partial(_COERCE_FIELD, alias=Columns.SALINITY_PPT)
+PH_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.PH)
+PH_FIELD = partial(_COERCE_FIELD, alias=Columns.PH)
+
+# Qualitative site observations: color, odor, visual.
+TYPE_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.TYPE)
+TYPE_FIELD = partial(_COERCE_FIELD, alias=Columns.TYPE)
+RANK_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.RANK)
+RANK_FIELD = partial(_COERCE_FIELD, alias=Columns.RANK)
+DESCRIPTION_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
+DESCRIPTION_FIELD = partial(_COERCE_FIELD, alias=Columns.DESCRIPTION)
+
 
 # TODO: Implement this.
 class FormMetadataExtracted(pa.DataFrameSchema):
@@ -101,6 +139,17 @@ class SiteObservationsExtracted(pa.DataFrameSchema):
     """Schema for the observations precleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
+    bottle_no: Series[str] = BOTTLE_NO_FIELD_LAX()
+    dry_outfall: Series[bool] = DRY_OUTFALL_FIELD_LAX()
+    arrival_time: Series[str] = ARRIVAL_TIME_FIELD_LAX()
+    flow: Series[str] = FLOW_FIELD_LAX()
+    flow_compared_to_expected: Series[str] = FLOW_COMPARED_TO_EXPECTED_FIELD_LAX()
+    air_temp: Series[float] = AIR_TEMP_FIELD_LAX()
+    water_temp: Series[float] = WATER_TEMP_FIELD_LAX()
+    DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD_LAX()
+    SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD_LAX()
+    salinity_ppt: Series[float] = SALINITY_PPT_FIELD_LAX()
+    pH: Series[float] = PH_FIELD_LAX()
 
     class Config:
         """The configuration for the schema."""
@@ -158,6 +207,17 @@ class SiteObservationsPrecleaned(pa.DataFrameSchema):
     """Schema for the observations extracted from the datasheets."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+    bottle_no: Series[str] = BOTTLE_NO_FIELD()
+    dry_outfall: Series[bool] = DRY_OUTFALL_FIELD()
+    arrival_time: Series[str] = ARRIVAL_TIME_FIELD()
+    flow: Series[str] = FLOW_FIELD()
+    flow_compared_to_expected: Series[str] = FLOW_COMPARED_TO_EXPECTED_FIELD()
+    air_temp: Series[float] = AIR_TEMP_FIELD()
+    water_temp: Series[float] = WATER_TEMP_FIELD()
+    DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD()
+    SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD()
+    salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
+    pH: Series[float] = PH_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -216,6 +276,17 @@ class SiteObservationsVerified(pa.DataFrameSchema):
     """Schema for the observations verified by the user."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+    bottle_no: Series[str] = BOTTLE_NO_FIELD()
+    dry_outfall: Series[bool] = DRY_OUTFALL_FIELD()
+    arrival_time: Series[str] = ARRIVAL_TIME_FIELD()
+    flow: Series[str] = FLOW_FIELD()
+    flow_compared_to_expected: Series[str] = FLOW_COMPARED_TO_EXPECTED_FIELD()
+    air_temp: Series[float] = AIR_TEMP_FIELD()
+    water_temp: Series[float] = WATER_TEMP_FIELD()
+    DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD()
+    SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD()
+    salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
+    pH: Series[float] = PH_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -274,6 +345,17 @@ class SiteObservationsCleaned(pa.DataFrameSchema):
     """Schema for the observations cleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+    bottle_no: Series[str] = BOTTLE_NO_FIELD()
+    dry_outfall: Series[bool] = DRY_OUTFALL_FIELD()
+    arrival_time: Series[str] = ARRIVAL_TIME_FIELD()
+    flow: Series[str] = FLOW_FIELD()
+    flow_compared_to_expected: Series[str] = FLOW_COMPARED_TO_EXPECTED_FIELD()
+    air_temp: Series[float] = AIR_TEMP_FIELD()
+    water_temp: Series[float] = WATER_TEMP_FIELD()
+    DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD()
+    SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD()
+    salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
+    pH: Series[float] = PH_FIELD()
 
     class Config:
         """The configuration for the schema."""

@@ -25,6 +25,25 @@ class Columns:
     PAST_24HR_RAINFALL: Final[str] = "past_24hr_rainfall"
     WEATHER: Final[str] = "weather"
 
+    # Site observations.
+    SITE_ID: Final[str] = "site_id"
+    BOTTLE_NO: Final[str] = "bottle_no"
+    DRY_OUTFALL: Final[str] = "dry_outfall"
+    ARRIVAL_TIME: Final[str] = "arrival_time"
+    FLOW: Final[str] = "flow"
+    FLOW_COMPARED_TO_EXPECTED: Final[str] = "flow_compared_to_expected"
+    AIR_TEMP: Final[str] = "air_temp"
+    WATER_TEMP: Final[str] = "water_temp"
+    DO_MG_PER_L: Final[str] = "DO_mg_per_l"
+    SPS_MICRO_S_PER_CM: Final[str] = "SPS micro_S_per_cm"
+    SALINITY_PPT: Final[str] = "salinity_ppt"
+    PH: Final[str] = "pH"
+
+    # Qualitative site observations: color, odor, visual.
+    TYPE: Final[str] = "type"
+    RANK: Final[str] = "rank"
+    DESCRIPTION: Final[str] = "description"
+
 
 class DocStrings:
     """Docstrings for top-level modules."""
