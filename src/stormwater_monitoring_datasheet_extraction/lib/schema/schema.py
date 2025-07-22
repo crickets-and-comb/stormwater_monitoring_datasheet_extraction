@@ -12,9 +12,12 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import Columns
 # TODO: Index all to form/image name.
 
 _COERCE_FIELD = partial(pa.Field, coerce=True)
+_LAX_FIELD = partial(pa.Field, coerce=False, unique=False, nullable=True)
 _NULLABLE_FIELD = partial(_COERCE_FIELD, nullable=True)
 _UNIQUE_FIELD = partial(_COERCE_FIELD, unique=True)
 
+# NOTE: We can add form_type and form_version when we add other forms.
+FORM_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD_UNQ = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
 
@@ -23,28 +26,28 @@ FORM_ID_FIELD_UNQ = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
 class FormMetadataExtracted(pa.DataFrameSchema):
     """Schema for the form metadata extracted from the datasheets."""
 
-    form_id: Series[str] = FORM_ID_FIELD_UNQ()
+    form_id: Series[str] = FORM_ID_FIELD_LAX()
 
 
 # TODO: Implement this.
 class InvestigatorsExtracted(pa.DataFrameSchema):
     """Schema for the investigators extracted from the datasheets."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
+    form_id: Series[str] = FORM_ID_FIELD_LAX()
 
 
 # TODO: Implement this.
 class FieldObservationsExtracted(pa.DataFrameSchema):
     """Schema for the observations precleaned."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
+    form_id: Series[str] = FORM_ID_FIELD_LAX()
 
 
 # TODO: Implement this.
 class SiteObservationsExtracted(pa.DataFrameSchema):
     """Schema for the observations precleaned."""
 
-    form_id: Series[str] = FORM_ID_FIELD()
+    form_id: Series[str] = FORM_ID_FIELD_LAX()
 
 
 # TODO: Implement this.
