@@ -1,6 +1,7 @@
 """Pandera schemas for ETL steps."""
 
 from functools import partial
+from typing import Callable, Final
 
 import pandera as pa
 from pandera.typing import Series
@@ -24,84 +25,92 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import Columns
 # 2. Add feature to pass in custom error handler function,
 # with default that uses generally useful DataFrameSchema error features.
 
-_COERCE_FIELD = partial(pa.Field, coerce=True)
-_LAX_FIELD = partial(pa.Field, coerce=False, unique=False, nullable=True)
-_NULLABLE_FIELD = partial(_COERCE_FIELD, nullable=True)
-_UNIQUE_FIELD = partial(_COERCE_FIELD, unique=True)
+_COERCE_FIELD: Final[Callable] = partial(pa.Field, coerce=True)
+_LAX_FIELD: Final[Callable] = partial(pa.Field, coerce=False, unique=False, nullable=True)
+_NULLABLE_FIELD: Final[Callable] = partial(_COERCE_FIELD, nullable=True)
+_UNIQUE_FIELD: Final[Callable] = partial(_COERCE_FIELD, unique=True)
 
 
 # Form metadata.
 # NOTE: form_id is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
 # If all files are from the same directory in a single extraction, then it will be unique.
 # But, that doesn't guarantee uniqueness across multiple extractions to the same DB.
-FORM_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FORM_ID)
-FORM_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
-FORM_ID_FIELD_UNQ = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
+FORM_ID_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.FORM_ID)
+FORM_ID_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
+FORM_ID_FIELD_UNQ: Final[Callable] = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
 # NOTE: We can add form_type and form_version when we add other forms.
 # May need to add dataframe checks at that point, or create new schema,
 # or completely refactor how we handle the data.
-CITY_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.CITY)
-CITY_FIELD = partial(_COERCE_FIELD, alias=Columns.CITY)
-DATE_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DATE)
-DATE_FIELD = partial(_COERCE_FIELD, alias=Columns.DATE)
-NOTES_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.NOTES)
-NOTES_FIELD = partial(_COERCE_FIELD, alias=Columns.NOTES)
+CITY_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.CITY)
+CITY_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.CITY)
+DATE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DATE)
+DATE_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DATE)
+NOTES_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.NOTES)
+NOTES_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.NOTES)
 
 # Investigators.
-INVESTIGATOR_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.INVESTIGATOR)
-INVESTIGATOR_FIELD = partial(_COERCE_FIELD, alias=Columns.INVESTIGATOR)
-START_TIME_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.START_TIME)
-START_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.START_TIME)
-END_TIME_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.END_TIME)
-END_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.END_TIME)
+INVESTIGATOR_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.INVESTIGATOR)
+INVESTIGATOR_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.INVESTIGATOR)
+START_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.START_TIME)
+START_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.START_TIME)
+END_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.END_TIME)
+END_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.END_TIME)
 
 # Field observations.
-TIDE_HEIGHT_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.TIDE_HEIGHT)
-TIDE_HEIGHT_FIELD = partial(_COERCE_FIELD, alias=Columns.TIDE_HEIGHT)
-TIDE_TIME_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.TIDE_TIME)
-TIDE_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.TIDE_TIME)
-PAST_24HR_RAINFALL_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.PAST_24HR_RAINFALL)
-PAST_24HR_RAINFALL_FIELD = partial(_COERCE_FIELD, alias=Columns.PAST_24HR_RAINFALL)
-WEATHER_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.WEATHER)
-WEATHER_FIELD = partial(_COERCE_FIELD, alias=Columns.WEATHER)
+TIDE_HEIGHT_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.TIDE_HEIGHT)
+TIDE_HEIGHT_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.TIDE_HEIGHT)
+TIDE_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.TIDE_TIME)
+TIDE_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.TIDE_TIME)
+PAST_24HR_RAINFALL_FIELD_LAX: Final[Callable] = partial(
+    _LAX_FIELD, alias=Columns.PAST_24HR_RAINFALL
+)
+PAST_24HR_RAINFALL_FIELD: Final[Callable] = partial(
+    _COERCE_FIELD, alias=Columns.PAST_24HR_RAINFALL
+)
+WEATHER_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.WEATHER)
+WEATHER_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.WEATHER)
 
 # Site observations.
-SITE_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.SITE_ID)
-SITE_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.SITE_ID)
-BOTTLE_NO_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.BOTTLE_NO)
-BOTTLE_NO_FIELD = partial(_COERCE_FIELD, alias=Columns.BOTTLE_NO)
-DRY_OUTFALL_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DRY_OUTFALL)
-DRY_OUTFALL_FIELD = partial(_COERCE_FIELD, alias=Columns.DRY_OUTFALL)
-ARRIVAL_TIME_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.ARRIVAL_TIME)
-ARRIVAL_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.ARRIVAL_TIME)
-FLOW_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FLOW)
-FLOW_FIELD = partial(_COERCE_FIELD, alias=Columns.FLOW)
-FLOW_COMPARED_TO_EXPECTED_FIELD_LAX = partial(
+SITE_ID_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.SITE_ID)
+SITE_ID_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.SITE_ID)
+BOTTLE_NO_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.BOTTLE_NO)
+BOTTLE_NO_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.BOTTLE_NO)
+DRY_OUTFALL_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DRY_OUTFALL)
+DRY_OUTFALL_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DRY_OUTFALL)
+ARRIVAL_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.ARRIVAL_TIME)
+ARRIVAL_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.ARRIVAL_TIME)
+FLOW_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.FLOW)
+FLOW_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FLOW)
+FLOW_COMPARED_TO_EXPECTED_FIELD_LAX: Final[Callable] = partial(
     _LAX_FIELD, alias=Columns.FLOW_COMPARED_TO_EXPECTED
 )
-FLOW_COMPARED_TO_EXPECTED_FIELD = partial(
+FLOW_COMPARED_TO_EXPECTED_FIELD: Final[Callable] = partial(
     _COERCE_FIELD, alias=Columns.FLOW_COMPARED_TO_EXPECTED
 )
-AIR_TEMP_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.AIR_TEMP)
-AIR_TEMP_FIELD = partial(_COERCE_FIELD, alias=Columns.AIR_TEMP)
-WATER_TEMP_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.WATER_TEMP)
-WATER_TEMP_FIELD = partial(_COERCE_FIELD, alias=Columns.WATER_TEMP)
-DO_MG_PER_L_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DO_MG_PER_L)
-DO_MG_PER_L_FIELD = partial(_COERCE_FIELD, alias=Columns.DO_MG_PER_L)
-SPS_MICRO_S_PER_CM_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.SPS_MICRO_S_PER_CM)
-SPS_MICRO_S_PER_CM_FIELD = partial(_COERCE_FIELD, alias=Columns.SPS_MICRO_S_PER_CM)
-SALINITY_PPT_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.SALINITY_PPT)
-SALINITY_PPT_FIELD = partial(_COERCE_FIELD, alias=Columns.SALINITY_PPT)
-PH_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.PH)
-PH_FIELD = partial(_COERCE_FIELD, alias=Columns.PH)
+AIR_TEMP_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.AIR_TEMP)
+AIR_TEMP_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.AIR_TEMP)
+WATER_TEMP_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.WATER_TEMP)
+WATER_TEMP_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.WATER_TEMP)
+DO_MG_PER_L_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DO_MG_PER_L)
+DO_MG_PER_L_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DO_MG_PER_L)
+SPS_MICRO_S_PER_CM_FIELD_LAX: Final[Callable] = partial(
+    _LAX_FIELD, alias=Columns.SPS_MICRO_S_PER_CM
+)
+SPS_MICRO_S_PER_CM_FIELD: Final[Callable] = partial(
+    _COERCE_FIELD, alias=Columns.SPS_MICRO_S_PER_CM
+)
+SALINITY_PPT_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.SALINITY_PPT)
+SALINITY_PPT_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.SALINITY_PPT)
+PH_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.PH)
+PH_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.PH)
 
 # Qualitative site observations: color, odor, visual.
-TYPE_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.TYPE)
-TYPE_FIELD = partial(_COERCE_FIELD, alias=Columns.TYPE)
-RANK_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.RANK)
-RANK_FIELD = partial(_COERCE_FIELD, alias=Columns.RANK)
-DESCRIPTION_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
-DESCRIPTION_FIELD = partial(_COERCE_FIELD, alias=Columns.DESCRIPTION)
+TYPE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.TYPE)
+TYPE_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.TYPE)
+RANK_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.RANK)
+RANK_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.RANK)
+DESCRIPTION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
+DESCRIPTION_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DESCRIPTION)
 
 
 class FormMetadataExtracted(pa.DataFrameSchema):
