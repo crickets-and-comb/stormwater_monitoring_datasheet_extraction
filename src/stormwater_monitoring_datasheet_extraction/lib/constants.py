@@ -19,7 +19,11 @@ class Columns:
     START_TIME: Final[str] = "start_time"
     END_TIME: Final[str] = "end_time"
 
-    # Observations.
+    # Field observations.
+    TIDE_HEIGHT: Final[str] = "tide_height"
+    TIDE_TIME: Final[str] = "tide_time"
+    PAST_24HR_RAINFALL: Final[str] = "past_24hr_rainfall"
+    WEATHER: Final[str] = "weather"
 
 
 class DocStrings:

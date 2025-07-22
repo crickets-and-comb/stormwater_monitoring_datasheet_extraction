@@ -39,6 +39,16 @@ START_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.START_TIME)
 END_TIME_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.END_TIME)
 END_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.END_TIME)
 
+# Field observations.
+TIDE_HEIGHT_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.TIDE_HEIGHT)
+TIDE_HEIGHT_FIELD = partial(_COERCE_FIELD, alias=Columns.TIDE_HEIGHT)
+TIDE_TIME_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.TIDE_TIME)
+TIDE_TIME_FIELD = partial(_COERCE_FIELD, alias=Columns.TIDE_TIME)
+PAST_24HR_RAINFALL_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.PAST_24HR_RAINFALL)
+PAST_24HR_RAINFALL_FIELD = partial(_COERCE_FIELD, alias=Columns.PAST_24HR_RAINFALL)
+WEATHER_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.WEATHER)
+WEATHER_FIELD = partial(_COERCE_FIELD, alias=Columns.WEATHER)
+
 
 # TODO: Implement this.
 class FormMetadataExtracted(pa.DataFrameSchema):
@@ -75,6 +85,10 @@ class FieldObservationsExtracted(pa.DataFrameSchema):
     """Schema for the observations precleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
+    tide_height: Series[float] = TIDE_HEIGHT_FIELD_LAX()
+    tide_time: Series[str] = TIDE_TIME_FIELD_LAX()
+    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD_LAX()
+    weather: Series[str] = WEATHER_FIELD_LAX()
 
     class Config:
         """The configuration for the schema."""
@@ -129,6 +143,10 @@ class FieldObservationsPrecleaned(pa.DataFrameSchema):
     """Schema for the observations extracted from the datasheets."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+    tide_height: Series[float] = TIDE_HEIGHT_FIELD()
+    tide_time: Series[str] = TIDE_TIME_FIELD()
+    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD()
+    weather: Series[str] = WEATHER_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -182,6 +200,10 @@ class FieldObservationsVerified(pa.DataFrameSchema):
     """Schema for the observations verified by the user."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+    tide_height: Series[float] = TIDE_HEIGHT_FIELD()
+    tide_time: Series[str] = TIDE_TIME_FIELD()
+    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD()
+    weather: Series[str] = WEATHER_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -236,6 +258,10 @@ class FieldObservationsCleaned(pa.DataFrameSchema):
     """Schema for the observations cleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD()
+    tide_height: Series[float] = TIDE_HEIGHT_FIELD()
+    tide_time: Series[str] = TIDE_TIME_FIELD()
+    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD()
+    weather: Series[str] = WEATHER_FIELD()
 
     class Config:
         """The configuration for the schema."""
