@@ -10,12 +10,15 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (
     FormMetadataCleaned,
     FormMetadataExtracted,
+    FormMetadataPrecleaned,
     FormMetadataVerified,
     InvestigatorsCleaned,
     InvestigatorsExtracted,
+    InvestigatorsPrecleaned,
     InvestigatorsVerified,
     ObservationsCleaned,
     ObservationsExtracted,
+    ObservationsPrecleaned,
     ObservationsVerified,
 )
 
@@ -30,10 +33,16 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
     # verification.
     raw_metadata, raw_investigators, raw_observations = extract(input_dir=input_dir)
 
-    verified_metadata, verified_investigators, verified_observations = verify(
+    precleaned_metadata, precleaned_investigators, precleaned_observations = preclean(
         raw_metadata=raw_metadata,
         raw_investigators=raw_investigators,
         raw_observations=raw_observations,
+    )
+
+    verified_metadata, verified_investigators, verified_observations = verify(
+        precleaned_metadata=precleaned_metadata,
+        precleaned_investigators=precleaned_investigators,
+        precleaned_observations=precleaned_observations,
     )
 
     cleaned_metadata, cleaned_investigators, cleaned_observations = clean(
@@ -63,7 +72,7 @@ def extract(
 ) -> Tuple[FormMetadataExtracted, InvestigatorsExtracted, ObservationsExtracted]:
     """Extracts data from the images in the input directory.
 
-    Using computer vision extracts data from datasheets into JSON schema.
+    Using computer vision, extracts data from datasheets.
 
     Args:
         input_dir: Path to the directory containing the datasheet images.
@@ -81,21 +90,48 @@ def extract(
     return form_metadata, investigators, observations
 
 
-# TODO: Implement this.
-@pa.check_types(with_pydantic=True, lazy=True)
-def verify(
+def preclean(
     raw_metadata: FormMetadataExtracted,
     raw_investigators: InvestigatorsExtracted,
     raw_observations: ObservationsExtracted,
+) -> Tuple[FormMetadataPrecleaned, InvestigatorsPrecleaned, ObservationsPrecleaned]:
+    """Preclean the raw extraction.
+
+    Ligth cleaning before user verification. E.g., strip whitespace, try to cast to type,
+    check for within range, but warn don't fail.
+
+    Args:
+        raw_metadata: The raw metadata extracted from the datasheets.
+        raw_investigators: The raw investigators extracted from the datasheets.
+        raw_observations: The raw observations extracted from the datasheets.
+
+    Returns:
+        Precleaned metadata, investigators, and observations.
+    """
+    precleaned_metadata = FormMetadataPrecleaned()
+    precleaned_investigators = InvestigatorsPrecleaned()
+    precleaned_observations = ObservationsPrecleaned()
+
+    ...
+
+    return precleaned_metadata, precleaned_investigators, precleaned_observations
+
+
+# TODO: Implement this.
+@pa.check_types(with_pydantic=True, lazy=True)
+def verify(
+    precleaned_metadata: FormMetadataPrecleaned,
+    precleaned_investigators: InvestigatorsPrecleaned,
+    precleaned_observations: ObservationsPrecleaned,
 ) -> Tuple[FormMetadataVerified, InvestigatorsVerified, ObservationsVerified]:
     """Verifies the raw extraction with the user.
 
     Prompts user to check each image against each extraction and edit as needed.
 
     Args:
-        raw_metadata: The raw metadata extracted from the datasheets.
-        raw_investigators: The raw investigators extracted from the datasheets.
-        raw_observations: The raw observations extracted from the datasheets.
+        precleaned_metadata: The precleaned metadata.
+        precleaned_investigators: The precleaned investigators.
+        precleaned_observations: The precleaned observations.
 
     Returns:
         User-verified metadata, investigators, and observations.

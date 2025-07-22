@@ -2,7 +2,7 @@
 
 import pandera as pa
 
-# TODO: Validations should be lax for extraction,
+# TODO: Validations should be lax for extraction, stricter after cleaning,
 # stricter after user verification, and strictest after final cleaning.
 # TODO: Index all to form/image name.
 
@@ -23,6 +23,27 @@ class InvestigatorsExtracted(pa.DataFrameSchema):
 
 # TODO: Implement this.
 class ObservationsExtracted(pa.DataFrameSchema):
+    """Schema for the observations precleaned."""
+
+    pass
+
+
+# TODO: Implement this.
+class FormMetadataPrecleaned(pa.DataFrameSchema):
+    """Schema for the form metadata precleaned."""
+
+    pass
+
+
+# TODO: Implement this.
+class InvestigatorsPrecleaned(pa.DataFrameSchema):
+    """Schema for the investigators precleaned."""
+
+    pass
+
+
+# TODO: Implement this.
+class ObservationsPrecleaned(pa.DataFrameSchema):
     """Schema for the observations extracted from the datasheets."""
 
     pass
