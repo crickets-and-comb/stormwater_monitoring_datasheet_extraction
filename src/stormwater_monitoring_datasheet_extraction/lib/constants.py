@@ -112,8 +112,8 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             "form_version": str,
             "city": str,
             "date": str,
-            "investigators": {"name": {"start_time": str, "end_time": str}},
             "notes": str,
+            "investigators": {"name": {"start_time": str, "end_time": str}},
             "observations": {
                 "field": {
                     "tide_height": float,
@@ -146,12 +146,13 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
     "metadata": {
         "date": {"format": "YYYY-MM-DD"},
         "form_id": {
+            "type": str,
             "note": (
                 "Unique identifier of completed form. Different than DB's form ID if it "
                 "exists, and won't likely be entered into DB, and is not found on the "
                 "forms themselves. Just for convenience and to avoid trouble with "
                 "accidentally sorted lists. Maybe use image filename and/or timestamp."
-            )
+            ),
         },
         "form_type": {
             "options": ["field_datasheet_stormwater_monitoring_friends_of_salish_sea"]
