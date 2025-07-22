@@ -7,23 +7,39 @@ from pandera.typing import Series
 
 from stormwater_monitoring_datasheet_extraction.lib.constants import Columns
 
-# TODO: Validations should be lax for extraction, stricter after cleaning,
+# TODO: Confirm/set field types and restrictions.
+# See/use field_datasheet_data_definition.json metadata.
+# TODO: Set field-level checks.
+# See/use field_datasheet_data_definition.json metadata.
+# TODO: Set dataframe-level checks.
+# See/use field_datasheet_data_definition.json metadata.
+# NOTE: Validations should be lax for extraction, stricter after cleaning,
 # stricter after user verification, and strictest after final cleaning.
-# TODO: Index all to form/image name.
+# TODO: Implement and use `schema_error_handler` decorator.
+# Helps catch/handle schema errors more gracefully.
+# 0. Copy `schema_error_handler` from `bfb_delivery`.
+# https://github.com/crickets-and-comb/bfb_delivery/blob/main/src/bfb_delivery/lib/schema/utils.py#L8
+# https://github.com/crickets-and-comb/bfb_delivery/blob/main/src/bfb_delivery/lib/dispatch/write_to_circuit.py#L111
+# 1. Move from `bfb_delivery` to `comb_utils`.
+# 2. Add feature to pass in custom error handler function,
+# with default that uses generally useful DataFrameSchema error features.
 
 _COERCE_FIELD = partial(pa.Field, coerce=True)
 _LAX_FIELD = partial(pa.Field, coerce=False, unique=False, nullable=True)
 _NULLABLE_FIELD = partial(_COERCE_FIELD, nullable=True)
 _UNIQUE_FIELD = partial(_COERCE_FIELD, unique=True)
 
-# NOTE: We can add form_type and form_version when we add other forms.
-# May need to add dataframe checks at that point, or create new schema,
-# or completely refactor how we handle the data.
+
+# Form metadata.
+# NOTE: form_id is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
+# If all files are from the same directory in a single extraction, then it will be unique.
+# But, that doesn't guarantee uniqueness across multiple extractions to the same DB.
 FORM_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD_UNQ = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
-
-# Form metadata.
+# NOTE: We can add form_type and form_version when we add other forms.
+# May need to add dataframe checks at that point, or create new schema,
+# or completely refactor how we handle the data.
 CITY_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.CITY)
 CITY_FIELD = partial(_COERCE_FIELD, alias=Columns.CITY)
 DATE_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DATE)
@@ -88,7 +104,6 @@ DESCRIPTION_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
 DESCRIPTION_FIELD = partial(_COERCE_FIELD, alias=Columns.DESCRIPTION)
 
 
-# TODO: Implement this.
 class FormMetadataExtracted(pa.DataFrameSchema):
     """Schema for the form metadata extracted from the datasheets."""
 
@@ -103,7 +118,6 @@ class FormMetadataExtracted(pa.DataFrameSchema):
         strict = False
 
 
-# TODO: Implement this.
 class InvestigatorsExtracted(pa.DataFrameSchema):
     """Schema for the investigators extracted from the datasheets."""
 
@@ -118,7 +132,6 @@ class InvestigatorsExtracted(pa.DataFrameSchema):
         strict = False
 
 
-# TODO: Implement this.
 class FieldObservationsExtracted(pa.DataFrameSchema):
     """Schema for the observations precleaned."""
 
@@ -134,7 +147,6 @@ class FieldObservationsExtracted(pa.DataFrameSchema):
         strict = False
 
 
-# TODO: Implement this.
 class SiteObservationsExtracted(pa.DataFrameSchema):
     """Schema for the observations precleaned."""
 
@@ -157,7 +169,6 @@ class SiteObservationsExtracted(pa.DataFrameSchema):
         strict = False
 
 
-# TODO: Implement this.
 class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
     """Schema for the qualitative site observations extracted from the datasheets."""
 
@@ -173,7 +184,6 @@ class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
         strict = False
 
 
-# TODO: Implement this.
 class FormMetadataPrecleaned(pa.DataFrameSchema):
     """Schema for the form metadata precleaned."""
 
@@ -188,7 +198,6 @@ class FormMetadataPrecleaned(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class InvestigatorsPrecleaned(pa.DataFrameSchema):
     """Schema for the investigators precleaned."""
 
@@ -203,7 +212,6 @@ class InvestigatorsPrecleaned(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class FieldObservationsPrecleaned(pa.DataFrameSchema):
     """Schema for the observations extracted from the datasheets."""
 
@@ -256,7 +264,6 @@ class QualitativeSiteObservationsPrecleaned(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class FormMetadataVerified(pa.DataFrameSchema):
     """Schema for the form metadata verified by the user."""
 
@@ -271,7 +278,6 @@ class FormMetadataVerified(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class InvestigatorsVerified(pa.DataFrameSchema):
     """Schema for the investigators verified by the user."""
 
@@ -286,7 +292,6 @@ class InvestigatorsVerified(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class FieldObservationsVerified(pa.DataFrameSchema):
     """Schema for the observations verified by the user."""
 
@@ -302,7 +307,6 @@ class FieldObservationsVerified(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class SiteObservationsVerified(pa.DataFrameSchema):
     """Schema for the observations verified by the user."""
 
@@ -340,7 +344,6 @@ class QualitativeSiteObservationsVerified(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class FormMetadataCleaned(pa.DataFrameSchema):
     """Schema for the form metadata cleaned."""
 
@@ -355,7 +358,6 @@ class FormMetadataCleaned(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class InvestigatorsCleaned(pa.DataFrameSchema):
     """Schema for the investigators cleaned."""
 
@@ -370,7 +372,6 @@ class InvestigatorsCleaned(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class FieldObservationsCleaned(pa.DataFrameSchema):
     """Schema for the observations cleaned."""
 
@@ -386,7 +387,6 @@ class FieldObservationsCleaned(pa.DataFrameSchema):
         strict = True
 
 
-# TODO: Implement this.
 class SiteObservationsCleaned(pa.DataFrameSchema):
     """Schema for the observations cleaned."""
 

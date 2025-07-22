@@ -32,13 +32,10 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (
 
 
 # TODO: Set up logging.
-# TODO: Set up Pandera schema for each step.
 @typechecked
 def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
-    # TODO, NOTE: This is an estimate outline, not a hard requirement.
+    # TODO, NOTE: This is an estimated outline, not a hard requirement.
     # We may need to adjust the steps based on the actual implementation details.
-    # For instance, we may want to add a cleaning step between raw extraction and user
-    # verification.
     (
         raw_metadata,
         raw_investigators,
@@ -127,7 +124,6 @@ def extract(
         Raw extraction split into form metadata, investigators, field observations,
             and site observations.
     """
-    # TODO: Index all to form/image name.
     form_metadata = FormMetadataExtracted()
     investigators = InvestigatorsExtracted()
     field_field_observations = FieldObservationsExtracted()
@@ -272,6 +268,7 @@ def clean(
     cleaned_site_observations = SiteObservationsCleaned()
     cleaned_qualitative_site_observations = QualitativeSiteObservationsCleaned()
     ...
+    # TODO: Validate referential integrity. (Among other things to do here.)
 
     return (
         cleaned_metadata,
