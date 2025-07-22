@@ -1,5 +1,6 @@
 """Constants for the `lib` module."""
 
+from enum import IntEnum, StrEnum
 from typing import Any, Dict, Final
 
 from comb_utils import DocString
@@ -7,6 +8,8 @@ from comb_utils import DocString
 
 class Columns:
     """Column name constants."""
+
+    # TODO: Replace dict names with these.
 
     # Form metadata.
     FORM_ID: Final[str] = "form_id"
@@ -68,8 +71,57 @@ class DocStrings:
     )
 
 
+class Flow(StrEnum):
+    """Options for the flow field."""
+
+    T = "T"
+    M = "M"
+    H = "H"
+
+
+class FlowComparedToExpected(StrEnum):
+    """Options for the flow compared to expected field."""
+
+    LOWER = "Lower"
+    NORMAL = "Normal"
+    HIGHER = "Higher"
+
+
+class FormType(StrEnum):
+    """Options for the form type field."""
+
+    FIELD_DATASHEET_FOSS = "field_datasheet_FOSS"
+
+
+class Rank(IntEnum):
+    """Options for the rank field."""
+
+    ZERO = 0
+    ONE = 1
+    TWO = 2
+    THREE = 3
+
+
+class Weather(StrEnum):
+    """Options for the weather field."""
+
+    # TODO: Consider splitting out to precipitation/cloud types and severities.
+
+    CLOUD_CLEAR = "cloud_clear"
+    CLOUD_PART = "cloud_part"
+    CLOUD_OVER = "cloud_over"
+    PRECIP_RAIN_LIGHT = "precip_rain_light"
+    PRECIP_RAIN_MOD = "precip_rain_mod"
+    PRECIP_RAIN_HEAVY = "precip_rain_heavy"
+    PRECIP_SNOW = "precip_snow"
+
+
+DATE_FORMAT: Final[str] = "YYYY-MM-DD"
+TIME_FORMAT: Final[str] = "HH:MM"
+
 FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
     # TODO: Resolve these notes.
+    # TODO: Create enums for categorical data.
     "dev_notes": [
         (
             "For pre-DB validation, will need to consult target DB for nullability and other "
@@ -119,7 +171,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                     "tide_height": float,
                     "tide_time": str,
                     "past_24hr_rainfall": float,
-                    "weather": str,
+                    Columns.WEATHER: Weather,
                 },
                 "site": [
                     {
@@ -127,24 +179,24 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         "bacteria_bottle_no": str,
                         "dry_outfall": bool,
                         "arrival_time": str,
-                        "flow": str,
-                        "flow_compared_to_expected": str,
+                        Columns.FLOW: Flow,
+                        Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected,
                         "air_temp": float,
                         "water_temp": float,
                         "DO_mg_per_l": float,
                         "SPS micro_S_per_cm": float,
                         "salinity_ppt": float,
                         "pH": float,
-                        "color": {"rank": int, "description": str},
-                        "odor": {"rank": int, "description": str},
-                        "visual": {"rank": int, "description": str},
+                        "color": {Columns.RANK: Rank, "description": str},
+                        "odor": {Columns.RANK: Rank, "description": str},
+                        "visual": {Columns.RANK: Rank, "description": str},
                     }
                 ],
             },
         }
     },
     "metadata": {
-        "date": {"format": "YYYY-MM-DD"},
+        "date": {"format": DATE_FORMAT},
         "form_id": {
             "type": str,
             "note": (
@@ -154,29 +206,19 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                 "accidentally sorted lists. Maybe use image filename and/or timestamp."
             ),
         },
-        "form_type": {
-            "options": ["field_datasheet_stormwater_monitoring_friends_of_salish_sea"]
-        },
+        "form_type": {"options": list(FormType)},
         "investigators": {
             "name": str,
-            "end_time": {"format": "HH:MM"},
-            "start_time": {"format": "HH:MM"},
+            "end_time": {"format": TIME_FORMAT},
+            "start_time": {"format": TIME_FORMAT},
         },
         "observations": {
             "field": {
                 "past_24hr_rainfall": {"units": "inches"},
                 "tide_height": {"units": "feet"},
-                "tide_time": {"format": "HH:MM"},
-                "weather": {
-                    "options": [
-                        "cloud_clear",
-                        "cloud_part",
-                        "cloud_over",
-                        "precip_rain_light",
-                        "precip_rain_mod",
-                        "precip_rain_heavy",
-                        "precip_snow",
-                    ],
+                "tide_time": {"format": TIME_FORMAT},
+                Columns.WEATHER: {
+                    "options": list(Weather),
                     "dev_notes": [
                         (
                             "Took a liberty to create our own str values for optional "
@@ -195,9 +237,9 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             },
             "site": {
                 "air_temp": {"units": "Celsius"},
-                "arrival_time": {"format": "HH:MM"},
+                "arrival_time": {"format": TIME_FORMAT},
                 "color": {
-                    "rank": {"options": [0, 1, 2, 3]},
+                    Columns.RANK: {"options": list(Rank)},
                     "thresholds": {
                         "outfall": "Any non-natural phenomena.",
                         "creek": "Any non-natural phenomena.",
@@ -210,10 +252,10 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         "creek": {"lower": {"value": 10, "inclusive": True}},
                     },
                 },
-                "flow": {"options": ["T", "M", "H"]},
-                "flow_compared_to_expected": {"options": ["Lower", "Normal", "Higher"]},
+                Columns.FLOW: {"options": list(Flow)},
+                Columns.FLOW_COMPARED_TO_EXPECTED: {"options": list(FlowComparedToExpected)},
                 "odor": {
-                    "rank": {"options": [0, 1, 2, 3]},
+                    Columns.RANK: {"options": list(Rank)},
                     "thresholds": {
                         "outfall": "Any non-natural phenomena.",
                         "creek": "Any non-natural phenomena.",
@@ -241,7 +283,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                     },
                 },
                 "visual": {
-                    "rank": {"options": [0, 1, 2, 3]},
+                    Columns.RANK: {"options": list(Rank)},
                     "thresholds": {
                         "outfall": "Any non-natural phenomena.",
                         "creek": "Any non-natural phenomena.",
@@ -266,39 +308,29 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
     },
     "example_extraction_document": {
         "metadata": {
-            "date": {"format": "YYYY-MM-DD"},
+            "date": {"format": DATE_FORMAT},
             "form_id": "str",
-            "form_type": {
-                "options": ["field_datasheet_stormwater_monitoring_friends_of_salish_sea"]
-            },
+            "form_type": {"options": list(FormType)},
             "form_version": "str",
             "investigators": {
                 "name": "str",
-                "end_time": {"format": "HH:MM"},
-                "start_time": {"format": "HH:MM"},
+                "end_time": {"format": TIME_FORMAT},
+                "start_time": {"format": TIME_FORMAT},
             },
             "observations": {
                 "field": {
                     "past_24hr_rainfall": {"units": "inches"},
                     "tide_height": {"units": "feet"},
-                    "tide_time": {"format": "HH:MM"},
-                    "weather": {
-                        "options": [
-                            "cloud_clear",
-                            "cloud_part",
-                            "cloud_over",
-                            "precip_rain_light",
-                            "precip_rain_mod",
-                            "precip_rain_heavy",
-                            "precip_snow",
-                        ]
+                    "tide_time": {"format": TIME_FORMAT},
+                    Columns.WEATHER: {
+                        "options": list(Weather),
                     },
                 },
                 "site": {
                     "air_temp": {"units": "Celsius"},
-                    "arrival_time": {"format": "HH:MM"},
+                    "arrival_time": {"format": TIME_FORMAT},
                     "color": {
-                        "rank": {"options": [0, 1, 2, 3]},
+                        Columns.RANK: {"options": list(Rank)},
                         "thresholds": {
                             "outfall": "Any non-natural phenomena.",
                             "creek": "Any non-natural phenomena.",
@@ -311,10 +343,12 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             "creek": {"lower": {"value": 10.0, "inclusive": True}},
                         },
                     },
-                    "flow": {"options": ["T", "M", "H"]},
-                    "flow_compared_to_expected": {"options": ["Lower", "Normal", "Higher"]},
+                    Columns.FLOW: {"options": list(Flow)},
+                    Columns.FLOW_COMPARED_TO_EXPECTED: {
+                        "options": list(FlowComparedToExpected)
+                    },
                     "odor": {
-                        "rank": {"options": [0, 1, 2, 3]},
+                        Columns.RANK: {"options": list(Rank)},
                         "thresholds": {
                             "outfall": "Any non-natural phenomena.",
                             "creek": "Any non-natural phenomena.",
@@ -342,7 +376,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         },
                     },
                     "visual": {
-                        "rank": {"options": [0, 1, 2, 3]},
+                        Columns.RANK: {"options": list(Rank)},
                         "thresholds": {
                             "outfall": "Any non-natural phenomena.",
                             "creek": "Any non-natural phenomena.",
@@ -367,7 +401,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
         },
         "forms": {
             "IMG_9527.jpg": {
-                "form_type": "field_datasheet_stormwater_monitoring_friends_of_salish_sea",
+                "form_type": FormType.FIELD_DATASHEET_FOSS,
                 "form_version": "4.4-1-29-2025",
                 "city": "BELLINGHAM",
                 "date": "2025-04-17",
@@ -382,7 +416,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         "tide_height": -0.7,
                         "tide_time": "14:39",
                         "past_24hr_rainfall": 0.0,
-                        "weather": "cloud_clear",
+                        Columns.WEATHER: Weather.CLOUD_CLEAR,
                     },
                     "site": [
                         {
@@ -390,57 +424,57 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             "bacteria_bottle_no": "B1",
                             "dry_outfall": False,
                             "arrival_time": "14:41",
-                            "flow": "M",
-                            "flow_compared_to_expected": "Normal",
+                            Columns.FLOW: Flow.M,
+                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                             "air_temp": 21.0,
                             "water_temp": 11.6,
                             "DO_mg_per_l": 10.35,
                             "SPS micro_S_per_cm": 414.1,
                             "salinity_ppt": 0.2,
                             "pH": 5.91,
-                            "color": {"rank": 1, "description": "YELLOW"},
-                            "odor": {"rank": 1, "description": "SULPHUR"},
-                            "visual": {"rank": None, "description": None},
+                            "color": {Columns.RANK: Rank.ONE, "description": "YELLOW"},
+                            "odor": {Columns.RANK: Rank.ONE, "description": "SULPHUR"},
+                            "visual": {Columns.RANK: None, "description": None},
                         },
                         {
                             "site_id": "C ST",
                             "bacteria_bottle_no": "B2",
                             "dry_outfall": False,
                             "arrival_time": "14:41",
-                            "flow": "M",
-                            "flow_compared_to_expected": "Normal",
+                            Columns.FLOW: Flow.M,
+                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                             "air_temp": 21.0,
                             "water_temp": 11.2,
                             "DO_mg_per_l": 10.41,
                             "SPS micro_S_per_cm": 369.9,
                             "salinity_ppt": 0.18,
                             "pH": 5.5,
-                            "color": {"rank": 1, "description": "YELLOW"},
-                            "odor": {"rank": 1, "description": "SULPHUR"},
-                            "visual": {"rank": None, "description": None},
+                            "color": {Columns.RANK: Rank.ONE, "description": "YELLOW"},
+                            "odor": {Columns.RANK: Rank.ONE, "description": "SULPHUR"},
+                            "visual": {Columns.RANK: None, "description": None},
                         },
                         {
                             "site_id": "BROADWAY",
                             "bacteria_bottle_no": "B3",
                             "dry_outfall": False,
                             "arrival_time": "15:09",
-                            "flow": "M",
-                            "flow_compared_to_expected": "Normal",
+                            Columns.FLOW: Flow.M,
+                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                             "air_temp": 22.0,
                             "water_temp": 11.1,
                             "DO_mg_per_l": 10.73,
                             "SPS micro_S_per_cm": 314.1,
                             "salinity_ppt": 0.15,
                             "pH": 7.40,
-                            "color": {"rank": 1, "description": "YELLOW"},
-                            "odor": {"rank": 1, "description": "SULPHUR"},
-                            "visual": {"rank": None, "description": None},
+                            "color": {Columns.RANK: Rank.ONE, "description": "YELLOW"},
+                            "odor": {Columns.RANK: Rank.ONE, "description": "SULPHUR"},
+                            "visual": {Columns.RANK: None, "description": None},
                         },
                     ],
                 },
             },
             "sheet1.jpg": {
-                "form_type": "field_datasheet_stormwater_monitoring_friends_of_salish_sea",
+                "form_type": FormType.FIELD_DATASHEET_FOSS,
                 "form_version": "4.4-1-29-2025",
                 "city": "BELLINGHAM",
                 "date": "2025-04-21",
@@ -455,7 +489,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         "tide_height": 0.22,
                         "tide_time": "17:10",
                         "past_24hr_rainfall": None,
-                        "weather": "cloud_clear",
+                        Columns.WEATHER: Weather.CLOUD_CLEAR,
                     },
                     "site": [
                         {
@@ -463,51 +497,51 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             "bacteria_bottle_no": "B5",
                             "dry_outfall": False,
                             "arrival_time": "17:10",
-                            "flow": "H",
-                            "flow_compared_to_expected": "Normal",
+                            Columns.FLOW: Flow.H,
+                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                             "air_temp": 16,
                             "water_temp": 11.6,
                             "DO_mg_per_l": 102.1,
                             "SPS micro_S_per_cm": 151.0,
                             "salinity_ppt": 0.07,
                             "pH": 7.73,
-                            "color": {"rank": 1, "description": "TAN"},
-                            "odor": {"rank": 0, "description": None},
-                            "visual": {"rank": 0, "description": None},
+                            "color": {Columns.RANK: Rank.ONE, "description": "TAN"},
+                            "odor": {Columns.RANK: Rank.ZERO, "description": None},
+                            "visual": {Columns.RANK: Rank.ZERO, "description": None},
                         },
                         {
                             "site_id": "BENASFASDF",
                             "bacteria_bottle_no": "B6",
                             "dry_outfall": False,
                             "arrival_time": "17:33",
-                            "flow": "H",
-                            "flow_compared_to_expected": "Normal",
+                            Columns.FLOW: Flow.H,
+                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                             "air_temp": 18,
                             "water_temp": 11.4,
                             "DO_mg_per_l": 11.03,
                             "SPS micro_S_per_cm": 234.7,
                             "salinity_ppt": 0.11,
                             "pH": 7.87,
-                            "color": {"rank": 1, "description": "Tan/brown"},
-                            "odor": {"rank": None, "description": None},
-                            "visual": {"rank": None, "description": None},
+                            "color": {Columns.RANK: Rank.ONE, "description": "Tan/brown"},
+                            "odor": {Columns.RANK: None, "description": None},
+                            "visual": {Columns.RANK: None, "description": None},
                         },
                         {
                             "site_id": "BEPSODF72",
                             "bacteria_bottle_no": "B7",
                             "dry_outfall": False,
                             "arrival_time": "17:40",
-                            "flow": "H",
-                            "flow_compared_to_expected": "Normal",
+                            Columns.FLOW: Flow.H,
+                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                             "air_temp": None,
                             "water_temp": 11.4,
                             "DO_mg_per_l": 11.17,
                             "SPS micro_S_per_cm": 235.1,
                             "salinity_ppt": 0.11,
                             "pH": 7.82,
-                            "color": {"rank": 1, "description": "Brown"},
-                            "odor": {"rank": None, "description": None},
-                            "visual": {"rank": None, "description": None},
+                            "color": {Columns.RANK: Rank.ONE, "description": "Brown"},
+                            "odor": {Columns.RANK: None, "description": None},
+                            "visual": {Columns.RANK: None, "description": None},
                         },
                     ],
                 },
