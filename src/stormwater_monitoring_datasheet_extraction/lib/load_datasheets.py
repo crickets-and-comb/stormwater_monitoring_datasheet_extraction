@@ -104,11 +104,11 @@ def extract(
         Raw extraction split into form metadata, investigators, field observations,
             and site observations.
     """
-    form_metadata = schema.FormMetadataExtracted()
-    investigators = schema.InvestigatorsExtracted()
-    field_field_observations = schema.FieldObservationsExtracted()
-    site_observations = schema.SiteObservationsExtracted()
-    qualitative_site_observations = schema.QualitativeSiteObservationsExtracted()
+    form_metadata = DataFrame[schema.FormMetadataExtracted]()
+    investigators = DataFrame[schema.InvestigatorsExtracted]()
+    field_field_observations = DataFrame[schema.FieldObservationsExtracted]()
+    site_observations = DataFrame[schema.SiteObservationsExtracted]()
+    qualitative_site_observations = DataFrame[schema.QualitativeSiteObservationsExtracted]()
     ...
 
     return (
