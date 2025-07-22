@@ -10,11 +10,8 @@ class Columns:
 
     # Form metadata.
     FORM_ID: Final[str] = "form_id"
-    FORM_TYPE: Final[str] = "form_type"
-    FORM_VERSION: Final[str] = "form_version"
     CITY: Final[str] = "city"
     DATE: Final[str] = "date"
-    NOTES: Final[str] = "notes"
 
     # Investigators.
     INVESTIGATOR: Final[str] = "investigator"
@@ -22,11 +19,6 @@ class Columns:
     END_TIME: Final[str] = "end_time"
 
     # Observations.
-    OBSERVATION: Final[str] = "observation"
-    OBSERVATION_TYPE: Final[str] = "observation_type"
-    OBSERVATION_VALUE: Final[str] = "observation_value"
-    OBSERVATION_UNIT: Final[str] = "observation_unit"
-    OBSERVATION_COMMENT: Final[str] = "observation_comment"
 
 
 class DocStrings:

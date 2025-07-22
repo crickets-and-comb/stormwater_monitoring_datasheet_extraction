@@ -17,8 +17,12 @@ _NULLABLE_FIELD = partial(_COERCE_FIELD, nullable=True)
 _UNIQUE_FIELD = partial(_COERCE_FIELD, unique=True)
 
 # NOTE: We can add form_type and form_version when we add other forms.
-# May need to add dataframe checks at that point, or create new shcema,
+# May need to add dataframe checks at that point, or create new schema,
 # or completely refactor how we handle the data.
+CITY_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.CITY)
+CITY_FIELD = partial(_COERCE_FIELD, alias=Columns.CITY)
+DATE_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.DATE)
+DATE_FIELD = partial(_COERCE_FIELD, alias=Columns.DATE)
 FORM_ID_FIELD_LAX = partial(_LAX_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD_UNQ = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
@@ -29,6 +33,8 @@ class FormMetadataExtracted(pa.DataFrameSchema):
     """Schema for the form metadata extracted from the datasheets."""
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
+    city: Series[str] = CITY_FIELD_LAX()
+    date: Series[str] = DATE_FIELD_LAX()
 
     class Config:
         """The configuration for the schema."""
@@ -77,6 +83,8 @@ class FormMetadataPrecleaned(pa.DataFrameSchema):
     """Schema for the form metadata precleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
+    city: Series[str] = CITY_FIELD()
+    date: Series[str] = DATE_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -124,6 +132,8 @@ class FormMetadataVerified(pa.DataFrameSchema):
     """Schema for the form metadata verified by the user."""
 
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
+    city: Series[str] = CITY_FIELD()
+    date: Series[str] = DATE_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -172,6 +182,8 @@ class FormMetadataCleaned(pa.DataFrameSchema):
     """Schema for the form metadata cleaned."""
 
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
+    city: Series[str] = CITY_FIELD()
+    date: Series[str] = DATE_FIELD()
 
 
 # TODO: Implement this.
