@@ -170,42 +170,42 @@ TIME_FORMAT: Final[str] = "HH:MM"
 
 FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
     # TODO: Resolve these notes.
-    "dev_notes": [
-        (
-            "For pre-DB validation, will need to consult target DB for nullability and other "
-            "constraints (uniqueness, character limits, etc.)."
-        ),
-        (
-            "Should decide whether and how to differentiate null types, like empty fields "
-            "vs. user-entered nulls (e.g., 'N/A', 'none', null sign), vs. 0."
-        ),
-        "See also dev_notes/notes fields in metadata section, like for the weather field.",
-        (
-            "The example doc has the metadata block included. It's just a copy of the "
-            "metadata block in the data dictionary, so we could just leave it out of the "
-            "extraction docs themselves. The advantage of doing that would be saving a "
-            "little space, as well as avoiding some types of unintentional data anomalies in "
-            "the case of accidental changes to the metadata. But, I chose to include "
-            "metadata as part of the actual extraction document as a confirmation of "
-            "provenance. This allows us to more easily handle anomalies should they arise, "
-            "such as in the outside chance that we intentionally change the form (change "
-            "thresholds, etc.) or the data dictionary itself. Without the metadata included "
-            "with each raw extraction, in order to maintain tight provenance, we'd need to "
-            "add version numbers to the metadata and put those in each extraction instead -- "
-            "which is totally doable. Another advantage of including the metadata with the "
-            "extraction document is for easier processing when programming or simply reading "
-            "by a human. It also may prove useful if we take on other forms. Anyway, I'm "
-            "open to using a metadata versioning system instead to save a little space. Or, "
-            "we might want to include both a copy of the metadata and a metadata version in "
-            "the extraction documents.",
-        ),
-        (
-            "CAVEAT TO ABOVE: I just noticed a version number in the title of the "
-            "downloadable empty form, so we could easily use that without having to build "
-            "out our own form versioning system. I'll leave the metadata block as part of "
-            "the extraction for now as a sanity check, but add the form version number field."
-        ),
-    ],
+    # "dev_notes": [
+    #     (
+    #         "For pre-DB validation, will need to consult target DB for nullability and other " # noqa: E501
+    #         "constraints (uniqueness, character limits, etc.)."
+    #     ),
+    #     (
+    #         "Should decide whether and how to differentiate null types, like empty fields "
+    #         "vs. user-entered nulls (e.g., 'N/A', 'none', null sign), vs. 0."
+    #     ),
+    #     "See also dev_notes/notes fields in metadata section, like for the weather field.",
+    #     (
+    #         "The example doc has the metadata block included. It's just a copy of the "
+    #         "metadata block in the data dictionary, so we could just leave it out of the "
+    #         "extraction docs themselves. The advantage of doing that would be saving a "
+    #         "little space, as well as avoiding some types of unintentional data anomalies in " # noqa: E501
+    #         "the case of accidental changes to the metadata. But, I chose to include "
+    #         "metadata as part of the actual extraction document as a confirmation of "
+    #         "provenance. This allows us to more easily handle anomalies should they arise, "
+    #         "such as in the outside chance that we intentionally change the form (change "
+    #         "thresholds, etc.) or the data dictionary itself. Without the metadata included " # noqa: E501
+    #         "with each raw extraction, in order to maintain tight provenance, we'd need to "
+    #         "add version numbers to the metadata and put those in each extraction instead -- " # noqa: E501
+    #         "which is totally doable. Another advantage of including the metadata with the "
+    #         "extraction document is for easier processing when programming or simply reading " # noqa: E501
+    #         "by a human. It also may prove useful if we take on other forms. Anyway, I'm "
+    #         "open to using a metadata versioning system instead to save a little space. Or, " # noqa: E501
+    #         "we might want to include both a copy of the metadata and a metadata version in " # noqa: E501
+    #         "the extraction documents.",
+    #     ),
+    #     (
+    #         "CAVEAT TO ABOVE: I just noticed a version number in the title of the "
+    #         "downloadable empty form, so we could easily use that without having to build "
+    #         "out our own form versioning system. I'll leave the metadata block as part of "
+    #         "the extraction for now as a sanity check, but add the form version number field."  # noqa: E501
+    #     ),
+    # ],
     Columns.FORMS: {
         Columns.FORM_ID: {
             Columns.FORM_TYPE: str,
@@ -258,13 +258,12 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
         Columns.DATE: {Columns.FORMAT: DATE_FORMAT},
         Columns.FORM_ID: {
             Columns.DATA_TYPE: str,
-            # TODO: Make dev_notes into comments.
-            "dev_notes": (
-                "Unique identifier of completed form. Different than DB's form ID if it "
-                "exists, and won't likely be entered into DB, and is not found on the "
-                "forms themselves. Just for convenience and to avoid trouble with "
-                "accidentally sorted lists. Maybe use image filename and/or timestamp."
-            ),
+            # "dev_notes": (
+            #     "Unique identifier of completed form. Different than DB's form ID if it "
+            #     "exists, and won't likely be entered into DB, and is not found on the "
+            #     "forms themselves. Just for convenience and to avoid trouble with "
+            #     "accidentally sorted lists. Maybe use image filename and/or timestamp."
+            # ),
         },
         Columns.FORM_TYPE: {Columns.OPTIONS: list(FormType)},
         Columns.INVESTIGATORS: {
@@ -279,20 +278,20 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                 Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
                 Columns.WEATHER: {
                     Columns.OPTIONS: list(Weather),
-                    "dev_notes": [
-                        (
-                            "Took a liberty to create our own str values for optional "
-                            "rankings, clarity. But, likely need to convert to DB values."
-                        ),
-                        (
-                            "It's unclear at this time if they can only select one. But, "
-                            "common sense says cloud cover and precipitation levels are not "
-                            "mutually exclusive. If there can be multiple weather "
-                            "conditions, this will need to be a list of StrEnums (to be "
-                            "validated as a set outside of JSON, along with other "
-                            "validations, like no two-rain observations)."
-                        ),
-                    ],
+                    # "dev_notes": [
+                    #     (
+                    #         "Took a liberty to create our own str values for optional "
+                    #         "rankings, clarity. But, likely need to convert to DB values."
+                    #     ),
+                    #     (
+                    #         "It's unclear at this time if they can only select one. But, "
+                    #         "common sense says cloud cover and precipitation levels are not " # noqa: E501
+                    #         "mutually exclusive. If there can be multiple weather "
+                    #         "conditions, this will need to be a list of StrEnums (to be "
+                    #         "validated as a set outside of JSON, along with other "
+                    #         "validations, like no two-rain observations)."
+                    #     ),
+                    # ],
                 },
             },
             Columns.SITE: {
