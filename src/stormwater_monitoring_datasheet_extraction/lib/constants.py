@@ -9,8 +9,6 @@ from comb_utils import DocString
 class Columns:
     """Column name constants."""
 
-    # TODO: Replace dict names with these.
-
     # Form metadata.
     FORM_ID: Final[str] = "form_id"
     CITY: Final[str] = "city"

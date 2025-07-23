@@ -38,9 +38,6 @@ _UNIQUE_FIELD: Final[Callable] = partial(_COERCE_FIELD, unique=True)
 FORM_ID_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD_UNQ: Final[Callable] = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
-# NOTE: We can add form_type and form_version when we add other forms.
-# May need to add dataframe checks at that point, or create new schema,
-# or completely refactor how we handle the data.
 CITY_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.CITY)
 CITY_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.CITY)
 DATE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DATE)
@@ -105,21 +102,31 @@ PH_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.PH)
 PH_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.PH)
 
 # Qualitative site observations: color, odor, visual.
-TYPE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.OBSERVATION_TYPE)
-TYPE_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.OBSERVATION_TYPE)
+OBSERVATION_TYPE_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.OBSERVATION_TYPE)
+OBSERVATION_TYPE: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.OBSERVATION_TYPE)
 RANK_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.RANK)
 RANK_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.RANK)
 DESCRIPTION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
 DESCRIPTION_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DESCRIPTION)
 
 
+# TODO: Enforce all PKs.
+
+
+# TODO: Recombine metadata with field observations?
 class FormMetadataExtracted(pa.DataFrameSchema):
-    """Schema for the form metadata extracted from the datasheets."""
+    """Schema for the form metadata extracted from the datasheets.
+
+    PK: form_id (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
     city: Series[str] = CITY_FIELD_LAX()
     date: Series[str] = DATE_FIELD_LAX()
     notes: Series[str] = NOTES_FIELD_LAX()
+    # NOTE: We can add form_type and form_version when we add other forms.
+    # May need to add dataframe checks at that point, or create new schema,
+    # or completely refactor how we handle the data.
 
     class Config:
         """The configuration for the schema."""
@@ -128,7 +135,11 @@ class FormMetadataExtracted(pa.DataFrameSchema):
 
 
 class InvestigatorsExtracted(pa.DataFrameSchema):
-    """Schema for the investigators extracted from the datasheets."""
+    """Schema for the investigators extracted from the datasheets.
+
+    PK: form_id, investigator (unenforced).
+    FK: metadata.form_id (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
     investigator: Series[str] = INVESTIGATOR_FIELD_LAX()
@@ -142,7 +153,11 @@ class InvestigatorsExtracted(pa.DataFrameSchema):
 
 
 class FieldObservationsExtracted(pa.DataFrameSchema):
-    """Schema for the observations precleaned."""
+    """Schema for the observations precleaned.
+
+    PK: form_id (unenforced).
+    FK: metadata.form_id (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
     tide_height: Series[float] = TIDE_HEIGHT_FIELD_LAX()
@@ -157,9 +172,15 @@ class FieldObservationsExtracted(pa.DataFrameSchema):
 
 
 class SiteObservationsExtracted(pa.DataFrameSchema):
-    """Schema for the observations precleaned."""
+    """Schema for the observations precleaned.
+
+    PK: form_id, site_id (unenforced).
+    FK: metadata.form_id (unenforced).
+    FK: ?.bottle_no (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
+    site_id: Series[str] = SITE_ID_FIELD_LAX()
     bottle_no: Series[str] = BOTTLE_NO_FIELD_LAX()
     dry_outfall: Series[bool] = DRY_OUTFALL_FIELD_LAX()
     arrival_time: Series[str] = ARRIVAL_TIME_FIELD_LAX()
@@ -179,13 +200,17 @@ class SiteObservationsExtracted(pa.DataFrameSchema):
 
 
 class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
-    """Schema for the qualitative site observations extracted from the datasheets."""
+    """Schema for the qualitative site observations extracted from the datasheets.
+
+    PK: form_id, site_id (unenforced).
+    FK: metadata.form_id (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
-    bottle_no: Series[str] = BOTTLE_NO_FIELD_LAX()
-    color: Series[str] = TYPE_FIELD_LAX()
-    odor: Series[str] = TYPE_FIELD_LAX()
-    visual: Series[str] = TYPE_FIELD_LAX()
+    site_id: Series[str] = SITE_ID_FIELD_LAX()
+    type: Series[str] = OBSERVATION_TYPE_LAX()
+    rank: Series[str] = RANK_FIELD_LAX()
+    description: Series[str] = DESCRIPTION_FIELD_LAX()
 
     class Config:
         """The configuration for the schema."""
@@ -194,7 +219,10 @@ class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
 
 
 class FormMetadataPrecleaned(FormMetadataExtracted):
-    """Schema for the form metadata precleaned."""
+    """Schema for the form metadata precleaned.
+
+    PK: form_id (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
     city: Series[str] = CITY_FIELD()
@@ -208,7 +236,11 @@ class FormMetadataPrecleaned(FormMetadataExtracted):
 
 
 class InvestigatorsPrecleaned(InvestigatorsExtracted):
-    """Schema for the investigators precleaned."""
+    """Schema for the investigators precleaned.
+
+    PK: form_id, investigator (unenforced).
+    FK: metadata.form_id (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD()
     investigator: Series[str] = INVESTIGATOR_FIELD()
@@ -222,7 +254,11 @@ class InvestigatorsPrecleaned(InvestigatorsExtracted):
 
 
 class FieldObservationsPrecleaned(FieldObservationsExtracted):
-    """Schema for the observations extracted from the datasheets."""
+    """Schema for the observations extracted from the datasheets.
+
+    PK: form_id (unenforced).
+    FK: metadata.form_id (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD()
     tide_height: Series[float] = TIDE_HEIGHT_FIELD()
@@ -237,9 +273,15 @@ class FieldObservationsPrecleaned(FieldObservationsExtracted):
 
 
 class SiteObservationsPrecleaned(SiteObservationsExtracted):
-    """Schema for the observations extracted from the datasheets."""
+    """Schema for the observations extracted from the datasheets.
+
+    PK: form_id, site_id (unenforced).
+    FK: metadata.form_id (unenforced).
+    FK: ?.bottle_no (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD()
+    site_id: Series[str] = SITE_ID_FIELD()
     bottle_no: Series[str] = BOTTLE_NO_FIELD()
     dry_outfall: Series[bool] = DRY_OUTFALL_FIELD()
     arrival_time: Series[str] = ARRIVAL_TIME_FIELD()
@@ -259,13 +301,18 @@ class SiteObservationsPrecleaned(SiteObservationsExtracted):
 
 
 class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted):
-    """Schema for the qualitative site observations precleaned."""
+    """Schema for the qualitative site observations precleaned.
+
+    PK: form_id, site_id (unenforced).
+    FK: metadata.form_id (unenforced).
+    """
 
     form_id: Series[str] = FORM_ID_FIELD()
+    site_id: Series[str] = SITE_ID_FIELD()
     bottle_no: Series[str] = BOTTLE_NO_FIELD()
-    color: Series[str] = TYPE_FIELD()
-    odor: Series[str] = TYPE_FIELD()
-    visual: Series[str] = TYPE_FIELD()
+    type: Series[str] = OBSERVATION_TYPE()
+    rank: Series[str] = RANK_FIELD()
+    description: Series[str] = DESCRIPTION_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -274,40 +321,84 @@ class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted
 
 
 class FormMetadataVerified(FormMetadataPrecleaned):
-    """Schema for the form metadata verified by the user."""
+    """Schema for the form metadata verified by the user.
+
+    PK: form_id.
+    """
 
 
 class InvestigatorsVerified(InvestigatorsPrecleaned):
-    """Schema for the investigators verified by the user."""
+    """Schema for the investigators verified by the user.
+
+    PK: form_id, investigator.
+    FK: metadata.form_id (unenforced).
+    """
 
 
 class FieldObservationsVerified(FieldObservationsPrecleaned):
-    """Schema for the observations verified by the user."""
+    """Schema for the observations verified by the user.
+
+    PK: form_id.
+    FK: metadata.form_id (unenforced).
+    """
 
 
 class SiteObservationsVerified(SiteObservationsPrecleaned):
-    """Schema for the observations verified by the user."""
+    """Schema for the observations verified by the user.
+
+    PK: form_id, site_id.
+    FK: metadata.form_id (unenforced).
+    FK: ?.bottle_no (unenforced).
+    """
+
+    # TODO: bottle_no should be unique by form_id at least.
+    # TODO: If dry outfall is true, then bottle_no should be null.
+    # Otherwise, bottle_no should be non-null.
 
 
 class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned):
-    """Schema for the qualitative site observations verified by the user."""
+    """Schema for the qualitative site observations verified by the user.
+
+    PK: form_id, site_id.
+    FK: metadata.form_id (unenforced).
+    """
 
 
 class FormMetadataCleaned(FormMetadataVerified):
-    """Schema for the form metadata cleaned."""
+    """Schema for the form metadata cleaned.
+
+    PK: form_id.
+    """
 
 
 class InvestigatorsCleaned(InvestigatorsVerified):
-    """Schema for the investigators cleaned."""
+    """Schema for the investigators cleaned.
+
+    PK: form_id, investigator.
+    FK: metadata.form_id (unenforced).
+    """
 
 
 class FieldObservationsCleaned(FieldObservationsVerified):
-    """Schema for the observations cleaned."""
+    """Schema for the observations cleaned.
+
+    PK: form_id.
+    FK: metadata.form_id (unenforced).
+    """
 
 
 class SiteObservationsCleaned(SiteObservationsVerified):
-    """Schema for the observations cleaned."""
+    """Schema for the observations cleaned.
+
+    PK: form_id, site_id.
+    FK: metadata.form_id (unenforced).
+    FK: ?.bottle_no (unenforced).
+    """
 
 
 class QualitativeSiteObservationsCleaned(QualitativeSiteObservationsVerified):
-    """Schema for the qualitative site observations cleaned."""
+    """Schema for the qualitative site observations cleaned.
+
+    PK: form_id, site_id (unenforced).
+    FK: metadata.form_id (unenforced).
+    """
