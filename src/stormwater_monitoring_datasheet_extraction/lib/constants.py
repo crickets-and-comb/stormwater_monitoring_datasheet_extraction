@@ -30,7 +30,7 @@ class Columns:
 
     # Site observations.
     SITE_ID: Final[str] = "site_id"
-    BOTTLE_NO: Final[str] = "bottle_no"
+    BACTERIA_BOTTLE_NO: Final[str] = "bacteria_bottle_no"
     DRY_OUTFALL: Final[str] = "dry_outfall"
     ARRIVAL_TIME: Final[str] = "arrival_time"
     FLOW: Final[str] = "flow"
@@ -38,12 +38,12 @@ class Columns:
     AIR_TEMP: Final[str] = "air_temp"
     WATER_TEMP: Final[str] = "water_temp"
     DO_MG_PER_L: Final[str] = "DO_mg_per_l"
-    SPS_MICRO_S_PER_CM: Final[str] = "SPS micro_S_per_cm"
+    SPS_MICRO_S_PER_CM: Final[str] = "SPS_micro_S_per_cm"
     SALINITY_PPT: Final[str] = "salinity_ppt"
     PH: Final[str] = "pH"
 
     # Qualitative site observations: color, odor, visual.
-    TYPE: Final[str] = "type"
+    OBSERVATION_TYPE: Final[str] = "type"
     RANK: Final[str] = "rank"
     DESCRIPTION: Final[str] = "description"
 
@@ -159,45 +159,47 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
         ),
     ],
     "forms": {
-        "form_id": {
+        Columns.FORM_ID: {
             "form_type": str,
             "form_version": str,
-            "city": str,
-            "date": str,
-            "notes": str,
-            "investigators": {"name": {"start_time": str, "end_time": str}},
+            Columns.CITY: str,
+            Columns.DATE: str,
+            Columns.NOTES: str,
+            "investigators": {
+                Columns.INVESTIGATOR: {Columns.START_TIME: str, Columns.END_TIME: str}
+            },
             "observations": {
                 "field": {
-                    "tide_height": float,
-                    "tide_time": str,
-                    "past_24hr_rainfall": float,
+                    Columns.TIDE_HEIGHT: float,
+                    Columns.TIDE_TIME: str,
+                    Columns.PAST_24HR_RAINFALL: float,
                     Columns.WEATHER: Weather,
                 },
                 "site": [
                     {
-                        "site_id": str,
-                        "bacteria_bottle_no": str,
-                        "dry_outfall": bool,
-                        "arrival_time": str,
+                        Columns.SITE_ID: str,
+                        Columns.BACTERIA_BOTTLE_NO: str,
+                        Columns.DRY_OUTFALL: bool,
+                        Columns.ARRIVAL_TIME: str,
                         Columns.FLOW: Flow,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected,
-                        "air_temp": float,
-                        "water_temp": float,
-                        "DO_mg_per_l": float,
-                        "SPS micro_S_per_cm": float,
-                        "salinity_ppt": float,
-                        "pH": float,
-                        "color": {Columns.RANK: Rank, "description": str},
-                        "odor": {Columns.RANK: Rank, "description": str},
-                        "visual": {Columns.RANK: Rank, "description": str},
+                        Columns.AIR_TEMP: float,
+                        Columns.WATER_TEMP: float,
+                        Columns.DO_MG_PER_L: float,
+                        Columns.SPS_MICRO_S_PER_CM: float,
+                        Columns.SALINITY_PPT: float,
+                        Columns.PH: float,
+                        "color": {Columns.RANK: Rank, Columns.DESCRIPTION: str},
+                        "odor": {Columns.RANK: Rank, Columns.DESCRIPTION: str},
+                        "visual": {Columns.RANK: Rank, Columns.DESCRIPTION: str},
                     }
                 ],
             },
         }
     },
     "metadata": {
-        "date": {"format": DATE_FORMAT},
-        "form_id": {
+        Columns.DATE: {"format": DATE_FORMAT},
+        Columns.FORM_ID: {
             "type": str,
             "note": (
                 "Unique identifier of completed form. Different than DB's form ID if it "
@@ -208,15 +210,15 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
         },
         "form_type": {"options": list(FormType)},
         "investigators": {
-            "name": str,
-            "end_time": {"format": TIME_FORMAT},
-            "start_time": {"format": TIME_FORMAT},
+            Columns.INVESTIGATOR: str,
+            Columns.END_TIME: {"format": TIME_FORMAT},
+            Columns.START_TIME: {"format": TIME_FORMAT},
         },
         "observations": {
             "field": {
-                "past_24hr_rainfall": {"units": "inches"},
-                "tide_height": {"units": "feet"},
-                "tide_time": {"format": TIME_FORMAT},
+                Columns.PAST_24HR_RAINFALL: {"units": "inches"},
+                Columns.TIDE_HEIGHT: {"units": "feet"},
+                Columns.TIDE_TIME: {"format": TIME_FORMAT},
                 Columns.WEATHER: {
                     "options": list(Weather),
                     "dev_notes": [
@@ -236,8 +238,8 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                 },
             },
             "site": {
-                "air_temp": {"units": "Celsius"},
-                "arrival_time": {"format": TIME_FORMAT},
+                Columns.AIR_TEMP: {"units": "Celsius"},
+                Columns.ARRIVAL_TIME: {"format": TIME_FORMAT},
                 "color": {
                     Columns.RANK: {"options": list(Rank)},
                     "thresholds": {
@@ -245,7 +247,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         "creek": "Any non-natural phenomena.",
                     },
                 },
-                "DO_mg_per_l": {
+                Columns.DO_MG_PER_L: {
                     "units": "mg/l",
                     "thresholds": {
                         "outfall": {"lower": {"value": 6, "inclusive": True}},
@@ -261,7 +263,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         "creek": "Any non-natural phenomena.",
                     },
                 },
-                "pH": {
+                Columns.PH: {
                     "units": "pH",
                     "thresholds": {
                         "outfall": {
@@ -274,8 +276,8 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         },
                     },
                 },
-                "salinity_ppt": {"units": "ppt"},
-                "SPS micro_S_per_cm": {
+                Columns.SALINITY_PPT: {"units": "ppt"},
+                Columns.SPS_MICRO_S_PER_CM: {
                     "units": "microS/cm",
                     "thresholds": {
                         "outfall": {"upper": {"value": 500, "inclusive": True}},
@@ -289,11 +291,11 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         "creek": "Any non-natural phenomena.",
                     },
                 },
-                "water_temp": {
+                Columns.WATER_TEMP: {
                     "units": "Celsius",
                     "thresholds": {
                         "outfall": {
-                            "upper": {"reference_value": "air_temp", "inclusive": True}
+                            "upper": {"reference_value": Columns.AIR_TEMP, "inclusive": True}
                         },
                         "creek": {
                             "habitat": {"upper": {"value": 16, "inclusive": True}},
@@ -308,27 +310,27 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
     },
     "example_extraction_document": {
         "metadata": {
-            "date": {"format": DATE_FORMAT},
-            "form_id": "str",
+            Columns.DATE: {"format": DATE_FORMAT},
+            Columns.FORM_ID: "str",
             "form_type": {"options": list(FormType)},
             "form_version": "str",
             "investigators": {
-                "name": "str",
-                "end_time": {"format": TIME_FORMAT},
-                "start_time": {"format": TIME_FORMAT},
+                Columns.INVESTIGATOR: "str",
+                Columns.END_TIME: {"format": TIME_FORMAT},
+                Columns.START_TIME: {"format": TIME_FORMAT},
             },
             "observations": {
                 "field": {
-                    "past_24hr_rainfall": {"units": "inches"},
-                    "tide_height": {"units": "feet"},
-                    "tide_time": {"format": TIME_FORMAT},
+                    Columns.PAST_24HR_RAINFALL: {"units": "inches"},
+                    Columns.TIDE_HEIGHT: {"units": "feet"},
+                    Columns.TIDE_TIME: {"format": TIME_FORMAT},
                     Columns.WEATHER: {
                         "options": list(Weather),
                     },
                 },
                 "site": {
-                    "air_temp": {"units": "Celsius"},
-                    "arrival_time": {"format": TIME_FORMAT},
+                    Columns.AIR_TEMP: {"units": "Celsius"},
+                    Columns.ARRIVAL_TIME: {"format": TIME_FORMAT},
                     "color": {
                         Columns.RANK: {"options": list(Rank)},
                         "thresholds": {
@@ -336,7 +338,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             "creek": "Any non-natural phenomena.",
                         },
                     },
-                    "DO_mg_per_l": {
+                    Columns.DO_MG_PER_L: {
                         "units": "mg/l",
                         "thresholds": {
                             "outfall": {"lower": {"value": 6, "inclusive": True}},
@@ -354,7 +356,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             "creek": "Any non-natural phenomena.",
                         },
                     },
-                    "pH": {
+                    Columns.PH: {
                         "units": "pH",
                         "thresholds": {
                             "outfall": {
@@ -367,8 +369,8 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             },
                         },
                     },
-                    "salinity_ppt": {"units": "ppt"},
-                    "SPS micro_S_per_cm": {
+                    Columns.SALINITY_PPT: {"units": "ppt"},
+                    Columns.SPS_MICRO_S_PER_CM: {
                         "units": "microS/cm",
                         "thresholds": {
                             "outfall": {"upper": {"value": 500, "inclusive": True}},
@@ -382,11 +384,14 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             "creek": "Any non-natural phenomena.",
                         },
                     },
-                    "water_temp": {
+                    Columns.WATER_TEMP: {
                         "units": "Celsius",
                         "thresholds": {
                             "outfall": {
-                                "upper": {"reference_value": "air_temp", "inclusive": True}
+                                "upper": {
+                                    "reference_value": Columns.AIR_TEMP,
+                                    "inclusive": True,
+                                }
                             },
                             "creek": {
                                 "habitat": {"upper": {"value": 16, "inclusive": True}},
@@ -403,72 +408,72 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             "IMG_9527.jpg": {
                 "form_type": FormType.FIELD_DATASHEET_FOSS,
                 "form_version": "4.4-1-29-2025",
-                "city": "BELLINGHAM",
-                "date": "2025-04-17",
-                "notes": "C ST: MICROBIAL MAT RETREATED ...",
+                Columns.CITY: "BELLINGHAM",
+                Columns.DATE: "2025-04-17",
+                Columns.NOTES: "C ST: MICROBIAL MAT RETREATED ...",
                 "investigators": {
-                    "CIARA H": {"start_time": "14:40", "end_time": "15:23"},
-                    "ANNA B": {"start_time": "14:40", "end_time": "15:23"},
-                    "ZOE F": {"start_time": "15:09", "end_time": "15:23"},
+                    "CIARA H": {Columns.START_TIME: "14:40", Columns.END_TIME: "15:23"},
+                    "ANNA B": {Columns.START_TIME: "14:40", Columns.END_TIME: "15:23"},
+                    "ZOE F": {Columns.START_TIME: "15:09", Columns.END_TIME: "15:23"},
                 },
                 "observations": {
                     "field": {
-                        "tide_height": -0.7,
-                        "tide_time": "14:39",
-                        "past_24hr_rainfall": 0.0,
+                        Columns.TIDE_HEIGHT: -0.7,
+                        Columns.TIDE_TIME: "14:39",
+                        Columns.PAST_24HR_RAINFALL: 0.0,
                         Columns.WEATHER: Weather.CLOUD_CLEAR,
                     },
                     "site": [
                         {
-                            "site_id": "C ST",
-                            "bacteria_bottle_no": "B1",
-                            "dry_outfall": False,
-                            "arrival_time": "14:41",
+                            Columns.SITE_ID: "C ST",
+                            Columns.BACTERIA_BOTTLE_NO: "B1",
+                            Columns.DRY_OUTFALL: False,
+                            Columns.ARRIVAL_TIME: "14:41",
                             Columns.FLOW: Flow.M,
                             Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            "air_temp": 21.0,
-                            "water_temp": 11.6,
-                            "DO_mg_per_l": 10.35,
-                            "SPS micro_S_per_cm": 414.1,
-                            "salinity_ppt": 0.2,
-                            "pH": 5.91,
-                            "color": {Columns.RANK: Rank.ONE, "description": "YELLOW"},
-                            "odor": {Columns.RANK: Rank.ONE, "description": "SULPHUR"},
-                            "visual": {Columns.RANK: None, "description": None},
+                            Columns.AIR_TEMP: 21.0,
+                            Columns.WATER_TEMP: 11.6,
+                            Columns.DO_MG_PER_L: 10.35,
+                            Columns.SPS_MICRO_S_PER_CM: 414.1,
+                            Columns.SALINITY_PPT: 0.2,
+                            Columns.PH: 5.91,
+                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "YELLOW"},
+                            "odor": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "SULPHUR"},
+                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
                         },
                         {
-                            "site_id": "C ST",
-                            "bacteria_bottle_no": "B2",
-                            "dry_outfall": False,
-                            "arrival_time": "14:41",
+                            Columns.SITE_ID: "C ST",
+                            Columns.BACTERIA_BOTTLE_NO: "B2",
+                            Columns.DRY_OUTFALL: False,
+                            Columns.ARRIVAL_TIME: "14:41",
                             Columns.FLOW: Flow.M,
                             Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            "air_temp": 21.0,
-                            "water_temp": 11.2,
-                            "DO_mg_per_l": 10.41,
-                            "SPS micro_S_per_cm": 369.9,
-                            "salinity_ppt": 0.18,
-                            "pH": 5.5,
-                            "color": {Columns.RANK: Rank.ONE, "description": "YELLOW"},
-                            "odor": {Columns.RANK: Rank.ONE, "description": "SULPHUR"},
-                            "visual": {Columns.RANK: None, "description": None},
+                            Columns.AIR_TEMP: 21.0,
+                            Columns.WATER_TEMP: 11.2,
+                            Columns.DO_MG_PER_L: 10.41,
+                            Columns.SPS_MICRO_S_PER_CM: 369.9,
+                            Columns.SALINITY_PPT: 0.18,
+                            Columns.PH: 5.5,
+                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "YELLOW"},
+                            "odor": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "SULPHUR"},
+                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
                         },
                         {
-                            "site_id": "BROADWAY",
-                            "bacteria_bottle_no": "B3",
-                            "dry_outfall": False,
-                            "arrival_time": "15:09",
+                            Columns.SITE_ID: "BROADWAY",
+                            Columns.BACTERIA_BOTTLE_NO: "B3",
+                            Columns.DRY_OUTFALL: False,
+                            Columns.ARRIVAL_TIME: "15:09",
                             Columns.FLOW: Flow.M,
                             Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            "air_temp": 22.0,
-                            "water_temp": 11.1,
-                            "DO_mg_per_l": 10.73,
-                            "SPS micro_S_per_cm": 314.1,
-                            "salinity_ppt": 0.15,
-                            "pH": 7.40,
-                            "color": {Columns.RANK: Rank.ONE, "description": "YELLOW"},
-                            "odor": {Columns.RANK: Rank.ONE, "description": "SULPHUR"},
-                            "visual": {Columns.RANK: None, "description": None},
+                            Columns.AIR_TEMP: 22.0,
+                            Columns.WATER_TEMP: 11.1,
+                            Columns.DO_MG_PER_L: 10.73,
+                            Columns.SPS_MICRO_S_PER_CM: 314.1,
+                            Columns.SALINITY_PPT: 0.15,
+                            Columns.PH: 7.40,
+                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "YELLOW"},
+                            "odor": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "SULPHUR"},
+                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
                         },
                     ],
                 },
@@ -476,72 +481,75 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             "sheet1.jpg": {
                 "form_type": FormType.FIELD_DATASHEET_FOSS,
                 "form_version": "4.4-1-29-2025",
-                "city": "BELLINGHAM",
-                "date": "2025-04-21",
-                "notes": "Padden - DO%",
+                Columns.CITY: "BELLINGHAM",
+                Columns.DATE: "2025-04-21",
+                Columns.NOTES: "Padden - DO%",
                 "investigators": {
-                    "ANNA": {"start_time": "17:10"},
-                    "PAT": {"start_time": "17:10"},
-                    "CHRIS": {"start_time": "17:10"},
+                    "ANNA": {Columns.START_TIME: "17:10"},
+                    "PAT": {Columns.START_TIME: "17:10"},
+                    "CHRIS": {Columns.START_TIME: "17:10"},
                 },
                 "observations": {
                     "field": {
-                        "tide_height": 0.22,
-                        "tide_time": "17:10",
-                        "past_24hr_rainfall": None,
+                        Columns.TIDE_HEIGHT: 0.22,
+                        Columns.TIDE_TIME: "17:10",
+                        Columns.PAST_24HR_RAINFALL: None,
                         Columns.WEATHER: Weather.CLOUD_CLEAR,
                     },
                     "site": [
                         {
-                            "site_id": "PADDEN",
-                            "bacteria_bottle_no": "B5",
-                            "dry_outfall": False,
-                            "arrival_time": "17:10",
+                            Columns.SITE_ID: "PADDEN",
+                            Columns.BACTERIA_BOTTLE_NO: "B5",
+                            Columns.DRY_OUTFALL: False,
+                            Columns.ARRIVAL_TIME: "17:10",
                             Columns.FLOW: Flow.H,
                             Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            "air_temp": 16,
-                            "water_temp": 11.6,
-                            "DO_mg_per_l": 102.1,
-                            "SPS micro_S_per_cm": 151.0,
-                            "salinity_ppt": 0.07,
-                            "pH": 7.73,
-                            "color": {Columns.RANK: Rank.ONE, "description": "TAN"},
-                            "odor": {Columns.RANK: Rank.ZERO, "description": None},
-                            "visual": {Columns.RANK: Rank.ZERO, "description": None},
+                            Columns.AIR_TEMP: 16,
+                            Columns.WATER_TEMP: 11.6,
+                            Columns.DO_MG_PER_L: 102.1,
+                            Columns.SPS_MICRO_S_PER_CM: 151.0,
+                            Columns.SALINITY_PPT: 0.07,
+                            Columns.PH: 7.73,
+                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "TAN"},
+                            "odor": {Columns.RANK: Rank.ZERO, Columns.DESCRIPTION: None},
+                            "visual": {Columns.RANK: Rank.ZERO, Columns.DESCRIPTION: None},
                         },
                         {
-                            "site_id": "BENASFASDF",
-                            "bacteria_bottle_no": "B6",
-                            "dry_outfall": False,
-                            "arrival_time": "17:33",
+                            Columns.SITE_ID: "BENASFASDF",
+                            Columns.BACTERIA_BOTTLE_NO: "B6",
+                            Columns.DRY_OUTFALL: False,
+                            Columns.ARRIVAL_TIME: "17:33",
                             Columns.FLOW: Flow.H,
                             Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            "air_temp": 18,
-                            "water_temp": 11.4,
-                            "DO_mg_per_l": 11.03,
-                            "SPS micro_S_per_cm": 234.7,
-                            "salinity_ppt": 0.11,
-                            "pH": 7.87,
-                            "color": {Columns.RANK: Rank.ONE, "description": "Tan/brown"},
-                            "odor": {Columns.RANK: None, "description": None},
-                            "visual": {Columns.RANK: None, "description": None},
+                            Columns.AIR_TEMP: 18,
+                            Columns.WATER_TEMP: 11.4,
+                            Columns.DO_MG_PER_L: 11.03,
+                            Columns.SPS_MICRO_S_PER_CM: 234.7,
+                            Columns.SALINITY_PPT: 0.11,
+                            Columns.PH: 7.87,
+                            "color": {
+                                Columns.RANK: Rank.ONE,
+                                Columns.DESCRIPTION: "Tan/brown",
+                            },
+                            "odor": {Columns.RANK: None, Columns.DESCRIPTION: None},
+                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
                         },
                         {
-                            "site_id": "BEPSODF72",
-                            "bacteria_bottle_no": "B7",
-                            "dry_outfall": False,
-                            "arrival_time": "17:40",
+                            Columns.SITE_ID: "BEPSODF72",
+                            Columns.BACTERIA_BOTTLE_NO: "B7",
+                            Columns.DRY_OUTFALL: False,
+                            Columns.ARRIVAL_TIME: "17:40",
                             Columns.FLOW: Flow.H,
                             Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            "air_temp": None,
-                            "water_temp": 11.4,
-                            "DO_mg_per_l": 11.17,
-                            "SPS micro_S_per_cm": 235.1,
-                            "salinity_ppt": 0.11,
-                            "pH": 7.82,
-                            "color": {Columns.RANK: Rank.ONE, "description": "Brown"},
-                            "odor": {Columns.RANK: None, "description": None},
-                            "visual": {Columns.RANK: None, "description": None},
+                            Columns.AIR_TEMP: None,
+                            Columns.WATER_TEMP: 11.4,
+                            Columns.DO_MG_PER_L: 11.17,
+                            Columns.SPS_MICRO_S_PER_CM: 235.1,
+                            Columns.SALINITY_PPT: 0.11,
+                            Columns.PH: 7.82,
+                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "Brown"},
+                            "odor": {Columns.RANK: None, Columns.DESCRIPTION: None},
+                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
                         },
                     ],
                 },

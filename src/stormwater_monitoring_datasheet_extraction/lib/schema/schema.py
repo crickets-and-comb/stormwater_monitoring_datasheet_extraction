@@ -8,7 +8,7 @@ from pandera.typing import Series
 
 from stormwater_monitoring_datasheet_extraction.lib.constants import Columns
 
-# TODO: Confirm/set field types and restrictions.
+# TODO: Set field restrictions.
 # See/use field_datasheet_data_definition.json metadata.
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
@@ -73,8 +73,8 @@ WEATHER_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.WEATHER)
 # Site observations.
 SITE_ID_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.SITE_ID)
 SITE_ID_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.SITE_ID)
-BOTTLE_NO_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.BOTTLE_NO)
-BOTTLE_NO_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.BOTTLE_NO)
+BOTTLE_NO_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.BACTERIA_BOTTLE_NO)
+BOTTLE_NO_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.BACTERIA_BOTTLE_NO)
 DRY_OUTFALL_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DRY_OUTFALL)
 DRY_OUTFALL_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DRY_OUTFALL)
 ARRIVAL_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.ARRIVAL_TIME)
@@ -105,8 +105,8 @@ PH_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.PH)
 PH_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.PH)
 
 # Qualitative site observations: color, odor, visual.
-TYPE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.TYPE)
-TYPE_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.TYPE)
+TYPE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.OBSERVATION_TYPE)
+TYPE_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.OBSERVATION_TYPE)
 RANK_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.RANK)
 RANK_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.RANK)
 DESCRIPTION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
