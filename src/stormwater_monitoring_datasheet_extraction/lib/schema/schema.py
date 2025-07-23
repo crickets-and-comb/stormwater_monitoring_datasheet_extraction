@@ -6,7 +6,15 @@ from typing import Callable, Final
 import pandera as pa
 from pandera.typing import Series
 
-from stormwater_monitoring_datasheet_extraction.lib.constants import Columns
+from stormwater_monitoring_datasheet_extraction.lib.constants import (
+    Columns,
+    Flow,
+    FlowComparedToExpected,
+    FormType,
+    QualitativeSiteObservationTypes,
+    Rank,
+    Weather,
+)
 
 # TODO: Set field restrictions.
 # See/use field_datasheet_data_definition.json metadata.
@@ -38,6 +46,10 @@ _UNIQUE_FIELD: Final[Callable] = partial(_COERCE_FIELD, unique=True)
 FORM_ID_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
 FORM_ID_FIELD_UNQ: Final[Callable] = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
+FORM_TYPE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.FORM_TYPE)
+FORM_TYPE_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FORM_TYPE)
+FORM_VERSION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.FORM_VERSION)
+FORM_VERSION_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FORM_VERSION)
 CITY_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.CITY)
 CITY_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.CITY)
 DATE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DATE)
@@ -121,12 +133,11 @@ class FormMetadataExtracted(pa.DataFrameSchema):
     """
 
     form_id: Series[str] = FORM_ID_FIELD_LAX()
+    form_type: Series[str] = FORM_TYPE_FIELD_LAX()
+    form_version: Series[str] = FORM_VERSION_FIELD_LAX()
     city: Series[str] = CITY_FIELD_LAX()
     date: Series[str] = DATE_FIELD_LAX()
     notes: Series[str] = NOTES_FIELD_LAX()
-    # NOTE: We can add form_type and form_version when we add other forms.
-    # May need to add dataframe checks at that point, or create new schema,
-    # or completely refactor how we handle the data.
 
     class Config:
         """The configuration for the schema."""
@@ -209,7 +220,7 @@ class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
     form_id: Series[str] = FORM_ID_FIELD_LAX()
     site_id: Series[str] = SITE_ID_FIELD_LAX()
     type: Series[str] = OBSERVATION_TYPE_LAX()
-    rank: Series[str] = RANK_FIELD_LAX()
+    rank: Series[int] = RANK_FIELD_LAX()
     description: Series[str] = DESCRIPTION_FIELD_LAX()
 
     class Config:
@@ -225,6 +236,8 @@ class FormMetadataPrecleaned(FormMetadataExtracted):
     """
 
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
+    form_type: Series[str] = FORM_TYPE_FIELD()
+    form_version: Series[str] = FORM_VERSION_FIELD()
     city: Series[str] = CITY_FIELD()
     date: Series[str] = DATE_FIELD()
     notes: Series[str] = NOTES_FIELD()
@@ -311,7 +324,7 @@ class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted
     site_id: Series[str] = SITE_ID_FIELD()
     bottle_no: Series[str] = BOTTLE_NO_FIELD()
     type: Series[str] = OBSERVATION_TYPE()
-    rank: Series[str] = RANK_FIELD()
+    rank: Series[int] = RANK_FIELD()
     description: Series[str] = DESCRIPTION_FIELD()
 
     class Config:
@@ -325,6 +338,8 @@ class FormMetadataVerified(FormMetadataPrecleaned):
 
     PK: form_id.
     """
+
+    form_type: Series[FormType] = FORM_TYPE_FIELD()
 
 
 class InvestigatorsVerified(InvestigatorsPrecleaned):
@@ -342,6 +357,8 @@ class FieldObservationsVerified(FieldObservationsPrecleaned):
     FK: metadata.form_id (unenforced).
     """
 
+    weather: Series[Weather] = WEATHER_FIELD()
+
 
 class SiteObservationsVerified(SiteObservationsPrecleaned):
     """Schema for the observations verified by the user.
@@ -351,9 +368,15 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     FK: ?.bottle_no (unenforced).
     """
 
+    flow: Series[Flow] = FLOW_FIELD()
+    flow_compared_to_expected: Series[FlowComparedToExpected] = (
+        FLOW_COMPARED_TO_EXPECTED_FIELD_LAX()
+    )
+
     # TODO: bottle_no should be unique by form_id at least.
     # TODO: If dry outfall is true, then bottle_no should be null.
     # Otherwise, bottle_no should be non-null.
+    # What should be present for dry outfalls?
 
 
 class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned):
@@ -362,6 +385,9 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
     PK: form_id, site_id.
     FK: metadata.form_id (unenforced).
     """
+
+    type: Series[QualitativeSiteObservationTypes] = OBSERVATION_TYPE()
+    rank: Series[Rank] = RANK_FIELD()
 
 
 class FormMetadataCleaned(FormMetadataVerified):

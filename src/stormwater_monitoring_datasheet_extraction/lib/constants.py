@@ -163,9 +163,12 @@ class Weather(StrEnum):
     PRECIP_SNOW = "precip_snow"
 
 
+# TODO: Make custom date and time classes with __str__ and __repr__?
+# Extend String so it can be used as type hint and render as a string?
 DATE_FORMAT: Final[str] = "YYYY-MM-DD"
 TIME_FORMAT: Final[str] = "HH:MM"
 
+# TODO: Version data definitions by form type and version.
 FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
     # TODO: Resolve these notes.
     # "dev_notes": [
@@ -206,7 +209,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
     # ],
     Columns.FORMS: {
         Columns.FORM_ID: {
-            Columns.FORM_TYPE: str,
+            Columns.FORM_TYPE: FormType,
             Columns.FORM_VERSION: str,
             Columns.CITY: str,
             Columns.DATE: str,
