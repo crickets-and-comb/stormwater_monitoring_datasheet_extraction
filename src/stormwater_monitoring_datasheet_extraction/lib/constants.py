@@ -43,9 +43,38 @@ class Columns:
     PH: Final[str] = "pH"
 
     # Qualitative site observations: color, odor, visual.
-    OBSERVATION_TYPE: Final[str] = "type"
+    OBSERVATION_TYPE: Final[str] = "observation_type"
     RANK: Final[str] = "rank"
     DESCRIPTION: Final[str] = "description"
+
+    # Other
+    COLOR: Final[str] = "color"
+    CREEK: Final[str] = "creek"
+    DATA_TYPE: Final[str] = "data_type"
+    FIELD: Final[str] = "field"
+    FORM_TYPE: Final[str] = "form_type"
+    FORM_VERSION: Final[str] = "form_version"
+    FORMAT: Final[str] = "format"
+    FORMS: Final[str] = "forms"
+    HABITAT: Final[str] = "habitat"
+    INCLUSIVE: Final[str] = "inclusive"
+    INVESTIGATORS: Final[str] = "investigators"
+    LOWER: Final[str] = "lower"
+    METADATA: Final[str] = "metadata"
+    MIGRATE: Final[str] = "migrate"
+    OBSERVATIONS: Final[str] = "observations"
+    ODOR: Final[str] = "odor"
+    OPTIONS: Final[str] = "options"
+    OUTFALL: Final[str] = "outfall"
+    REAR: Final[str] = "rear"
+    REFERENCE_VALUE: Final[str] = "reference_value"
+    SITE: Final[str] = "site"
+    SPAWN: Final[str] = "spawn"
+    THRESHOLDS: Final[str] = "thresholds"
+    UNITS: Final[str] = "units"
+    UPPER: Final[str] = "upper"
+    VALUE: Final[str] = "value"
+    VISUAL: Final[str] = "visual"
 
 
 class DocStrings:
@@ -93,6 +122,14 @@ class FormType(StrEnum):
     FIELD_DATASHEET_FOSS = "field_datasheet_FOSS"
 
 
+class QualitativeSiteObservationTypes(StrEnum):
+    """Options for the qualitative site observation types field."""
+
+    COLOR = Columns.COLOR
+    ODOR = Columns.ODOR
+    VISUAL = Columns.VISUAL
+
+
 class Rank(IntEnum):
     """Options for the rank field."""
 
@@ -121,7 +158,6 @@ TIME_FORMAT: Final[str] = "HH:MM"
 
 FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
     # TODO: Resolve these notes.
-    # TODO: Create enums for categorical data.
     "dev_notes": [
         (
             "For pre-DB validation, will need to consult target DB for nullability and other "
@@ -158,24 +194,24 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             "the extraction for now as a sanity check, but add the form version number field."
         ),
     ],
-    "forms": {
+    Columns.FORMS: {
         Columns.FORM_ID: {
-            "form_type": str,
-            "form_version": str,
+            Columns.FORM_TYPE: str,
+            Columns.FORM_VERSION: str,
             Columns.CITY: str,
             Columns.DATE: str,
             Columns.NOTES: str,
-            "investigators": {
+            Columns.INVESTIGATORS: {
                 Columns.INVESTIGATOR: {Columns.START_TIME: str, Columns.END_TIME: str}
             },
-            "observations": {
-                "field": {
+            Columns.OBSERVATIONS: {
+                Columns.FIELD: {
                     Columns.TIDE_HEIGHT: float,
                     Columns.TIDE_TIME: str,
                     Columns.PAST_24HR_RAINFALL: float,
                     Columns.WEATHER: Weather,
                 },
-                "site": [
+                Columns.SITE: [
                     {
                         Columns.SITE_ID: str,
                         Columns.BACTERIA_BOTTLE_NO: str,
@@ -189,38 +225,48 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         Columns.SPS_MICRO_S_PER_CM: float,
                         Columns.SALINITY_PPT: float,
                         Columns.PH: float,
-                        "color": {Columns.RANK: Rank, Columns.DESCRIPTION: str},
-                        "odor": {Columns.RANK: Rank, Columns.DESCRIPTION: str},
-                        "visual": {Columns.RANK: Rank, Columns.DESCRIPTION: str},
+                        QualitativeSiteObservationTypes.COLOR: {
+                            Columns.RANK: Rank,
+                            Columns.DESCRIPTION: str,
+                        },
+                        QualitativeSiteObservationTypes.ODOR: {
+                            Columns.RANK: Rank,
+                            Columns.DESCRIPTION: str,
+                        },
+                        QualitativeSiteObservationTypes.VISUAL: {
+                            Columns.RANK: Rank,
+                            Columns.DESCRIPTION: str,
+                        },
                     }
                 ],
             },
         }
     },
-    "metadata": {
-        Columns.DATE: {"format": DATE_FORMAT},
+    Columns.METADATA: {
+        Columns.DATE: {Columns.FORMAT: DATE_FORMAT},
         Columns.FORM_ID: {
-            "type": str,
-            "note": (
+            Columns.DATA_TYPE: str,
+            # TODO: Make dev_notes into comments.
+            "dev_notes": (
                 "Unique identifier of completed form. Different than DB's form ID if it "
                 "exists, and won't likely be entered into DB, and is not found on the "
                 "forms themselves. Just for convenience and to avoid trouble with "
                 "accidentally sorted lists. Maybe use image filename and/or timestamp."
             ),
         },
-        "form_type": {"options": list(FormType)},
-        "investigators": {
+        Columns.FORM_TYPE: {Columns.OPTIONS: list(FormType)},
+        Columns.INVESTIGATORS: {
             Columns.INVESTIGATOR: str,
-            Columns.END_TIME: {"format": TIME_FORMAT},
-            Columns.START_TIME: {"format": TIME_FORMAT},
+            Columns.END_TIME: {Columns.FORMAT: TIME_FORMAT},
+            Columns.START_TIME: {Columns.FORMAT: TIME_FORMAT},
         },
-        "observations": {
-            "field": {
-                Columns.PAST_24HR_RAINFALL: {"units": "inches"},
-                Columns.TIDE_HEIGHT: {"units": "feet"},
-                Columns.TIDE_TIME: {"format": TIME_FORMAT},
+        Columns.OBSERVATIONS: {
+            Columns.FIELD: {
+                Columns.PAST_24HR_RAINFALL: {Columns.UNITS: "inches"},
+                Columns.TIDE_HEIGHT: {Columns.UNITS: "feet"},
+                Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
                 Columns.WEATHER: {
-                    "options": list(Weather),
+                    Columns.OPTIONS: list(Weather),
                     "dev_notes": [
                         (
                             "Took a liberty to create our own str values for optional "
@@ -237,71 +283,92 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                     ],
                 },
             },
-            "site": {
-                Columns.AIR_TEMP: {"units": "Celsius"},
-                Columns.ARRIVAL_TIME: {"format": TIME_FORMAT},
-                "color": {
-                    Columns.RANK: {"options": list(Rank)},
-                    "thresholds": {
-                        "outfall": "Any non-natural phenomena.",
-                        "creek": "Any non-natural phenomena.",
+            Columns.SITE: {
+                Columns.AIR_TEMP: {Columns.UNITS: "Celsius"},
+                Columns.ARRIVAL_TIME: {Columns.FORMAT: TIME_FORMAT},
+                QualitativeSiteObservationTypes.COLOR: {
+                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: "Any non-natural phenomena.",
+                        Columns.CREEK: "Any non-natural phenomena.",
                     },
                 },
                 Columns.DO_MG_PER_L: {
-                    "units": "mg/l",
-                    "thresholds": {
-                        "outfall": {"lower": {"value": 6, "inclusive": True}},
-                        "creek": {"lower": {"value": 10, "inclusive": True}},
+                    Columns.UNITS: "mg/l",
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: {
+                            Columns.LOWER: {Columns.VALUE: 6, Columns.INCLUSIVE: True}
+                        },
+                        Columns.CREEK: {
+                            Columns.LOWER: {Columns.VALUE: 10, Columns.INCLUSIVE: True}
+                        },
                     },
                 },
-                Columns.FLOW: {"options": list(Flow)},
-                Columns.FLOW_COMPARED_TO_EXPECTED: {"options": list(FlowComparedToExpected)},
-                "odor": {
-                    Columns.RANK: {"options": list(Rank)},
-                    "thresholds": {
-                        "outfall": "Any non-natural phenomena.",
-                        "creek": "Any non-natural phenomena.",
+                Columns.FLOW: {Columns.OPTIONS: list(Flow)},
+                Columns.FLOW_COMPARED_TO_EXPECTED: {
+                    Columns.OPTIONS: list(FlowComparedToExpected)
+                },
+                QualitativeSiteObservationTypes.ODOR: {
+                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: "Any non-natural phenomena.",
+                        Columns.CREEK: "Any non-natural phenomena.",
                     },
                 },
                 Columns.PH: {
-                    "units": "pH",
-                    "thresholds": {
-                        "outfall": {
-                            "lower": {"value": 5, "inclusive": True},
-                            "upper": {"value": 9, "inclusive": True},
+                    Columns.UNITS: "pH",
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: {
+                            Columns.LOWER: {Columns.VALUE: 5, Columns.INCLUSIVE: True},
+                            Columns.UPPER: {Columns.VALUE: 9, Columns.INCLUSIVE: True},
                         },
-                        "creek": {
-                            "lower": {"value": 6.5, "inclusive": True},
-                            "upper": {"value": 8.5, "inclusive": True},
+                        Columns.CREEK: {
+                            Columns.LOWER: {Columns.VALUE: 6.5, Columns.INCLUSIVE: True},
+                            Columns.UPPER: {Columns.VALUE: 8.5, Columns.INCLUSIVE: True},
                         },
                     },
                 },
-                Columns.SALINITY_PPT: {"units": "ppt"},
+                Columns.SALINITY_PPT: {Columns.UNITS: "ppt"},
                 Columns.SPS_MICRO_S_PER_CM: {
-                    "units": "microS/cm",
-                    "thresholds": {
-                        "outfall": {"upper": {"value": 500, "inclusive": True}},
-                        "creek": {"upper": {"value": 500, "inclusive": True}},
+                    Columns.UNITS: "microS/cm",
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: {
+                            Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
+                        },
+                        Columns.CREEK: {
+                            Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
+                        },
                     },
                 },
-                "visual": {
-                    Columns.RANK: {"options": list(Rank)},
-                    "thresholds": {
-                        "outfall": "Any non-natural phenomena.",
-                        "creek": "Any non-natural phenomena.",
+                QualitativeSiteObservationTypes.VISUAL: {
+                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: "Any non-natural phenomena.",
+                        Columns.CREEK: "Any non-natural phenomena.",
                     },
                 },
                 Columns.WATER_TEMP: {
-                    "units": "Celsius",
-                    "thresholds": {
-                        "outfall": {
-                            "upper": {"reference_value": Columns.AIR_TEMP, "inclusive": True}
+                    Columns.UNITS: "Celsius",
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: {
+                            Columns.UPPER: {
+                                Columns.REFERENCE_VALUE: Columns.AIR_TEMP,
+                                Columns.INCLUSIVE: True,
+                            }
                         },
-                        "creek": {
-                            "habitat": {"upper": {"value": 16, "inclusive": True}},
-                            "spawn": {"upper": {"value": 17.5, "inclusive": True}},
-                            "rear": {"upper": {"value": 17.5, "inclusive": True}},
-                            "migrate": {"upper": {"value": 17.5, "inclusive": True}},
+                        Columns.CREEK: {
+                            Columns.HABITAT: {
+                                Columns.UPPER: {Columns.VALUE: 16, Columns.INCLUSIVE: True}
+                            },
+                            Columns.SPAWN: {
+                                Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
+                            },
+                            Columns.REAR: {
+                                Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
+                            },
+                            Columns.MIGRATE: {
+                                Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
+                            },
                         },
                     },
                 },
@@ -309,121 +376,149 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
         },
     },
     "example_extraction_document": {
-        "metadata": {
-            Columns.DATE: {"format": DATE_FORMAT},
-            Columns.FORM_ID: "str",
-            "form_type": {"options": list(FormType)},
-            "form_version": "str",
-            "investigators": {
-                Columns.INVESTIGATOR: "str",
-                Columns.END_TIME: {"format": TIME_FORMAT},
-                Columns.START_TIME: {"format": TIME_FORMAT},
+        Columns.METADATA: {
+            Columns.DATE: {Columns.FORMAT: DATE_FORMAT},
+            Columns.FORM_ID: str,
+            Columns.FORM_TYPE: {Columns.OPTIONS: list(FormType)},
+            Columns.FORM_VERSION: str,
+            Columns.INVESTIGATORS: {
+                Columns.INVESTIGATOR: str,
+                Columns.END_TIME: {Columns.FORMAT: TIME_FORMAT},
+                Columns.START_TIME: {Columns.FORMAT: TIME_FORMAT},
             },
-            "observations": {
-                "field": {
-                    Columns.PAST_24HR_RAINFALL: {"units": "inches"},
-                    Columns.TIDE_HEIGHT: {"units": "feet"},
-                    Columns.TIDE_TIME: {"format": TIME_FORMAT},
+            Columns.OBSERVATIONS: {
+                Columns.FIELD: {
+                    Columns.PAST_24HR_RAINFALL: {Columns.UNITS: "inches"},
+                    Columns.TIDE_HEIGHT: {Columns.UNITS: "feet"},
+                    Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
                     Columns.WEATHER: {
-                        "options": list(Weather),
+                        Columns.OPTIONS: list(Weather),
                     },
                 },
-                "site": {
-                    Columns.AIR_TEMP: {"units": "Celsius"},
-                    Columns.ARRIVAL_TIME: {"format": TIME_FORMAT},
-                    "color": {
-                        Columns.RANK: {"options": list(Rank)},
-                        "thresholds": {
-                            "outfall": "Any non-natural phenomena.",
-                            "creek": "Any non-natural phenomena.",
+                Columns.SITE: {
+                    Columns.AIR_TEMP: {Columns.UNITS: "Celsius"},
+                    Columns.ARRIVAL_TIME: {Columns.FORMAT: TIME_FORMAT},
+                    QualitativeSiteObservationTypes.COLOR: {
+                        Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                        Columns.THRESHOLDS: {
+                            Columns.OUTFALL: "Any non-natural phenomena.",
+                            Columns.CREEK: "Any non-natural phenomena.",
                         },
                     },
                     Columns.DO_MG_PER_L: {
-                        "units": "mg/l",
-                        "thresholds": {
-                            "outfall": {"lower": {"value": 6, "inclusive": True}},
-                            "creek": {"lower": {"value": 10.0, "inclusive": True}},
+                        Columns.UNITS: "mg/l",
+                        Columns.THRESHOLDS: {
+                            Columns.OUTFALL: {
+                                Columns.LOWER: {Columns.VALUE: 6, Columns.INCLUSIVE: True}
+                            },
+                            Columns.CREEK: {
+                                Columns.LOWER: {Columns.VALUE: 10.0, Columns.INCLUSIVE: True}
+                            },
                         },
                     },
-                    Columns.FLOW: {"options": list(Flow)},
+                    Columns.FLOW: {Columns.OPTIONS: list(Flow)},
                     Columns.FLOW_COMPARED_TO_EXPECTED: {
-                        "options": list(FlowComparedToExpected)
+                        Columns.OPTIONS: list(FlowComparedToExpected)
                     },
-                    "odor": {
-                        Columns.RANK: {"options": list(Rank)},
-                        "thresholds": {
-                            "outfall": "Any non-natural phenomena.",
-                            "creek": "Any non-natural phenomena.",
+                    QualitativeSiteObservationTypes.ODOR: {
+                        Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                        Columns.THRESHOLDS: {
+                            Columns.OUTFALL: "Any non-natural phenomena.",
+                            Columns.CREEK: "Any non-natural phenomena.",
                         },
                     },
                     Columns.PH: {
-                        "units": "pH",
-                        "thresholds": {
-                            "outfall": {
-                                "lower": {"value": 5, "inclusive": True},
-                                "upper": {"value": 9, "inclusive": True},
+                        Columns.UNITS: "pH",
+                        Columns.THRESHOLDS: {
+                            Columns.OUTFALL: {
+                                Columns.LOWER: {Columns.VALUE: 5, Columns.INCLUSIVE: True},
+                                Columns.UPPER: {Columns.VALUE: 9, Columns.INCLUSIVE: True},
                             },
-                            "creek": {
-                                "lower": {"value": 6.5, "inclusive": True},
-                                "upper": {"value": 8.5, "inclusive": True},
+                            Columns.CREEK: {
+                                Columns.LOWER: {Columns.VALUE: 6.5, Columns.INCLUSIVE: True},
+                                Columns.UPPER: {Columns.VALUE: 8.5, Columns.INCLUSIVE: True},
                             },
                         },
                     },
-                    Columns.SALINITY_PPT: {"units": "ppt"},
+                    Columns.SALINITY_PPT: {Columns.UNITS: "ppt"},
                     Columns.SPS_MICRO_S_PER_CM: {
-                        "units": "microS/cm",
-                        "thresholds": {
-                            "outfall": {"upper": {"value": 500, "inclusive": True}},
-                            "creek": {"upper": {"value": 500, "inclusive": True}},
+                        Columns.UNITS: "microS/cm",
+                        Columns.THRESHOLDS: {
+                            Columns.OUTFALL: {
+                                Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
+                            },
+                            Columns.CREEK: {
+                                Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
+                            },
                         },
                     },
-                    "visual": {
-                        Columns.RANK: {"options": list(Rank)},
-                        "thresholds": {
-                            "outfall": "Any non-natural phenomena.",
-                            "creek": "Any non-natural phenomena.",
+                    QualitativeSiteObservationTypes.VISUAL: {
+                        Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                        Columns.THRESHOLDS: {
+                            Columns.OUTFALL: "Any non-natural phenomena.",
+                            Columns.CREEK: "Any non-natural phenomena.",
                         },
                     },
                     Columns.WATER_TEMP: {
-                        "units": "Celsius",
-                        "thresholds": {
-                            "outfall": {
-                                "upper": {
-                                    "reference_value": Columns.AIR_TEMP,
-                                    "inclusive": True,
+                        Columns.UNITS: "Celsius",
+                        Columns.THRESHOLDS: {
+                            Columns.OUTFALL: {
+                                Columns.UPPER: {
+                                    Columns.REFERENCE_VALUE: Columns.AIR_TEMP,
+                                    Columns.INCLUSIVE: True,
                                 }
                             },
-                            "creek": {
-                                "habitat": {"upper": {"value": 16, "inclusive": True}},
-                                "spawn": {"upper": {"value": 17.5, "inclusive": True}},
-                                "rear": {"upper": {"value": 17.5, "inclusive": True}},
-                                "migrate": {"upper": {"value": 17.5, "inclusive": True}},
+                            Columns.CREEK: {
+                                Columns.HABITAT: {
+                                    Columns.UPPER: {
+                                        Columns.VALUE: 16,
+                                        Columns.INCLUSIVE: True,
+                                    }
+                                },
+                                Columns.SPAWN: {
+                                    Columns.UPPER: {
+                                        Columns.VALUE: 17.5,
+                                        Columns.INCLUSIVE: True,
+                                    }
+                                },
+                                Columns.REAR: {
+                                    Columns.UPPER: {
+                                        Columns.VALUE: 17.5,
+                                        Columns.INCLUSIVE: True,
+                                    }
+                                },
+                                Columns.MIGRATE: {
+                                    Columns.UPPER: {
+                                        Columns.VALUE: 17.5,
+                                        Columns.INCLUSIVE: True,
+                                    }
+                                },
                             },
                         },
                     },
                 },
             },
         },
-        "forms": {
+        Columns.FORMS: {
             "IMG_9527.jpg": {
-                "form_type": FormType.FIELD_DATASHEET_FOSS,
-                "form_version": "4.4-1-29-2025",
+                Columns.FORM_TYPE: FormType.FIELD_DATASHEET_FOSS,
+                Columns.FORM_VERSION: "4.4-1-29-2025",
                 Columns.CITY: "BELLINGHAM",
                 Columns.DATE: "2025-04-17",
                 Columns.NOTES: "C ST: MICROBIAL MAT RETREATED ...",
-                "investigators": {
+                Columns.INVESTIGATORS: {
                     "CIARA H": {Columns.START_TIME: "14:40", Columns.END_TIME: "15:23"},
                     "ANNA B": {Columns.START_TIME: "14:40", Columns.END_TIME: "15:23"},
                     "ZOE F": {Columns.START_TIME: "15:09", Columns.END_TIME: "15:23"},
                 },
-                "observations": {
-                    "field": {
+                Columns.OBSERVATIONS: {
+                    Columns.FIELD: {
                         Columns.TIDE_HEIGHT: -0.7,
                         Columns.TIDE_TIME: "14:39",
                         Columns.PAST_24HR_RAINFALL: 0.0,
                         Columns.WEATHER: Weather.CLOUD_CLEAR,
                     },
-                    "site": [
+                    Columns.SITE: [
                         {
                             Columns.SITE_ID: "C ST",
                             Columns.BACTERIA_BOTTLE_NO: "B1",
@@ -437,9 +532,18 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             Columns.SPS_MICRO_S_PER_CM: 414.1,
                             Columns.SALINITY_PPT: 0.2,
                             Columns.PH: 5.91,
-                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "YELLOW"},
-                            "odor": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "SULPHUR"},
-                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
+                            QualitativeSiteObservationTypes.COLOR: {
+                                Columns.RANK: Rank.ONE,
+                                Columns.DESCRIPTION: "YELLOW",
+                            },
+                            QualitativeSiteObservationTypes.ODOR: {
+                                Columns.RANK: Rank.ONE,
+                                Columns.DESCRIPTION: "SULPHUR",
+                            },
+                            QualitativeSiteObservationTypes.VISUAL: {
+                                Columns.RANK: None,
+                                Columns.DESCRIPTION: None,
+                            },
                         },
                         {
                             Columns.SITE_ID: "C ST",
@@ -454,9 +558,18 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             Columns.SPS_MICRO_S_PER_CM: 369.9,
                             Columns.SALINITY_PPT: 0.18,
                             Columns.PH: 5.5,
-                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "YELLOW"},
-                            "odor": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "SULPHUR"},
-                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
+                            QualitativeSiteObservationTypes.COLOR: {
+                                Columns.RANK: Rank.ONE,
+                                Columns.DESCRIPTION: "YELLOW",
+                            },
+                            QualitativeSiteObservationTypes.ODOR: {
+                                Columns.RANK: Rank.ONE,
+                                Columns.DESCRIPTION: "SULPHUR",
+                            },
+                            QualitativeSiteObservationTypes.VISUAL: {
+                                Columns.RANK: None,
+                                Columns.DESCRIPTION: None,
+                            },
                         },
                         {
                             Columns.SITE_ID: "BROADWAY",
@@ -471,32 +584,41 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             Columns.SPS_MICRO_S_PER_CM: 314.1,
                             Columns.SALINITY_PPT: 0.15,
                             Columns.PH: 7.40,
-                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "YELLOW"},
-                            "odor": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "SULPHUR"},
-                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
+                            QualitativeSiteObservationTypes.COLOR: {
+                                Columns.RANK: Rank.ONE,
+                                Columns.DESCRIPTION: "YELLOW",
+                            },
+                            QualitativeSiteObservationTypes.ODOR: {
+                                Columns.RANK: Rank.ONE,
+                                Columns.DESCRIPTION: "SULPHUR",
+                            },
+                            QualitativeSiteObservationTypes.VISUAL: {
+                                Columns.RANK: None,
+                                Columns.DESCRIPTION: None,
+                            },
                         },
                     ],
                 },
             },
             "sheet1.jpg": {
-                "form_type": FormType.FIELD_DATASHEET_FOSS,
-                "form_version": "4.4-1-29-2025",
+                Columns.FORM_TYPE: FormType.FIELD_DATASHEET_FOSS,
+                Columns.FORM_VERSION: "4.4-1-29-2025",
                 Columns.CITY: "BELLINGHAM",
                 Columns.DATE: "2025-04-21",
                 Columns.NOTES: "Padden - DO%",
-                "investigators": {
+                Columns.INVESTIGATORS: {
                     "ANNA": {Columns.START_TIME: "17:10"},
                     "PAT": {Columns.START_TIME: "17:10"},
                     "CHRIS": {Columns.START_TIME: "17:10"},
                 },
-                "observations": {
-                    "field": {
+                Columns.OBSERVATIONS: {
+                    Columns.FIELD: {
                         Columns.TIDE_HEIGHT: 0.22,
                         Columns.TIDE_TIME: "17:10",
                         Columns.PAST_24HR_RAINFALL: None,
                         Columns.WEATHER: Weather.CLOUD_CLEAR,
                     },
-                    "site": [
+                    Columns.SITE: [
                         {
                             Columns.SITE_ID: "PADDEN",
                             Columns.BACTERIA_BOTTLE_NO: "B5",
@@ -510,9 +632,18 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             Columns.SPS_MICRO_S_PER_CM: 151.0,
                             Columns.SALINITY_PPT: 0.07,
                             Columns.PH: 7.73,
-                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "TAN"},
-                            "odor": {Columns.RANK: Rank.ZERO, Columns.DESCRIPTION: None},
-                            "visual": {Columns.RANK: Rank.ZERO, Columns.DESCRIPTION: None},
+                            QualitativeSiteObservationTypes.COLOR: {
+                                Columns.RANK: Rank.ONE,
+                                Columns.DESCRIPTION: "TAN",
+                            },
+                            QualitativeSiteObservationTypes.ODOR: {
+                                Columns.RANK: Rank.ZERO,
+                                Columns.DESCRIPTION: None,
+                            },
+                            QualitativeSiteObservationTypes.VISUAL: {
+                                Columns.RANK: Rank.ZERO,
+                                Columns.DESCRIPTION: None,
+                            },
                         },
                         {
                             Columns.SITE_ID: "BENASFASDF",
@@ -527,12 +658,18 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             Columns.SPS_MICRO_S_PER_CM: 234.7,
                             Columns.SALINITY_PPT: 0.11,
                             Columns.PH: 7.87,
-                            "color": {
+                            QualitativeSiteObservationTypes.COLOR: {
                                 Columns.RANK: Rank.ONE,
                                 Columns.DESCRIPTION: "Tan/brown",
                             },
-                            "odor": {Columns.RANK: None, Columns.DESCRIPTION: None},
-                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
+                            QualitativeSiteObservationTypes.ODOR: {
+                                Columns.RANK: None,
+                                Columns.DESCRIPTION: None,
+                            },
+                            QualitativeSiteObservationTypes.VISUAL: {
+                                Columns.RANK: None,
+                                Columns.DESCRIPTION: None,
+                            },
                         },
                         {
                             Columns.SITE_ID: "BEPSODF72",
@@ -547,9 +684,18 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             Columns.SPS_MICRO_S_PER_CM: 235.1,
                             Columns.SALINITY_PPT: 0.11,
                             Columns.PH: 7.82,
-                            "color": {Columns.RANK: Rank.ONE, Columns.DESCRIPTION: "Brown"},
-                            "odor": {Columns.RANK: None, Columns.DESCRIPTION: None},
-                            "visual": {Columns.RANK: None, Columns.DESCRIPTION: None},
+                            QualitativeSiteObservationTypes.COLOR: {
+                                Columns.RANK: Rank.ONE,
+                                Columns.DESCRIPTION: "Brown",
+                            },
+                            QualitativeSiteObservationTypes.ODOR: {
+                                Columns.RANK: None,
+                                Columns.DESCRIPTION: None,
+                            },
+                            QualitativeSiteObservationTypes.VISUAL: {
+                                Columns.RANK: None,
+                                Columns.DESCRIPTION: None,
+                            },
                         },
                     ],
                 },
