@@ -57,15 +57,7 @@ DATE_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DATE)
 NOTES_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.NOTES)
 NOTES_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.NOTES)
 
-# Investigators.
-INVESTIGATOR_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.INVESTIGATOR)
-INVESTIGATOR_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.INVESTIGATOR)
-START_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.START_TIME)
-START_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.START_TIME)
-END_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.END_TIME)
-END_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.END_TIME)
-
-# Field observations.
+# Form metadata: Field observations.
 TIDE_HEIGHT_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.TIDE_HEIGHT)
 TIDE_HEIGHT_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.TIDE_HEIGHT)
 TIDE_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.TIDE_TIME)
@@ -78,6 +70,14 @@ PAST_24HR_RAINFALL_FIELD: Final[Callable] = partial(
 )
 WEATHER_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.WEATHER)
 WEATHER_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.WEATHER)
+
+# Investigators.
+INVESTIGATOR_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.INVESTIGATOR)
+INVESTIGATOR_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.INVESTIGATOR)
+START_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.START_TIME)
+START_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.START_TIME)
+END_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.END_TIME)
+END_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.END_TIME)
 
 # Site observations.
 SITE_ID_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.SITE_ID)
@@ -125,7 +125,6 @@ DESCRIPTION_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DESCRI
 # TODO: Enforce all PKs.
 
 
-# TODO: Recombine metadata with field observations?
 class FormMetadataExtracted(pa.DataFrameSchema):
     """Schema for the form metadata extracted from the datasheets.
 
@@ -135,8 +134,12 @@ class FormMetadataExtracted(pa.DataFrameSchema):
     form_id: Series[str] = FORM_ID_FIELD_LAX()
     form_type: Series[str] = FORM_TYPE_FIELD_LAX()
     form_version: Series[str] = FORM_VERSION_FIELD_LAX()
-    city: Series[str] = CITY_FIELD_LAX()
     date: Series[str] = DATE_FIELD_LAX()
+    city: Series[str] = CITY_FIELD_LAX()
+    tide_height: Series[float] = TIDE_HEIGHT_FIELD_LAX()
+    tide_time: Series[str] = TIDE_TIME_FIELD_LAX()
+    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD_LAX()
+    weather: Series[str] = WEATHER_FIELD_LAX()
     notes: Series[str] = NOTES_FIELD_LAX()
 
     class Config:
@@ -156,25 +159,6 @@ class InvestigatorsExtracted(pa.DataFrameSchema):
     investigator: Series[str] = INVESTIGATOR_FIELD_LAX()
     start_time: Series[str] = START_TIME_FIELD_LAX()
     end_time: Series[str] = END_TIME_FIELD_LAX()
-
-    class Config:
-        """The configuration for the schema."""
-
-        strict = False
-
-
-class FieldObservationsExtracted(pa.DataFrameSchema):
-    """Schema for the observations precleaned.
-
-    PK: form_id (unenforced).
-    FK: metadata.form_id (unenforced).
-    """
-
-    form_id: Series[str] = FORM_ID_FIELD_LAX()
-    tide_height: Series[float] = TIDE_HEIGHT_FIELD_LAX()
-    tide_time: Series[str] = TIDE_TIME_FIELD_LAX()
-    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD_LAX()
-    weather: Series[str] = WEATHER_FIELD_LAX()
 
     class Config:
         """The configuration for the schema."""
@@ -238,8 +222,12 @@ class FormMetadataPrecleaned(FormMetadataExtracted):
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
     form_type: Series[str] = FORM_TYPE_FIELD()
     form_version: Series[str] = FORM_VERSION_FIELD()
-    city: Series[str] = CITY_FIELD()
     date: Series[str] = DATE_FIELD()
+    city: Series[str] = CITY_FIELD()
+    tide_height: Series[float] = TIDE_HEIGHT_FIELD()
+    tide_time: Series[str] = TIDE_TIME_FIELD()
+    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD()
+    weather: Series[str] = WEATHER_FIELD()
     notes: Series[str] = NOTES_FIELD()
 
     class Config:
@@ -259,25 +247,6 @@ class InvestigatorsPrecleaned(InvestigatorsExtracted):
     investigator: Series[str] = INVESTIGATOR_FIELD()
     start_time: Series[str] = START_TIME_FIELD()
     end_time: Series[str] = END_TIME_FIELD()
-
-    class Config:
-        """The configuration for the schema."""
-
-        strict = True
-
-
-class FieldObservationsPrecleaned(FieldObservationsExtracted):
-    """Schema for the observations extracted from the datasheets.
-
-    PK: form_id (unenforced).
-    FK: metadata.form_id (unenforced).
-    """
-
-    form_id: Series[str] = FORM_ID_FIELD()
-    tide_height: Series[float] = TIDE_HEIGHT_FIELD()
-    tide_time: Series[str] = TIDE_TIME_FIELD()
-    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD()
-    weather: Series[str] = WEATHER_FIELD()
 
     class Config:
         """The configuration for the schema."""
@@ -340,6 +309,7 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     """
 
     form_type: Series[FormType] = FORM_TYPE_FIELD()
+    weather: Series[Weather] = WEATHER_FIELD()
 
 
 class InvestigatorsVerified(InvestigatorsPrecleaned):
@@ -348,16 +318,6 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     PK: form_id, investigator.
     FK: metadata.form_id (unenforced).
     """
-
-
-class FieldObservationsVerified(FieldObservationsPrecleaned):
-    """Schema for the observations verified by the user.
-
-    PK: form_id.
-    FK: metadata.form_id (unenforced).
-    """
-
-    weather: Series[Weather] = WEATHER_FIELD()
 
 
 class SiteObservationsVerified(SiteObservationsPrecleaned):
@@ -401,14 +361,6 @@ class InvestigatorsCleaned(InvestigatorsVerified):
     """Schema for the investigators cleaned.
 
     PK: form_id, investigator.
-    FK: metadata.form_id (unenforced).
-    """
-
-
-class FieldObservationsCleaned(FieldObservationsVerified):
-    """Schema for the observations cleaned.
-
-    PK: form_id.
     FK: metadata.form_id (unenforced).
     """
 
