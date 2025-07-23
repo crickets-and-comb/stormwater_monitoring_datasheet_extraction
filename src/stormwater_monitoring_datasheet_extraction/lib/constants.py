@@ -139,6 +139,18 @@ class Rank(IntEnum):
     THREE = 3
 
 
+class Units(StrEnum):
+    """Options for the units field."""
+
+    CELSIUS = "Celsius"
+    FEET = "feet"
+    INCHES = "inches"
+    MICRO_S_PER_CM = "microS/cm"
+    MG_PER_L = "mg/l"
+    PH = "pH"
+    PPT = "ppt"
+
+
 class Weather(StrEnum):
     """Options for the weather field."""
 
@@ -262,8 +274,8 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
         },
         Columns.OBSERVATIONS: {
             Columns.FIELD: {
-                Columns.PAST_24HR_RAINFALL: {Columns.UNITS: "inches"},
-                Columns.TIDE_HEIGHT: {Columns.UNITS: "feet"},
+                Columns.PAST_24HR_RAINFALL: {Columns.UNITS: Units.INCHES},
+                Columns.TIDE_HEIGHT: {Columns.UNITS: Units.FEET},
                 Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
                 Columns.WEATHER: {
                     Columns.OPTIONS: list(Weather),
@@ -284,7 +296,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                 },
             },
             Columns.SITE: {
-                Columns.AIR_TEMP: {Columns.UNITS: "Celsius"},
+                Columns.AIR_TEMP: {Columns.UNITS: Units.CELSIUS},
                 Columns.ARRIVAL_TIME: {Columns.FORMAT: TIME_FORMAT},
                 QualitativeSiteObservationTypes.COLOR: {
                     Columns.RANK: {Columns.OPTIONS: list(Rank)},
@@ -294,7 +306,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                     },
                 },
                 Columns.DO_MG_PER_L: {
-                    Columns.UNITS: "mg/l",
+                    Columns.UNITS: Units.MG_PER_L,
                     Columns.THRESHOLDS: {
                         Columns.OUTFALL: {
                             Columns.LOWER: {Columns.VALUE: 6, Columns.INCLUSIVE: True}
@@ -316,7 +328,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                     },
                 },
                 Columns.PH: {
-                    Columns.UNITS: "pH",
+                    Columns.UNITS: Units.PH,
                     Columns.THRESHOLDS: {
                         Columns.OUTFALL: {
                             Columns.LOWER: {Columns.VALUE: 5, Columns.INCLUSIVE: True},
@@ -328,9 +340,9 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         },
                     },
                 },
-                Columns.SALINITY_PPT: {Columns.UNITS: "ppt"},
+                Columns.SALINITY_PPT: {Columns.UNITS: Units.PPT},
                 Columns.SPS_MICRO_S_PER_CM: {
-                    Columns.UNITS: "microS/cm",
+                    Columns.UNITS: Units.MICRO_S_PER_CM,
                     Columns.THRESHOLDS: {
                         Columns.OUTFALL: {
                             Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
@@ -348,7 +360,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                     },
                 },
                 Columns.WATER_TEMP: {
-                    Columns.UNITS: "Celsius",
+                    Columns.UNITS: Units.CELSIUS,
                     Columns.THRESHOLDS: {
                         Columns.OUTFALL: {
                             Columns.UPPER: {
@@ -388,15 +400,15 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             },
             Columns.OBSERVATIONS: {
                 Columns.FIELD: {
-                    Columns.PAST_24HR_RAINFALL: {Columns.UNITS: "inches"},
-                    Columns.TIDE_HEIGHT: {Columns.UNITS: "feet"},
+                    Columns.PAST_24HR_RAINFALL: {Columns.UNITS: Units.INCHES},
+                    Columns.TIDE_HEIGHT: {Columns.UNITS: Units.FEET},
                     Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
                     Columns.WEATHER: {
                         Columns.OPTIONS: list(Weather),
                     },
                 },
                 Columns.SITE: {
-                    Columns.AIR_TEMP: {Columns.UNITS: "Celsius"},
+                    Columns.AIR_TEMP: {Columns.UNITS: Units.CELSIUS},
                     Columns.ARRIVAL_TIME: {Columns.FORMAT: TIME_FORMAT},
                     QualitativeSiteObservationTypes.COLOR: {
                         Columns.RANK: {Columns.OPTIONS: list(Rank)},
@@ -406,7 +418,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         },
                     },
                     Columns.DO_MG_PER_L: {
-                        Columns.UNITS: "mg/l",
+                        Columns.UNITS: Units.MG_PER_L,
                         Columns.THRESHOLDS: {
                             Columns.OUTFALL: {
                                 Columns.LOWER: {Columns.VALUE: 6, Columns.INCLUSIVE: True}
@@ -428,7 +440,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         },
                     },
                     Columns.PH: {
-                        Columns.UNITS: "pH",
+                        Columns.UNITS: Units.PH,
                         Columns.THRESHOLDS: {
                             Columns.OUTFALL: {
                                 Columns.LOWER: {Columns.VALUE: 5, Columns.INCLUSIVE: True},
@@ -440,9 +452,9 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             },
                         },
                     },
-                    Columns.SALINITY_PPT: {Columns.UNITS: "ppt"},
+                    Columns.SALINITY_PPT: {Columns.UNITS: Units.PPT},
                     Columns.SPS_MICRO_S_PER_CM: {
-                        Columns.UNITS: "microS/cm",
+                        Columns.UNITS: Units.MICRO_S_PER_CM,
                         Columns.THRESHOLDS: {
                             Columns.OUTFALL: {
                                 Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
@@ -460,7 +472,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         },
                     },
                     Columns.WATER_TEMP: {
-                        Columns.UNITS: "Celsius",
+                        Columns.UNITS: Units.CELSIUS,
                         Columns.THRESHOLDS: {
                             Columns.OUTFALL: {
                                 Columns.UPPER: {
