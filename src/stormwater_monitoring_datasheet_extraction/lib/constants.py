@@ -6,6 +6,12 @@ from typing import Any, Dict, Final
 from comb_utils import DocString
 
 
+class City(StrEnum):
+    """Options for the city field."""
+
+    BELLINGHAM = "Bellingham"
+
+
 class Columns:
     """Column name constants."""
 
@@ -211,7 +217,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
         Columns.FORM_ID: {
             Columns.FORM_TYPE: FormType,
             Columns.FORM_VERSION: str,
-            Columns.CITY: str,
+            Columns.CITY: City,
             Columns.DATE: str,
             Columns.NOTES: str,
             Columns.INVESTIGATORS: {
@@ -272,6 +278,10 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             Columns.END_TIME: {Columns.FORMAT: TIME_FORMAT},
             Columns.START_TIME: {Columns.FORMAT: TIME_FORMAT},
         },
+        # TODO: Recombine field observations into metadata.
+        # TODO: To check observations threshholds, need a site-type map:
+        # creek or outfall, and if creek:
+        # habitat, spawn, rear, or migrate.
         Columns.OBSERVATIONS: {
             Columns.FIELD: {
                 Columns.PAST_24HR_RAINFALL: {Columns.UNITS: Units.INCHES},
@@ -298,13 +308,6 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             Columns.SITE: {
                 Columns.AIR_TEMP: {Columns.UNITS: Units.CELSIUS},
                 Columns.ARRIVAL_TIME: {Columns.FORMAT: TIME_FORMAT},
-                QualitativeSiteObservationTypes.COLOR: {
-                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
-                    Columns.THRESHOLDS: {
-                        Columns.OUTFALL: "Any non-natural phenomena.",
-                        Columns.CREEK: "Any non-natural phenomena.",
-                    },
-                },
                 Columns.DO_MG_PER_L: {
                     Columns.UNITS: Units.MG_PER_L,
                     Columns.THRESHOLDS: {
@@ -319,13 +322,6 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                 Columns.FLOW: {Columns.OPTIONS: list(Flow)},
                 Columns.FLOW_COMPARED_TO_EXPECTED: {
                     Columns.OPTIONS: list(FlowComparedToExpected)
-                },
-                QualitativeSiteObservationTypes.ODOR: {
-                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
-                    Columns.THRESHOLDS: {
-                        Columns.OUTFALL: "Any non-natural phenomena.",
-                        Columns.CREEK: "Any non-natural phenomena.",
-                    },
                 },
                 Columns.PH: {
                     Columns.UNITS: Units.PH,
@@ -352,13 +348,6 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         },
                     },
                 },
-                QualitativeSiteObservationTypes.VISUAL: {
-                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
-                    Columns.THRESHOLDS: {
-                        Columns.OUTFALL: "Any non-natural phenomena.",
-                        Columns.CREEK: "Any non-natural phenomena.",
-                    },
-                },
                 Columns.WATER_TEMP: {
                     Columns.UNITS: Units.CELSIUS,
                     Columns.THRESHOLDS: {
@@ -382,6 +371,27 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                                 Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
                             },
                         },
+                    },
+                },
+                QualitativeSiteObservationTypes.COLOR: {
+                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: "Any non-natural phenomena.",
+                        Columns.CREEK: "Any non-natural phenomena.",
+                    },
+                },
+                QualitativeSiteObservationTypes.ODOR: {
+                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: "Any non-natural phenomena.",
+                        Columns.CREEK: "Any non-natural phenomena.",
+                    },
+                },
+                QualitativeSiteObservationTypes.VISUAL: {
+                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: "Any non-natural phenomena.",
+                        Columns.CREEK: "Any non-natural phenomena.",
                     },
                 },
             },
@@ -515,7 +525,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             "IMG_9527.jpg": {
                 Columns.FORM_TYPE: FormType.FIELD_DATASHEET_FOSS,
                 Columns.FORM_VERSION: "4.4-1-29-2025",
-                Columns.CITY: "BELLINGHAM",
+                Columns.CITY: City.BELLINGHAM,
                 Columns.DATE: "2025-04-17",
                 Columns.NOTES: "C ST: MICROBIAL MAT RETREATED ...",
                 Columns.INVESTIGATORS: {
@@ -615,7 +625,7 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             "sheet1.jpg": {
                 Columns.FORM_TYPE: FormType.FIELD_DATASHEET_FOSS,
                 Columns.FORM_VERSION: "4.4-1-29-2025",
-                Columns.CITY: "BELLINGHAM",
+                Columns.CITY: City.BELLINGHAM,
                 Columns.DATE: "2025-04-21",
                 Columns.NOTES: "Padden - DO%",
                 Columns.INVESTIGATORS: {

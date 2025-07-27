@@ -10,6 +10,10 @@ from typeguard import typechecked
 from stormwater_monitoring_datasheet_extraction.lib import schema
 from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 
+# TODO: To check observations threshholds, need a site-type map:
+# creek or outfall, and if creek:
+# habitat, spawn, rear, or migrate.
+
 
 # TODO: Set up logging.
 @typechecked
@@ -136,6 +140,10 @@ def preclean(
     """
     # TODO: Light cleaning before user verification.
     # E.g., strip whitespace, try to cast, check range, but warn don't fail.
+    # Much of this might be done by creating a custom class for each field
+    # that cleans and warns on construction,
+    # define __str__/__repr__/__int__ etc. as needed,
+    # and use the class as a type in the schema to coerce the data.
     # Use data definition as source of truth rather than schema.
     precleaned_metadata = raw_metadata.copy()
     precleaned_investigators = raw_investigators.copy()
@@ -189,7 +197,7 @@ def verify(
     # Offer enumerated options for categorical data.
     # Highlight invalid extracted fields as they come to user's focus.
     # Ask for reentry if entered/verified can't be typed correctly or is out of range.
-    # Warn if out of expected but valid range.
+    # Warn and offer to re-enter if out of expected range but within valid range.
     # Use data definition as source of truth rather than schema.
 
     return (
@@ -235,9 +243,15 @@ def clean(
     cleaned_site_observations = verified_site_observations.copy()
     cleaned_qualitative_site_observations = verified_qualitative_site_observations.copy()
     ...
-    # TODO: Validate referential integrity.
     # TODO: Inferred/courtesy imputations? (nulls/empties, don't overstep)
-    # TODO: Final validations schema can't accomplish.
+
+    # TODO: Validations schema can't accomplish:
+    # - Referential integrity.
+    # - Date is on or before today.
+    # - Ideally, we would verify that site arrival times are within
+    #   the investigator's start and end times, but we can't 100% do that
+    #   because forms don't assign observations to investigators.
+
     # TODO: If still invalid, alert to the problem, and re-call `verify()`.
     # Use data definition as source of truth rather than schema.
 
