@@ -55,7 +55,6 @@ class Columns:
     COLOR: Final[str] = "color"
     CREEK: Final[str] = "creek"
     DATA_TYPE: Final[str] = "data_type"
-    FIELD: Final[str] = "field"
     FORM_TYPE: Final[str] = "form_type"
     FORM_VERSION: Final[str] = "form_version"
     FORMAT: Final[str] = "format"
@@ -223,42 +222,38 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             Columns.INVESTIGATORS: {
                 Columns.INVESTIGATOR: {Columns.START_TIME: str, Columns.END_TIME: str}
             },
-            Columns.OBSERVATIONS: {
-                Columns.FIELD: {
-                    Columns.TIDE_HEIGHT: float,
-                    Columns.TIDE_TIME: str,
-                    Columns.PAST_24HR_RAINFALL: float,
-                    Columns.WEATHER: Weather,
-                },
-                Columns.SITE: [
-                    {
-                        Columns.SITE_ID: str,
-                        Columns.BACTERIA_BOTTLE_NO: str,
-                        Columns.DRY_OUTFALL: bool,
-                        Columns.ARRIVAL_TIME: str,
-                        Columns.FLOW: Flow,
-                        Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected,
-                        Columns.AIR_TEMP: float,
-                        Columns.WATER_TEMP: float,
-                        Columns.DO_MG_PER_L: float,
-                        Columns.SPS_MICRO_S_PER_CM: float,
-                        Columns.SALINITY_PPT: float,
-                        Columns.PH: float,
-                        QualitativeSiteObservationTypes.COLOR: {
-                            Columns.RANK: Rank,
-                            Columns.DESCRIPTION: str,
-                        },
-                        QualitativeSiteObservationTypes.ODOR: {
-                            Columns.RANK: Rank,
-                            Columns.DESCRIPTION: str,
-                        },
-                        QualitativeSiteObservationTypes.VISUAL: {
-                            Columns.RANK: Rank,
-                            Columns.DESCRIPTION: str,
-                        },
-                    }
-                ],
-            },
+            Columns.TIDE_HEIGHT: float,
+            Columns.TIDE_TIME: str,
+            Columns.PAST_24HR_RAINFALL: float,
+            Columns.WEATHER: Weather,
+            Columns.OBSERVATIONS: [
+                {
+                    Columns.SITE_ID: str,
+                    Columns.BACTERIA_BOTTLE_NO: str,
+                    Columns.DRY_OUTFALL: bool,
+                    Columns.ARRIVAL_TIME: str,
+                    Columns.FLOW: Flow,
+                    Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected,
+                    Columns.AIR_TEMP: float,
+                    Columns.WATER_TEMP: float,
+                    Columns.DO_MG_PER_L: float,
+                    Columns.SPS_MICRO_S_PER_CM: float,
+                    Columns.SALINITY_PPT: float,
+                    Columns.PH: float,
+                    QualitativeSiteObservationTypes.COLOR: {
+                        Columns.RANK: Rank,
+                        Columns.DESCRIPTION: str,
+                    },
+                    QualitativeSiteObservationTypes.ODOR: {
+                        Columns.RANK: Rank,
+                        Columns.DESCRIPTION: str,
+                    },
+                    QualitativeSiteObservationTypes.VISUAL: {
+                        Columns.RANK: Rank,
+                        Columns.DESCRIPTION: str,
+                    },
+                }
+            ],
         }
     },
     Columns.METADATA: {
@@ -278,36 +273,147 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
             Columns.END_TIME: {Columns.FORMAT: TIME_FORMAT},
             Columns.START_TIME: {Columns.FORMAT: TIME_FORMAT},
         },
-        # TODO: Recombine field observations into metadata.
+        Columns.PAST_24HR_RAINFALL: {Columns.UNITS: Units.INCHES},
+        Columns.TIDE_HEIGHT: {Columns.UNITS: Units.FEET},
+        Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
+        Columns.WEATHER: {
+            Columns.OPTIONS: list(Weather),
+            # "dev_notes": [
+            #     (
+            #         "Took a liberty to create our own str values for optional "
+            #         "rankings, clarity. But, likely need to convert to DB values."
+            #     ),
+            #     (
+            #         "It's unclear at this time if they can only select one. But, "
+            #         "common sense says cloud cover and precipitation levels are not " # noqa: E501
+            #         "mutually exclusive. If there can be multiple weather "
+            #         "conditions, this will need to be a list of StrEnums (to be "
+            #         "validated as a set outside of JSON, along with other "
+            #         "validations, like no two-rain observations)."
+            #     ),
+            # ],
+        },
         # TODO: To check observations threshholds, need a site-type map:
         # creek or outfall, and if creek:
         # habitat, spawn, rear, or migrate.
         Columns.OBSERVATIONS: {
-            Columns.FIELD: {
-                Columns.PAST_24HR_RAINFALL: {Columns.UNITS: Units.INCHES},
-                Columns.TIDE_HEIGHT: {Columns.UNITS: Units.FEET},
-                Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
-                Columns.WEATHER: {
-                    Columns.OPTIONS: list(Weather),
-                    # "dev_notes": [
-                    #     (
-                    #         "Took a liberty to create our own str values for optional "
-                    #         "rankings, clarity. But, likely need to convert to DB values."
-                    #     ),
-                    #     (
-                    #         "It's unclear at this time if they can only select one. But, "
-                    #         "common sense says cloud cover and precipitation levels are not " # noqa: E501
-                    #         "mutually exclusive. If there can be multiple weather "
-                    #         "conditions, this will need to be a list of StrEnums (to be "
-                    #         "validated as a set outside of JSON, along with other "
-                    #         "validations, like no two-rain observations)."
-                    #     ),
-                    # ],
+            Columns.AIR_TEMP: {Columns.UNITS: Units.CELSIUS},
+            Columns.ARRIVAL_TIME: {Columns.FORMAT: TIME_FORMAT},
+            Columns.DO_MG_PER_L: {
+                Columns.UNITS: Units.MG_PER_L,
+                Columns.THRESHOLDS: {
+                    Columns.OUTFALL: {
+                        Columns.LOWER: {Columns.VALUE: 6, Columns.INCLUSIVE: True}
+                    },
+                    Columns.CREEK: {
+                        Columns.LOWER: {Columns.VALUE: 10, Columns.INCLUSIVE: True}
+                    },
                 },
             },
-            Columns.SITE: {
+            Columns.FLOW: {Columns.OPTIONS: list(Flow)},
+            Columns.FLOW_COMPARED_TO_EXPECTED: {
+                Columns.OPTIONS: list(FlowComparedToExpected)
+            },
+            Columns.PH: {
+                Columns.UNITS: Units.PH,
+                Columns.THRESHOLDS: {
+                    Columns.OUTFALL: {
+                        Columns.LOWER: {Columns.VALUE: 5, Columns.INCLUSIVE: True},
+                        Columns.UPPER: {Columns.VALUE: 9, Columns.INCLUSIVE: True},
+                    },
+                    Columns.CREEK: {
+                        Columns.LOWER: {Columns.VALUE: 6.5, Columns.INCLUSIVE: True},
+                        Columns.UPPER: {Columns.VALUE: 8.5, Columns.INCLUSIVE: True},
+                    },
+                },
+            },
+            Columns.SALINITY_PPT: {Columns.UNITS: Units.PPT},
+            Columns.SPS_MICRO_S_PER_CM: {
+                Columns.UNITS: Units.MICRO_S_PER_CM,
+                Columns.THRESHOLDS: {
+                    Columns.OUTFALL: {
+                        Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
+                    },
+                    Columns.CREEK: {
+                        Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
+                    },
+                },
+            },
+            Columns.WATER_TEMP: {
+                Columns.UNITS: Units.CELSIUS,
+                Columns.THRESHOLDS: {
+                    Columns.OUTFALL: {
+                        Columns.UPPER: {
+                            Columns.REFERENCE_VALUE: Columns.AIR_TEMP,
+                            Columns.INCLUSIVE: True,
+                        }
+                    },
+                    Columns.CREEK: {
+                        Columns.HABITAT: {
+                            Columns.UPPER: {Columns.VALUE: 16, Columns.INCLUSIVE: True}
+                        },
+                        Columns.SPAWN: {
+                            Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
+                        },
+                        Columns.REAR: {
+                            Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
+                        },
+                        Columns.MIGRATE: {
+                            Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
+                        },
+                    },
+                },
+            },
+            QualitativeSiteObservationTypes.COLOR: {
+                Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                Columns.THRESHOLDS: {
+                    Columns.OUTFALL: "Any non-natural phenomena.",
+                    Columns.CREEK: "Any non-natural phenomena.",
+                },
+            },
+            QualitativeSiteObservationTypes.ODOR: {
+                Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                Columns.THRESHOLDS: {
+                    Columns.OUTFALL: "Any non-natural phenomena.",
+                    Columns.CREEK: "Any non-natural phenomena.",
+                },
+            },
+            QualitativeSiteObservationTypes.VISUAL: {
+                Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                Columns.THRESHOLDS: {
+                    Columns.OUTFALL: "Any non-natural phenomena.",
+                    Columns.CREEK: "Any non-natural phenomena.",
+                },
+            },
+        },
+    },
+    "example_extraction_document": {
+        Columns.METADATA: {
+            Columns.DATE: {Columns.FORMAT: DATE_FORMAT},
+            Columns.FORM_ID: str,
+            Columns.FORM_TYPE: {Columns.OPTIONS: list(FormType)},
+            Columns.FORM_VERSION: str,
+            Columns.INVESTIGATORS: {
+                Columns.INVESTIGATOR: str,
+                Columns.END_TIME: {Columns.FORMAT: TIME_FORMAT},
+                Columns.START_TIME: {Columns.FORMAT: TIME_FORMAT},
+            },
+            Columns.PAST_24HR_RAINFALL: {Columns.UNITS: Units.INCHES},
+            Columns.TIDE_HEIGHT: {Columns.UNITS: Units.FEET},
+            Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
+            Columns.WEATHER: {
+                Columns.OPTIONS: list(Weather),
+            },
+            Columns.OBSERVATIONS: {
                 Columns.AIR_TEMP: {Columns.UNITS: Units.CELSIUS},
                 Columns.ARRIVAL_TIME: {Columns.FORMAT: TIME_FORMAT},
+                QualitativeSiteObservationTypes.COLOR: {
+                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: "Any non-natural phenomena.",
+                        Columns.CREEK: "Any non-natural phenomena.",
+                    },
+                },
                 Columns.DO_MG_PER_L: {
                     Columns.UNITS: Units.MG_PER_L,
                     Columns.THRESHOLDS: {
@@ -315,13 +421,20 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                             Columns.LOWER: {Columns.VALUE: 6, Columns.INCLUSIVE: True}
                         },
                         Columns.CREEK: {
-                            Columns.LOWER: {Columns.VALUE: 10, Columns.INCLUSIVE: True}
+                            Columns.LOWER: {Columns.VALUE: 10.0, Columns.INCLUSIVE: True}
                         },
                     },
                 },
                 Columns.FLOW: {Columns.OPTIONS: list(Flow)},
                 Columns.FLOW_COMPARED_TO_EXPECTED: {
                     Columns.OPTIONS: list(FlowComparedToExpected)
+                },
+                QualitativeSiteObservationTypes.ODOR: {
+                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: "Any non-natural phenomena.",
+                        Columns.CREEK: "Any non-natural phenomena.",
+                    },
                 },
                 Columns.PH: {
                     Columns.UNITS: Units.PH,
@@ -348,6 +461,13 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         },
                     },
                 },
+                QualitativeSiteObservationTypes.VISUAL: {
+                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
+                    Columns.THRESHOLDS: {
+                        Columns.OUTFALL: "Any non-natural phenomena.",
+                        Columns.CREEK: "Any non-natural phenomena.",
+                    },
+                },
                 Columns.WATER_TEMP: {
                     Columns.UNITS: Units.CELSIUS,
                     Columns.THRESHOLDS: {
@@ -359,162 +479,28 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                         },
                         Columns.CREEK: {
                             Columns.HABITAT: {
-                                Columns.UPPER: {Columns.VALUE: 16, Columns.INCLUSIVE: True}
-                            },
-                            Columns.SPAWN: {
-                                Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
-                            },
-                            Columns.REAR: {
-                                Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
-                            },
-                            Columns.MIGRATE: {
-                                Columns.UPPER: {Columns.VALUE: 17.5, Columns.INCLUSIVE: True}
-                            },
-                        },
-                    },
-                },
-                QualitativeSiteObservationTypes.COLOR: {
-                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
-                    Columns.THRESHOLDS: {
-                        Columns.OUTFALL: "Any non-natural phenomena.",
-                        Columns.CREEK: "Any non-natural phenomena.",
-                    },
-                },
-                QualitativeSiteObservationTypes.ODOR: {
-                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
-                    Columns.THRESHOLDS: {
-                        Columns.OUTFALL: "Any non-natural phenomena.",
-                        Columns.CREEK: "Any non-natural phenomena.",
-                    },
-                },
-                QualitativeSiteObservationTypes.VISUAL: {
-                    Columns.RANK: {Columns.OPTIONS: list(Rank)},
-                    Columns.THRESHOLDS: {
-                        Columns.OUTFALL: "Any non-natural phenomena.",
-                        Columns.CREEK: "Any non-natural phenomena.",
-                    },
-                },
-            },
-        },
-    },
-    "example_extraction_document": {
-        Columns.METADATA: {
-            Columns.DATE: {Columns.FORMAT: DATE_FORMAT},
-            Columns.FORM_ID: str,
-            Columns.FORM_TYPE: {Columns.OPTIONS: list(FormType)},
-            Columns.FORM_VERSION: str,
-            Columns.INVESTIGATORS: {
-                Columns.INVESTIGATOR: str,
-                Columns.END_TIME: {Columns.FORMAT: TIME_FORMAT},
-                Columns.START_TIME: {Columns.FORMAT: TIME_FORMAT},
-            },
-            Columns.OBSERVATIONS: {
-                Columns.FIELD: {
-                    Columns.PAST_24HR_RAINFALL: {Columns.UNITS: Units.INCHES},
-                    Columns.TIDE_HEIGHT: {Columns.UNITS: Units.FEET},
-                    Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
-                    Columns.WEATHER: {
-                        Columns.OPTIONS: list(Weather),
-                    },
-                },
-                Columns.SITE: {
-                    Columns.AIR_TEMP: {Columns.UNITS: Units.CELSIUS},
-                    Columns.ARRIVAL_TIME: {Columns.FORMAT: TIME_FORMAT},
-                    QualitativeSiteObservationTypes.COLOR: {
-                        Columns.RANK: {Columns.OPTIONS: list(Rank)},
-                        Columns.THRESHOLDS: {
-                            Columns.OUTFALL: "Any non-natural phenomena.",
-                            Columns.CREEK: "Any non-natural phenomena.",
-                        },
-                    },
-                    Columns.DO_MG_PER_L: {
-                        Columns.UNITS: Units.MG_PER_L,
-                        Columns.THRESHOLDS: {
-                            Columns.OUTFALL: {
-                                Columns.LOWER: {Columns.VALUE: 6, Columns.INCLUSIVE: True}
-                            },
-                            Columns.CREEK: {
-                                Columns.LOWER: {Columns.VALUE: 10.0, Columns.INCLUSIVE: True}
-                            },
-                        },
-                    },
-                    Columns.FLOW: {Columns.OPTIONS: list(Flow)},
-                    Columns.FLOW_COMPARED_TO_EXPECTED: {
-                        Columns.OPTIONS: list(FlowComparedToExpected)
-                    },
-                    QualitativeSiteObservationTypes.ODOR: {
-                        Columns.RANK: {Columns.OPTIONS: list(Rank)},
-                        Columns.THRESHOLDS: {
-                            Columns.OUTFALL: "Any non-natural phenomena.",
-                            Columns.CREEK: "Any non-natural phenomena.",
-                        },
-                    },
-                    Columns.PH: {
-                        Columns.UNITS: Units.PH,
-                        Columns.THRESHOLDS: {
-                            Columns.OUTFALL: {
-                                Columns.LOWER: {Columns.VALUE: 5, Columns.INCLUSIVE: True},
-                                Columns.UPPER: {Columns.VALUE: 9, Columns.INCLUSIVE: True},
-                            },
-                            Columns.CREEK: {
-                                Columns.LOWER: {Columns.VALUE: 6.5, Columns.INCLUSIVE: True},
-                                Columns.UPPER: {Columns.VALUE: 8.5, Columns.INCLUSIVE: True},
-                            },
-                        },
-                    },
-                    Columns.SALINITY_PPT: {Columns.UNITS: Units.PPT},
-                    Columns.SPS_MICRO_S_PER_CM: {
-                        Columns.UNITS: Units.MICRO_S_PER_CM,
-                        Columns.THRESHOLDS: {
-                            Columns.OUTFALL: {
-                                Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
-                            },
-                            Columns.CREEK: {
-                                Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
-                            },
-                        },
-                    },
-                    QualitativeSiteObservationTypes.VISUAL: {
-                        Columns.RANK: {Columns.OPTIONS: list(Rank)},
-                        Columns.THRESHOLDS: {
-                            Columns.OUTFALL: "Any non-natural phenomena.",
-                            Columns.CREEK: "Any non-natural phenomena.",
-                        },
-                    },
-                    Columns.WATER_TEMP: {
-                        Columns.UNITS: Units.CELSIUS,
-                        Columns.THRESHOLDS: {
-                            Columns.OUTFALL: {
                                 Columns.UPPER: {
-                                    Columns.REFERENCE_VALUE: Columns.AIR_TEMP,
+                                    Columns.VALUE: 16,
                                     Columns.INCLUSIVE: True,
                                 }
                             },
-                            Columns.CREEK: {
-                                Columns.HABITAT: {
-                                    Columns.UPPER: {
-                                        Columns.VALUE: 16,
-                                        Columns.INCLUSIVE: True,
-                                    }
-                                },
-                                Columns.SPAWN: {
-                                    Columns.UPPER: {
-                                        Columns.VALUE: 17.5,
-                                        Columns.INCLUSIVE: True,
-                                    }
-                                },
-                                Columns.REAR: {
-                                    Columns.UPPER: {
-                                        Columns.VALUE: 17.5,
-                                        Columns.INCLUSIVE: True,
-                                    }
-                                },
-                                Columns.MIGRATE: {
-                                    Columns.UPPER: {
-                                        Columns.VALUE: 17.5,
-                                        Columns.INCLUSIVE: True,
-                                    }
-                                },
+                            Columns.SPAWN: {
+                                Columns.UPPER: {
+                                    Columns.VALUE: 17.5,
+                                    Columns.INCLUSIVE: True,
+                                }
+                            },
+                            Columns.REAR: {
+                                Columns.UPPER: {
+                                    Columns.VALUE: 17.5,
+                                    Columns.INCLUSIVE: True,
+                                }
+                            },
+                            Columns.MIGRATE: {
+                                Columns.UPPER: {
+                                    Columns.VALUE: 17.5,
+                                    Columns.INCLUSIVE: True,
+                                }
                             },
                         },
                     },
@@ -533,94 +519,90 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                     "ANNA B": {Columns.START_TIME: "14:40", Columns.END_TIME: "15:23"},
                     "ZOE F": {Columns.START_TIME: "15:09", Columns.END_TIME: "15:23"},
                 },
-                Columns.OBSERVATIONS: {
-                    Columns.FIELD: {
-                        Columns.TIDE_HEIGHT: -0.7,
-                        Columns.TIDE_TIME: "14:39",
-                        Columns.PAST_24HR_RAINFALL: 0.0,
-                        Columns.WEATHER: Weather.CLOUD_CLEAR,
+                Columns.TIDE_HEIGHT: -0.7,
+                Columns.TIDE_TIME: "14:39",
+                Columns.PAST_24HR_RAINFALL: 0.0,
+                Columns.WEATHER: Weather.CLOUD_CLEAR,
+                Columns.OBSERVATIONS: [
+                    {
+                        Columns.SITE_ID: "C ST",
+                        Columns.BACTERIA_BOTTLE_NO: "B1",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.ARRIVAL_TIME: "14:41",
+                        Columns.FLOW: Flow.M,
+                        Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
+                        Columns.AIR_TEMP: 21.0,
+                        Columns.WATER_TEMP: 11.6,
+                        Columns.DO_MG_PER_L: 10.35,
+                        Columns.SPS_MICRO_S_PER_CM: 414.1,
+                        Columns.SALINITY_PPT: 0.2,
+                        Columns.PH: 5.91,
+                        QualitativeSiteObservationTypes.COLOR: {
+                            Columns.RANK: Rank.ONE,
+                            Columns.DESCRIPTION: "YELLOW",
+                        },
+                        QualitativeSiteObservationTypes.ODOR: {
+                            Columns.RANK: Rank.ONE,
+                            Columns.DESCRIPTION: "SULPHUR",
+                        },
+                        QualitativeSiteObservationTypes.VISUAL: {
+                            Columns.RANK: None,
+                            Columns.DESCRIPTION: None,
+                        },
                     },
-                    Columns.SITE: [
-                        {
-                            Columns.SITE_ID: "C ST",
-                            Columns.BACTERIA_BOTTLE_NO: "B1",
-                            Columns.DRY_OUTFALL: False,
-                            Columns.ARRIVAL_TIME: "14:41",
-                            Columns.FLOW: Flow.M,
-                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            Columns.AIR_TEMP: 21.0,
-                            Columns.WATER_TEMP: 11.6,
-                            Columns.DO_MG_PER_L: 10.35,
-                            Columns.SPS_MICRO_S_PER_CM: 414.1,
-                            Columns.SALINITY_PPT: 0.2,
-                            Columns.PH: 5.91,
-                            QualitativeSiteObservationTypes.COLOR: {
-                                Columns.RANK: Rank.ONE,
-                                Columns.DESCRIPTION: "YELLOW",
-                            },
-                            QualitativeSiteObservationTypes.ODOR: {
-                                Columns.RANK: Rank.ONE,
-                                Columns.DESCRIPTION: "SULPHUR",
-                            },
-                            QualitativeSiteObservationTypes.VISUAL: {
-                                Columns.RANK: None,
-                                Columns.DESCRIPTION: None,
-                            },
+                    {
+                        Columns.SITE_ID: "C ST",
+                        Columns.BACTERIA_BOTTLE_NO: "B2",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.ARRIVAL_TIME: "14:41",
+                        Columns.FLOW: Flow.M,
+                        Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
+                        Columns.AIR_TEMP: 21.0,
+                        Columns.WATER_TEMP: 11.2,
+                        Columns.DO_MG_PER_L: 10.41,
+                        Columns.SPS_MICRO_S_PER_CM: 369.9,
+                        Columns.SALINITY_PPT: 0.18,
+                        Columns.PH: 5.5,
+                        QualitativeSiteObservationTypes.COLOR: {
+                            Columns.RANK: Rank.ONE,
+                            Columns.DESCRIPTION: "YELLOW",
                         },
-                        {
-                            Columns.SITE_ID: "C ST",
-                            Columns.BACTERIA_BOTTLE_NO: "B2",
-                            Columns.DRY_OUTFALL: False,
-                            Columns.ARRIVAL_TIME: "14:41",
-                            Columns.FLOW: Flow.M,
-                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            Columns.AIR_TEMP: 21.0,
-                            Columns.WATER_TEMP: 11.2,
-                            Columns.DO_MG_PER_L: 10.41,
-                            Columns.SPS_MICRO_S_PER_CM: 369.9,
-                            Columns.SALINITY_PPT: 0.18,
-                            Columns.PH: 5.5,
-                            QualitativeSiteObservationTypes.COLOR: {
-                                Columns.RANK: Rank.ONE,
-                                Columns.DESCRIPTION: "YELLOW",
-                            },
-                            QualitativeSiteObservationTypes.ODOR: {
-                                Columns.RANK: Rank.ONE,
-                                Columns.DESCRIPTION: "SULPHUR",
-                            },
-                            QualitativeSiteObservationTypes.VISUAL: {
-                                Columns.RANK: None,
-                                Columns.DESCRIPTION: None,
-                            },
+                        QualitativeSiteObservationTypes.ODOR: {
+                            Columns.RANK: Rank.ONE,
+                            Columns.DESCRIPTION: "SULPHUR",
                         },
-                        {
-                            Columns.SITE_ID: "BROADWAY",
-                            Columns.BACTERIA_BOTTLE_NO: "B3",
-                            Columns.DRY_OUTFALL: False,
-                            Columns.ARRIVAL_TIME: "15:09",
-                            Columns.FLOW: Flow.M,
-                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            Columns.AIR_TEMP: 22.0,
-                            Columns.WATER_TEMP: 11.1,
-                            Columns.DO_MG_PER_L: 10.73,
-                            Columns.SPS_MICRO_S_PER_CM: 314.1,
-                            Columns.SALINITY_PPT: 0.15,
-                            Columns.PH: 7.40,
-                            QualitativeSiteObservationTypes.COLOR: {
-                                Columns.RANK: Rank.ONE,
-                                Columns.DESCRIPTION: "YELLOW",
-                            },
-                            QualitativeSiteObservationTypes.ODOR: {
-                                Columns.RANK: Rank.ONE,
-                                Columns.DESCRIPTION: "SULPHUR",
-                            },
-                            QualitativeSiteObservationTypes.VISUAL: {
-                                Columns.RANK: None,
-                                Columns.DESCRIPTION: None,
-                            },
+                        QualitativeSiteObservationTypes.VISUAL: {
+                            Columns.RANK: None,
+                            Columns.DESCRIPTION: None,
                         },
-                    ],
-                },
+                    },
+                    {
+                        Columns.SITE_ID: "BROADWAY",
+                        Columns.BACTERIA_BOTTLE_NO: "B3",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.ARRIVAL_TIME: "15:09",
+                        Columns.FLOW: Flow.M,
+                        Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
+                        Columns.AIR_TEMP: 22.0,
+                        Columns.WATER_TEMP: 11.1,
+                        Columns.DO_MG_PER_L: 10.73,
+                        Columns.SPS_MICRO_S_PER_CM: 314.1,
+                        Columns.SALINITY_PPT: 0.15,
+                        Columns.PH: 7.40,
+                        QualitativeSiteObservationTypes.COLOR: {
+                            Columns.RANK: Rank.ONE,
+                            Columns.DESCRIPTION: "YELLOW",
+                        },
+                        QualitativeSiteObservationTypes.ODOR: {
+                            Columns.RANK: Rank.ONE,
+                            Columns.DESCRIPTION: "SULPHUR",
+                        },
+                        QualitativeSiteObservationTypes.VISUAL: {
+                            Columns.RANK: None,
+                            Columns.DESCRIPTION: None,
+                        },
+                    },
+                ],
             },
             "sheet1.jpg": {
                 Columns.FORM_TYPE: FormType.FIELD_DATASHEET_FOSS,
@@ -633,94 +615,90 @@ FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
                     "PAT": {Columns.START_TIME: "17:10"},
                     "CHRIS": {Columns.START_TIME: "17:10"},
                 },
-                Columns.OBSERVATIONS: {
-                    Columns.FIELD: {
-                        Columns.TIDE_HEIGHT: 0.22,
-                        Columns.TIDE_TIME: "17:10",
-                        Columns.PAST_24HR_RAINFALL: None,
-                        Columns.WEATHER: Weather.CLOUD_CLEAR,
+                Columns.TIDE_HEIGHT: 0.22,
+                Columns.TIDE_TIME: "17:10",
+                Columns.PAST_24HR_RAINFALL: None,
+                Columns.WEATHER: Weather.CLOUD_CLEAR,
+                Columns.OBSERVATIONS: [
+                    {
+                        Columns.SITE_ID: "PADDEN",
+                        Columns.BACTERIA_BOTTLE_NO: "B5",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.ARRIVAL_TIME: "17:10",
+                        Columns.FLOW: Flow.H,
+                        Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
+                        Columns.AIR_TEMP: 16,
+                        Columns.WATER_TEMP: 11.6,
+                        Columns.DO_MG_PER_L: 102.1,
+                        Columns.SPS_MICRO_S_PER_CM: 151.0,
+                        Columns.SALINITY_PPT: 0.07,
+                        Columns.PH: 7.73,
+                        QualitativeSiteObservationTypes.COLOR: {
+                            Columns.RANK: Rank.ONE,
+                            Columns.DESCRIPTION: "TAN",
+                        },
+                        QualitativeSiteObservationTypes.ODOR: {
+                            Columns.RANK: Rank.ZERO,
+                            Columns.DESCRIPTION: None,
+                        },
+                        QualitativeSiteObservationTypes.VISUAL: {
+                            Columns.RANK: Rank.ZERO,
+                            Columns.DESCRIPTION: None,
+                        },
                     },
-                    Columns.SITE: [
-                        {
-                            Columns.SITE_ID: "PADDEN",
-                            Columns.BACTERIA_BOTTLE_NO: "B5",
-                            Columns.DRY_OUTFALL: False,
-                            Columns.ARRIVAL_TIME: "17:10",
-                            Columns.FLOW: Flow.H,
-                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            Columns.AIR_TEMP: 16,
-                            Columns.WATER_TEMP: 11.6,
-                            Columns.DO_MG_PER_L: 102.1,
-                            Columns.SPS_MICRO_S_PER_CM: 151.0,
-                            Columns.SALINITY_PPT: 0.07,
-                            Columns.PH: 7.73,
-                            QualitativeSiteObservationTypes.COLOR: {
-                                Columns.RANK: Rank.ONE,
-                                Columns.DESCRIPTION: "TAN",
-                            },
-                            QualitativeSiteObservationTypes.ODOR: {
-                                Columns.RANK: Rank.ZERO,
-                                Columns.DESCRIPTION: None,
-                            },
-                            QualitativeSiteObservationTypes.VISUAL: {
-                                Columns.RANK: Rank.ZERO,
-                                Columns.DESCRIPTION: None,
-                            },
+                    {
+                        Columns.SITE_ID: "BENASFASDF",
+                        Columns.BACTERIA_BOTTLE_NO: "B6",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.ARRIVAL_TIME: "17:33",
+                        Columns.FLOW: Flow.H,
+                        Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
+                        Columns.AIR_TEMP: 18,
+                        Columns.WATER_TEMP: 11.4,
+                        Columns.DO_MG_PER_L: 11.03,
+                        Columns.SPS_MICRO_S_PER_CM: 234.7,
+                        Columns.SALINITY_PPT: 0.11,
+                        Columns.PH: 7.87,
+                        QualitativeSiteObservationTypes.COLOR: {
+                            Columns.RANK: Rank.ONE,
+                            Columns.DESCRIPTION: "Tan/brown",
                         },
-                        {
-                            Columns.SITE_ID: "BENASFASDF",
-                            Columns.BACTERIA_BOTTLE_NO: "B6",
-                            Columns.DRY_OUTFALL: False,
-                            Columns.ARRIVAL_TIME: "17:33",
-                            Columns.FLOW: Flow.H,
-                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            Columns.AIR_TEMP: 18,
-                            Columns.WATER_TEMP: 11.4,
-                            Columns.DO_MG_PER_L: 11.03,
-                            Columns.SPS_MICRO_S_PER_CM: 234.7,
-                            Columns.SALINITY_PPT: 0.11,
-                            Columns.PH: 7.87,
-                            QualitativeSiteObservationTypes.COLOR: {
-                                Columns.RANK: Rank.ONE,
-                                Columns.DESCRIPTION: "Tan/brown",
-                            },
-                            QualitativeSiteObservationTypes.ODOR: {
-                                Columns.RANK: None,
-                                Columns.DESCRIPTION: None,
-                            },
-                            QualitativeSiteObservationTypes.VISUAL: {
-                                Columns.RANK: None,
-                                Columns.DESCRIPTION: None,
-                            },
+                        QualitativeSiteObservationTypes.ODOR: {
+                            Columns.RANK: None,
+                            Columns.DESCRIPTION: None,
                         },
-                        {
-                            Columns.SITE_ID: "BEPSODF72",
-                            Columns.BACTERIA_BOTTLE_NO: "B7",
-                            Columns.DRY_OUTFALL: False,
-                            Columns.ARRIVAL_TIME: "17:40",
-                            Columns.FLOW: Flow.H,
-                            Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                            Columns.AIR_TEMP: None,
-                            Columns.WATER_TEMP: 11.4,
-                            Columns.DO_MG_PER_L: 11.17,
-                            Columns.SPS_MICRO_S_PER_CM: 235.1,
-                            Columns.SALINITY_PPT: 0.11,
-                            Columns.PH: 7.82,
-                            QualitativeSiteObservationTypes.COLOR: {
-                                Columns.RANK: Rank.ONE,
-                                Columns.DESCRIPTION: "Brown",
-                            },
-                            QualitativeSiteObservationTypes.ODOR: {
-                                Columns.RANK: None,
-                                Columns.DESCRIPTION: None,
-                            },
-                            QualitativeSiteObservationTypes.VISUAL: {
-                                Columns.RANK: None,
-                                Columns.DESCRIPTION: None,
-                            },
+                        QualitativeSiteObservationTypes.VISUAL: {
+                            Columns.RANK: None,
+                            Columns.DESCRIPTION: None,
                         },
-                    ],
-                },
+                    },
+                    {
+                        Columns.SITE_ID: "BEPSODF72",
+                        Columns.BACTERIA_BOTTLE_NO: "B7",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.ARRIVAL_TIME: "17:40",
+                        Columns.FLOW: Flow.H,
+                        Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
+                        Columns.AIR_TEMP: None,
+                        Columns.WATER_TEMP: 11.4,
+                        Columns.DO_MG_PER_L: 11.17,
+                        Columns.SPS_MICRO_S_PER_CM: 235.1,
+                        Columns.SALINITY_PPT: 0.11,
+                        Columns.PH: 7.82,
+                        QualitativeSiteObservationTypes.COLOR: {
+                            Columns.RANK: Rank.ONE,
+                            Columns.DESCRIPTION: "Brown",
+                        },
+                        QualitativeSiteObservationTypes.ODOR: {
+                            Columns.RANK: None,
+                            Columns.DESCRIPTION: None,
+                        },
+                        QualitativeSiteObservationTypes.VISUAL: {
+                            Columns.RANK: None,
+                            Columns.DESCRIPTION: None,
+                        },
+                    },
+                ],
             },
         },
     },
