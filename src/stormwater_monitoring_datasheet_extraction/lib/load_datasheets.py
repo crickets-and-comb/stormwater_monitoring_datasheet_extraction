@@ -4,48 +4,70 @@ from pathlib import Path
 from typing import Any, Dict, Tuple
 
 import pandera as pa
+from pandera.typing import DataFrame
 from typeguard import typechecked
 
+from stormwater_monitoring_datasheet_extraction.lib import schema
 from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
-from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (
-    FormMetadataCleaned,
-    FormMetadataExtracted,
-    FormMetadataVerified,
-    InvestigatorsCleaned,
-    InvestigatorsExtracted,
-    InvestigatorsVerified,
-    ObservationsCleaned,
-    ObservationsExtracted,
-    ObservationsVerified,
-)
+
+# TODO: To check observations threshholds, need a site-type map:
+# creek or outfall, and if creek:
+# habitat, spawn, rear, or migrate.
 
 
 # TODO: Set up logging.
-# TODO: Set up Pandera schema for each step.
 @typechecked
 def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
-    # TODO, NOTE: This is an estimate outline, not a hard requirement.
+    # TODO, NOTE: This is an estimated outline, not a hard requirement.
     # We may need to adjust the steps based on the actual implementation details.
-    # For instance, we may want to add a cleaning step between raw extraction and user
-    # verification.
-    raw_metadata, raw_investigators, raw_observations = extract(input_dir=input_dir)
+    (
+        raw_metadata,
+        raw_investigators,
+        raw_site_observations,
+        raw_qualitative_site_observations,
+    ) = extract(input_dir=input_dir)
 
-    verified_metadata, verified_investigators, verified_observations = verify(
+    (
+        precleaned_metadata,
+        precleaned_investigators,
+        precleaned_site_observations,
+        precleaned_qualitative_site_observations,
+    ) = preclean(
         raw_metadata=raw_metadata,
         raw_investigators=raw_investigators,
-        raw_observations=raw_observations,
+        raw_site_observations=raw_site_observations,
+        raw_qualitative_site_observations=raw_qualitative_site_observations,
     )
 
-    cleaned_metadata, cleaned_investigators, cleaned_observations = clean(
+    (
+        verified_metadata,
+        verified_investigators,
+        verified_site_observations,
+        verified_qualitative_site_observations,
+    ) = verify(
+        precleaned_metadata=precleaned_metadata,
+        precleaned_investigators=precleaned_investigators,
+        precleaned_site_observations=precleaned_site_observations,
+        precleaned_qualitative_site_observations=precleaned_qualitative_site_observations,
+    )
+
+    (
+        cleaned_metadata,
+        cleaned_investigators,
+        cleaned_site_observations,
+        cleaned_qualitative_site_observations,
+    ) = clean(
         verified_metadata=verified_metadata,
         verified_investigators=verified_investigators,
-        verified_observations=verified_observations,
+        verified_site_observations=verified_site_observations,
+        verified_qualitative_site_observations=verified_qualitative_site_observations,
     )
 
     restructured_json = restructure_extraction(
         cleaned_metadata=cleaned_metadata,
         cleaned_investigators=cleaned_investigators,
-        cleaned_observations=cleaned_observations,
+        cleaned_site_observations=cleaned_site_observations,
+        cleaned_qualitative_site_observations=cleaned_qualitative_site_observations,
     )
 
     final_output_path = load(restructured_json=restructured_json, output_dir=output_dir)
@@ -60,97 +82,205 @@ run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 @pa.check_types(with_pydantic=True, lazy=True)
 def extract(
     input_dir: Path,
-) -> Tuple[FormMetadataExtracted, InvestigatorsExtracted, ObservationsExtracted]:
+) -> Tuple[
+    DataFrame[schema.FormMetadataExtracted],
+    DataFrame[schema.InvestigatorsExtracted],
+    DataFrame[schema.SiteObservationsExtracted],
+    DataFrame[schema.QualitativeSiteObservationsExtracted],
+]:
     """Extracts data from the images in the input directory.
 
-    Using computer vision extracts data from datasheets into JSON schema.
+    Using computer vision, extracts data from datasheets.
 
     Args:
         input_dir: Path to the directory containing the datasheet images.
 
     Returns:
-        Raw extraction split into form metadata, investigators, and observations.
+        Raw extraction split into form metadata, investigators,
+            and site observations.
     """
-    # TODO: Index all to form/image name.
-    form_metadata = FormMetadataExtracted()
-    investigators = InvestigatorsExtracted()
-    observations = ObservationsExtracted()
-
+    form_metadata = DataFrame()
+    investigators = DataFrame()
+    site_observations = DataFrame()
+    qualitative_site_observations = DataFrame()
+    # TODO: Use data definition as source of truth rather than schema.
     ...
 
-    return form_metadata, investigators, observations
+    return (
+        form_metadata,
+        investigators,
+        site_observations,
+        qualitative_site_observations,
+    )
+
+
+# TODO: Implement this.
+def preclean(
+    raw_metadata: DataFrame[schema.FormMetadataExtracted],
+    raw_investigators: DataFrame[schema.InvestigatorsExtracted],
+    raw_site_observations: DataFrame[schema.SiteObservationsExtracted],
+    raw_qualitative_site_observations: DataFrame[schema.QualitativeSiteObservationsExtracted],
+) -> Tuple[
+    DataFrame[schema.FormMetadataPrecleaned],
+    DataFrame[schema.InvestigatorsPrecleaned],
+    DataFrame[schema.SiteObservationsPrecleaned],
+    DataFrame[schema.QualitativeSiteObservationsPrecleaned],
+]:
+    """Preclean the raw extraction.
+
+    Args:
+        raw_metadata: Metadata extracted from the datasheets.
+        raw_investigators: Investigators extracted from the datasheets.
+        raw_site_observations: Site observations extracted from the datasheets.
+        raw_qualitative_site_observations:
+            Qualitative site observations extracted from the datasheets.
+
+    Returns:
+        Precleaned metadata, investigators, and site observations.
+    """
+    # TODO: Light cleaning before user verification.
+    # E.g., strip whitespace, try to cast, check range, but warn don't fail.
+    # Much of this might be done by creating a custom class for each field
+    # that cleans and warns on construction,
+    # define __str__/__repr__/__int__ etc. as needed,
+    # and use the class as a type in the schema to coerce the data.
+    # Use data definition as source of truth rather than schema.
+    precleaned_metadata = raw_metadata.copy()
+    precleaned_investigators = raw_investigators.copy()
+    precleaned_site_observations = raw_site_observations.copy()
+    precleaned_qualitative_site_observations = raw_qualitative_site_observations.copy()
+    ...
+
+    return (
+        precleaned_metadata,
+        precleaned_investigators,
+        precleaned_site_observations,
+        precleaned_qualitative_site_observations,
+    )
 
 
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def verify(
-    raw_metadata: FormMetadataExtracted,
-    raw_investigators: InvestigatorsExtracted,
-    raw_observations: ObservationsExtracted,
-) -> Tuple[FormMetadataVerified, InvestigatorsVerified, ObservationsVerified]:
+    precleaned_metadata: DataFrame[schema.FormMetadataPrecleaned],
+    precleaned_investigators: DataFrame[schema.InvestigatorsPrecleaned],
+    precleaned_site_observations: DataFrame[schema.SiteObservationsPrecleaned],
+    precleaned_qualitative_site_observations: DataFrame[
+        schema.QualitativeSiteObservationsPrecleaned
+    ],
+) -> Tuple[
+    DataFrame[schema.FormMetadataVerified],
+    DataFrame[schema.InvestigatorsVerified],
+    DataFrame[schema.SiteObservationsVerified],
+    DataFrame[schema.QualitativeSiteObservationsVerified],
+]:
     """Verifies the raw extraction with the user.
 
     Prompts user to check each image against each extraction and edit as needed.
 
     Args:
-        raw_metadata: The raw metadata extracted from the datasheets.
-        raw_investigators: The raw investigators extracted from the datasheets.
-        raw_observations: The raw observations extracted from the datasheets.
+        precleaned_metadata: The precleaned metadata.
+        precleaned_investigators: The precleaned investigators.
+        precleaned_site_observations: The precleaned site observations.
+        precleaned_qualitative_site_observations:
+            The precleaned qualitative site observations.
 
     Returns:
-        User-verified metadata, investigators, and observations.
+        User-verified metadata, investigators, and site observations.
     """
-    verified_metadata = FormMetadataVerified()
-    verified_investigators = InvestigatorsVerified()
-    verified_observations = ObservationsVerified()
-
+    verified_metadata = precleaned_metadata.copy()
+    verified_investigators = precleaned_investigators.copy()
+    verified_site_observations = precleaned_site_observations.copy()
+    verified_qualitative_site_observations = precleaned_qualitative_site_observations.copy()
     ...
+    # TODO: Offer some immediate feedback:
+    # Offer enumerated options for categorical data.
+    # Highlight invalid extracted fields as they come to user's focus.
+    # Ask for reentry if entered/verified can't be typed correctly or is out of range.
+    # Warn and offer to re-enter if out of expected range but within valid range.
+    # Use data definition as source of truth rather than schema.
 
-    return verified_metadata, verified_investigators, verified_observations
+    return (
+        verified_metadata,
+        verified_investigators,
+        verified_site_observations,
+        verified_qualitative_site_observations,
+    )
 
 
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def clean(
-    verified_metadata: FormMetadataVerified,
-    verified_investigators: InvestigatorsVerified,
-    verified_observations: ObservationsVerified,
-) -> Tuple[FormMetadataCleaned, InvestigatorsCleaned, ObservationsCleaned]:
-    """Clean the user verified extraction.
+    verified_metadata: DataFrame[schema.FormMetadataVerified],
+    verified_investigators: DataFrame[schema.InvestigatorsVerified],
+    verified_site_observations: DataFrame[schema.SiteObservationsVerified],
+    verified_qualitative_site_observations: DataFrame[
+        schema.QualitativeSiteObservationsVerified
+    ],
+) -> Tuple[
+    DataFrame[schema.FormMetadataCleaned],
+    DataFrame[schema.InvestigatorsCleaned],
+    DataFrame[schema.SiteObservationsCleaned],
+    DataFrame[schema.QualitativeSiteObservationsCleaned],
+]:
+    """Clean the user-verified extraction.
 
-    Clean and validates the user verified extraction data, ensuring it is in a consistent
+    Clean and validates the user-verified extraction data, ensuring it is in a consistent
     format, appropriate data types, within specified ranges, etc., and ready to load.
 
     Args:
-        verified_metadata: The user verified metadata.
-        verified_investigators: The user verified investigators.
-        verified_observations: The user verified observations.
+        verified_metadata: The user-verified metadata.
+        verified_investigators: The user-verified investigators.
+        verified_site_observations: The user-verified site observations.
+        verified_qualitative_site_observations:
+            The user-verified qualitative site observations.
 
     Returns:
-        Cleaned metadata, investigators, and observations.
+        Cleaned metadata, investigators, and site observations.
     """
-    cleaned_metadata = FormMetadataCleaned()
-    cleaned_investigators = InvestigatorsCleaned()
-    cleaned_observations = ObservationsCleaned()
-
+    cleaned_metadata = verified_metadata.copy()
+    cleaned_investigators = verified_investigators.copy()
+    cleaned_site_observations = verified_site_observations.copy()
+    cleaned_qualitative_site_observations = verified_qualitative_site_observations.copy()
     ...
+    # TODO: Inferred/courtesy imputations? (nulls/empties, don't overstep)
 
-    return cleaned_metadata, cleaned_investigators, cleaned_observations
+    # TODO: Validations schema can't accomplish:
+    # - Referential integrity.
+    # - Date is on or before today.
+    # - Ideally, we would verify that site arrival times are within
+    #   the investigator's start and end times, but we can't 100% do that
+    #   because forms don't assign observations to investigators.
+    # - Qualitative observations for non-dry outfalls exist, but none for dry outfalls.
+
+    # TODO: If still invalid, alert to the problem, and re-call `verify()`.
+    # Use data definition as source of truth rather than schema.
+
+    return (
+        cleaned_metadata,
+        cleaned_investigators,
+        cleaned_site_observations,
+        cleaned_qualitative_site_observations,
+    )
 
 
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def restructure_extraction(
-    cleaned_metadata: FormMetadataCleaned,
-    cleaned_investigators: InvestigatorsCleaned,
-    cleaned_observations: ObservationsCleaned,
+    cleaned_metadata: DataFrame[schema.FormMetadataCleaned],
+    cleaned_investigators: DataFrame[schema.InvestigatorsCleaned],
+    cleaned_site_observations: DataFrame[schema.SiteObservationsCleaned],
+    cleaned_qualitative_site_observations: DataFrame[
+        schema.QualitativeSiteObservationsCleaned
+    ],
 ) -> Dict[str, Any]:
     """Restructure the cleaned extraction into a JSON schema.
 
     Args:
         cleaned_metadata: The cleaned metadata.
         cleaned_investigators: The cleaned investigators.
-        cleaned_observations: The cleaned observations.
+        cleaned_site_observations: The cleaned site observations.
+        cleaned_qualitative_site_observations: The cleaned qualitative site observations.
 
     Returns:
         Restructured JSON schema.
