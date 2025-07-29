@@ -16,6 +16,7 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import (
     Rank,
     Weather,
 )
+from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa: F401
 
 # TODO: Set field restrictions.
 # See/use field_datasheet_data_definition.json metadata.
@@ -123,9 +124,6 @@ DESCRIPTION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DESCR
 DESCRIPTION_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.DESCRIPTION)
 
 
-# TODO: Enforce all PKs.
-
-
 class FormMetadataExtracted(pa.DataFrameSchema):
     """Schema for the form metadata extracted from the datasheets.
 
@@ -147,6 +145,10 @@ class FormMetadataExtracted(pa.DataFrameSchema):
         """The configuration for the schema."""
 
         strict = False
+
+        # Dataframe checks.
+        # NOTE: Redundant to `FORM_ID_FIELD_UNQ` but included for clarity.
+        pk_check = {"pk_cols": [Columns.FORM_ID]}
 
 
 class InvestigatorsExtracted(pa.DataFrameSchema):
@@ -282,12 +284,17 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     weather: Series[Weather] = WEATHER_FIELD()
     notes: Series[str] = NOTES_FIELD()
 
-    # TODO: Field checks:
-    # - Date is formatted and valid. (Make a class for this?)
-    # - Time is formatted and valid. (Make a class for this?)
-    # - Rainfall is positive. (Extant class/type?)
+    class Config:
+        """The configuration for the schema."""
 
-    # TODO: Dataframe checks:
+        # Dataframe checks.
+        pk_check = {"pk_cols": [Columns.FORM_ID]}
+
+        # Field checks.
+        # TODO: Field checks:
+        # - Date is formatted and valid. (Make a class for this?)
+        # - Time is formatted and valid. (Make a class for this?)
+        # - Rainfall is positive. (Extant class/type?)
 
 
 class InvestigatorsVerified(InvestigatorsPrecleaned):
@@ -302,13 +309,18 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     start_time: Series[str] = START_TIME_FIELD()
     end_time: Series[str] = END_TIME_FIELD()
 
-    # TODO: Field checks:
-    # - Start time is formatted and valid. (Make a class for this?)
-    # - End time is formatted and valid. (Make a class for this?)
+    class Config:
+        """The configuration for the schema."""
 
-    # TODO: Dataframe checks:
-    # - Unique by PK.
-    # - Start time is before end time.
+        # Dataframe checks.
+        pk_check = {"pk_cols": [Columns.FORM_ID, Columns.INVESTIGATOR]}
+
+        # TODO: Field checks:
+        # - Start time is formatted and valid. (Make a class for this?)
+        # - End time is formatted and valid. (Make a class for this?)
+
+        # TODO: Dataframe checks:
+        # - Start time is before end time.
 
 
 class SiteObservationsVerified(SiteObservationsPrecleaned):
@@ -335,17 +347,22 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
     pH: Series[float] = PH_FIELD()
 
-    # TODO: To check threshholds, need a site-type map:
-    # creek or outfall, and if creek:
-    # habitat, spawn, rear, or migrate.
+    class Config:
+        """The configuration for the schema."""
 
-    # TODO: Dataframe checks:
-    # - Unique by PK.
-    # - bottle_no should be unique by form_id, if not overall.
-    # - If dry outfall is true, then observations should be null.
-    # - Otherwise, observations should be non-null (unless all null).
-    # - Time should be formatted and valid. (Make a class for this?)
-    # - Positives: DO_mg_per_l, SPS_micro_S_per_cm, salinity_ppt, pH.
+        # Dataframe checks.
+        pk_check = {"pk_cols": [Columns.FORM_ID, Columns.SITE_ID]}
+
+        # TODO: To check threshholds, need a site-type map:
+        # creek or outfall, and if creek:
+        # habitat, spawn, rear, or migrate.
+
+        # TODO: Dataframe checks:
+        # - bottle_no should be unique by form_id, if not overall.
+        # - If dry outfall is true, then observations should be null.
+        # - Otherwise, observations should be non-null (unless all null).
+        # - Time should be formatted and valid. (Make a class for this?)
+        # - Positives: DO_mg_per_l, SPS_micro_S_per_cm, salinity_ppt, pH.
 
 
 class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned):
@@ -361,11 +378,14 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
     rank: Series[Rank] = RANK_FIELD()
     description: Series[str] = DESCRIPTION_FIELD()
 
-    # TODO: Field checks:
-    # - varchar limit description.
+    class Config:
+        """The configuration for the schema."""
 
-    # TODO: Dataframe checks:
-    # - Unique by PK.
+        # Dataframe checks.
+        pk_check = {"pk_cols": [Columns.FORM_ID, Columns.SITE_ID]}
+
+        # TODO: Field checks:
+        # - varchar limit description.
 
 
 class FormMetadataCleaned(FormMetadataVerified):
