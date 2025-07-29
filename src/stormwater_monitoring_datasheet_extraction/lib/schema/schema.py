@@ -20,7 +20,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa
 
 # TODO: Set field restrictions.
 # See/use field_datasheet_data_definition.json metadata.
-# TODO: Add member docstrings (#:)
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
 # TODO: Set dataframe-level checks.
@@ -43,7 +42,7 @@ _UNIQUE_FIELD: Final[Callable] = partial(_COERCE_FIELD, unique=True)
 
 
 # Form metadata.
-# NOTE: form_id is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
+# NOTE: `form_id` is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
 # If all files are from the same directory in a single extraction, then it will be unique.
 # But, that doesn't guarantee uniqueness across multiple extractions to the same DB.
 FORM_ID_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
@@ -117,32 +116,47 @@ PH_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.PH)
 
 # Qualitative site observations: color, odor, visual.
 OBSERVATION_TYPE_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.OBSERVATION_TYPE)
-OBSERVATION_TYPE: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.OBSERVATION_TYPE)
+OBSERVATION_TYPE: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.OBSERVATION_TYPE)
 RANK_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.RANK)
-RANK_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.RANK)
+RANK_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.RANK)
 DESCRIPTION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
-DESCRIPTION_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.DESCRIPTION)
+DESCRIPTION_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DESCRIPTION)
 
 
 class FormMetadataExtracted(pa.DataFrameSchema):
     """Schema for the form metadata extracted from the datasheets.
 
-    PK: form_id.
+    PK: `form_id`.
     """
 
+    #: The form ID, sole primary key.
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
+    #: The form type. Nullable. Unenforced `FormType`.
     form_type: Series[str] = FORM_TYPE_FIELD_LAX()
+    #: The form version. Nullable.
     form_version: Series[str] = FORM_VERSION_FIELD_LAX()
+    #: The date of observations. Nullable.
     date: Series[str] = DATE_FIELD_LAX()
+    #: The city of observations. Nullable. Unenforced `City`.
     city: Series[str] = CITY_FIELD_LAX()
+    #: The tide height at the time of observations. Nullable.
     tide_height: Series[float] = TIDE_HEIGHT_FIELD_LAX()
+    #: The tide time at the time of observations. Nullable.
     tide_time: Series[str] = TIDE_TIME_FIELD_LAX()
+    #: The past 24-hour rainfall. Nullable.
     past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD_LAX()
+    #: The weather at the time of observations. Nullable. Unenforced `Weather`.
     weather: Series[str] = WEATHER_FIELD_LAX()
+    #: Investigator notes. Nullable.
     notes: Series[str] = NOTES_FIELD_LAX()
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        Not a strict schema at this stage since it's the "raw" extracted data.
+
+        We do enforce the primary key since it's created by the extraction process.
+        """
 
         strict = False
 
@@ -154,17 +168,24 @@ class FormMetadataExtracted(pa.DataFrameSchema):
 class InvestigatorsExtracted(pa.DataFrameSchema):
     """Schema for the investigators extracted from the datasheets.
 
-    PK: form_id, investigator (unenforced).
-    FK: metadata.form_id (unenforced).
+    PK: `form_id`, `investigator` (unenforced).
+    FK: `FormMetadata.form_id` (unenforced).
     """
 
+    #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
+    #: The investigator, part of the primary key, but nullable at this stage.
     investigator: Series[str] = INVESTIGATOR_FIELD_LAX()
+    #: The start time of the investigation. Nullable.
     start_time: Series[str] = START_TIME_FIELD_LAX()
+    #: The end time of the investigation. Nullable.
     end_time: Series[str] = END_TIME_FIELD_LAX()
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        Not a strict schema at this stage since it's the "raw" extracted data.
+        """
 
         strict = False
 
@@ -172,27 +193,43 @@ class InvestigatorsExtracted(pa.DataFrameSchema):
 class SiteObservationsExtracted(pa.DataFrameSchema):
     """Schema for the observations precleaned.
 
-    PK: form_id, site_id (unenforced).
-    FK: metadata.form_id (unenforced).
-    FK: ?.bottle_no (unenforced).
+    PK: `form_id`, `site_id` (unenforced).
+    FK: `FormMetadata.form_id` (unenforced).
+    FK: ?.`bottle_no` (unenforced).
     """
 
+    #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
+    #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Series[str] = SITE_ID_FIELD_LAX()
+    #: The bottle number. Nullable.
     bottle_no: Series[str] = BOTTLE_NO_FIELD_LAX()
+    #: Whether the outfall was dry. Nullable.
     dry_outfall: Series[bool] = DRY_OUTFALL_FIELD_LAX()
+    #: The arrival time of the investigation. Nullable.
     arrival_time: Series[str] = ARRIVAL_TIME_FIELD_LAX()
+    #: The flow. Nullable. Unenforced `Flow`.
     flow: Series[str] = FLOW_FIELD_LAX()
+    #: The flow compared to expected. Nullable. Unenforced `FlowComparedToExpected`.
     flow_compared_to_expected: Series[str] = FLOW_COMPARED_TO_EXPECTED_FIELD_LAX()
+    #: The air temperature. Nullable.
     air_temp: Series[float] = AIR_TEMP_FIELD_LAX()
+    #: The water temperature. Nullable.
     water_temp: Series[float] = WATER_TEMP_FIELD_LAX()
+    #: The dissolved oxygen. Nullable.
     DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD_LAX()
+    #: The specific conductance. Nullable.
     SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD_LAX()
+    #: The salinity. Nullable.
     salinity_ppt: Series[float] = SALINITY_PPT_FIELD_LAX()
+    #: The pH. Nullable.
     pH: Series[float] = PH_FIELD_LAX()
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        Not a strict schema at this stage since it's the "raw" extracted data.
+        """
 
         strict = False
 
@@ -200,18 +237,27 @@ class SiteObservationsExtracted(pa.DataFrameSchema):
 class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
     """Schema for the qualitative site observations extracted from the datasheets.
 
-    PK: form_id, site_id (unenforced).
-    FK: metadata.form_id (unenforced).
+    PK: `form_id`, `site_id` (unenforced).
+    FK: `FormMetadata.form_id` (unenforced).
     """
 
+    # TODO: Type should be part of the PK.
+    #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
+    #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Series[str] = SITE_ID_FIELD_LAX()
+    #: The observation type. Nullable. Unenforced `QualitativeSiteObservationTypes`.
     type: Series[str] = OBSERVATION_TYPE_LAX()
+    #: The rank of the observation. Nullable. Unenforced `Rank`.
     rank: Series[int] = RANK_FIELD_LAX()
+    #: The description of the observation. Nullable.
     description: Series[str] = DESCRIPTION_FIELD_LAX()
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        Not a strict schema at this stage since it's the "raw" extracted data.
+        """
 
         strict = False
 
@@ -219,11 +265,14 @@ class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
 class FormMetadataPrecleaned(FormMetadataExtracted):
     """Schema for the form metadata precleaned.
 
-    PK: form_id.
+    PK: `form_id`.
     """
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        A strict schema, requires all fields to be present.
+        """
 
         strict = True
 
@@ -231,12 +280,15 @@ class FormMetadataPrecleaned(FormMetadataExtracted):
 class InvestigatorsPrecleaned(InvestigatorsExtracted):
     """Schema for the investigators precleaned.
 
-    PK: form_id, investigator (unenforced).
-    FK: metadata.form_id (unenforced).
+    PK: `form_id`, `investigator` (unenforced).
+    FK: `FormMetadata.form_id` (unenforced).
     """
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        A strict schema, requires all fields to be present.
+        """
 
         strict = True
 
@@ -244,13 +296,16 @@ class InvestigatorsPrecleaned(InvestigatorsExtracted):
 class SiteObservationsPrecleaned(SiteObservationsExtracted):
     """Schema for the observations extracted from the datasheets.
 
-    PK: form_id, site_id (unenforced).
-    FK: metadata.form_id (unenforced).
-    FK: ?.bottle_no (unenforced).
+    PK: `form_id`, `site_id` (unenforced).
+    FK: `FormMetadata.form_id` (unenforced).
+    FK: ?.`bottle_no` (unenforced).
     """
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        A strict schema, requires all fields to be present.
+        """
 
         strict = True
 
@@ -258,12 +313,15 @@ class SiteObservationsPrecleaned(SiteObservationsExtracted):
 class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted):
     """Schema for the qualitative site observations precleaned.
 
-    PK: form_id, site_id (unenforced).
-    FK: metadata.form_id (unenforced).
+    PK: `form_id`, `site_id` (unenforced).
+    FK: `FormMetadata.form_id` (unenforced).
     """
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        A strict schema, requires all fields to be present.
+        """
 
         strict = True
 
@@ -271,24 +329,33 @@ class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted
 class FormMetadataVerified(FormMetadataPrecleaned):
     """Schema for the form metadata verified by the user.
 
-    PK: form_id.
+    PK: `form_id`.
     """
 
+    # TODO: If fields are not coerced before this, can't we still type them as their enums?
+    #: The form type.
     form_type: Series[FormType] = FORM_TYPE_FIELD()
+    #: The form version.
     form_version: Series[str] = FORM_VERSION_FIELD()
+    #: The date of observations.
     date: Series[str] = DATE_FIELD()
+    #: The city of observations.
     city: Series[City] = CITY_FIELD()
+    #: The tide height at the time of observations.
     tide_height: Series[float] = TIDE_HEIGHT_FIELD()
+    #: The tide time at the time of observations.
     tide_time: Series[str] = TIDE_TIME_FIELD()
+    #: The past 24-hour rainfall.
     past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD()
+    #: The weather at the time of observations.
     weather: Series[Weather] = WEATHER_FIELD()
+    #: Investigator notes.
     notes: Series[str] = NOTES_FIELD()
 
     class Config:
         """The configuration for the schema."""
 
         # Dataframe checks.
-        pk_check = {"pk_cols": [Columns.FORM_ID]}
 
         # Field checks.
         # TODO: Field checks:
@@ -300,17 +367,24 @@ class FormMetadataVerified(FormMetadataPrecleaned):
 class InvestigatorsVerified(InvestigatorsPrecleaned):
     """Schema for the investigators verified by the user.
 
-    PK: form_id, investigator.
-    FK: metadata.form_id (unenforced).
+    PK: `form_id`, `investigator`.
+    FK: `FormMetadata.form_id` (unenforced).
     """
 
+    #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
+    #: The investigator, part of the primary key.
     investigator: Series[str] = INVESTIGATOR_FIELD()
+    #: The start time of the investigation.
     start_time: Series[str] = START_TIME_FIELD()
+    #: The end time of the investigation.
     end_time: Series[str] = END_TIME_FIELD()
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        Enforces the primary key.
+        """
 
         # Dataframe checks.
         pk_check = {"pk_cols": [Columns.FORM_ID, Columns.INVESTIGATOR]}
@@ -326,29 +400,45 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
 class SiteObservationsVerified(SiteObservationsPrecleaned):
     """Schema for the observations verified by the user.
 
-    PK: form_id, site_id.
-    FK: metadata.form_id (unenforced).
-    FK: ?.bottle_no (unenforced).
+    PK: `form_id`, `site_id`.
+    FK: `FormMetadata.form_id` (unenforced).
+    FK: ?.`bottle_no` (unenforced).
     """
 
+    #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
+    #: The site ID, part of the primary key.
     site_id: Series[str] = SITE_ID_FIELD()
+    #: Whether the outfall was dry.
     dry_outfall: Series[bool] = DRY_OUTFALL_FIELD()
+    #: The bottle number. Nullable, but only if `dry_outfall` is true.
     bottle_no: Series[str] = BOTTLE_NO_FIELD()
+    #: The arrival time of the investigation.
     arrival_time: Series[str] = ARRIVAL_TIME_FIELD()
+    #: The flow. Nullable, but only if `dry_outfall` is false.
     flow: Series[Flow] = FLOW_FIELD()
+    #: The flow compared to expected. Nullable, but only if `dry_outfall` is false.
     flow_compared_to_expected: Series[FlowComparedToExpected] = (
         FLOW_COMPARED_TO_EXPECTED_FIELD_LAX()
     )
+    #: The air temperature. Nullable, but only if `dry_outfall` is false.
     air_temp: Series[float] = AIR_TEMP_FIELD()
+    #: The water temperature. Nullable, but only if `dry_outfall` is false.
     water_temp: Series[float] = WATER_TEMP_FIELD()
+    #: The dissolved oxygen. Nullable, but only if `dry_outfall` is false.
     DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD()
+    #: The specific conductance. Nullable, but only if `dry_outfall` is false.
     SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD()
+    #: The salinity. Nullable, but only if `dry_outfall` is false.
     salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
+    #: The pH. Nullable, but only if `dry_outfall` is false.
     pH: Series[float] = PH_FIELD()
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        Enforces the primary key.
+        """
 
         # Dataframe checks.
         pk_check = {"pk_cols": [Columns.FORM_ID, Columns.SITE_ID]}
@@ -358,7 +448,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         # habitat, spawn, rear, or migrate.
 
         # TODO: Dataframe checks:
-        # - bottle_no should be unique by form_id, if not overall.
+        # - `bottle_no` should be unique by `form_id`, if not overall.
         # - If dry outfall is true, then observations should be null.
         # - Otherwise, observations should be non-null (unless all null).
         # - Time should be formatted and valid. (Make a class for this?)
@@ -368,18 +458,29 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
 class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned):
     """Schema for the qualitative site observations verified by the user.
 
-    PK: form_id, site_id.
-    FK: metadata.form_id (unenforced).
+    PK: `form_id`, `site_id`.
+    FK: `FormMetadata.form_id` (unenforced).
     """
 
+    # TODO: Ensure observations for non-dry outfalls exist, but none for dry outfalls.
+    # Will need to be done in the final validation, outside of schema definitions
+    # (unless we duplicated `dry_outfall` here, but that's not a good idea).
+    #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
+    #: The site ID, part of the primary key.
     site_id: Series[str] = SITE_ID_FIELD()
+    #: The observation type.
     type: Series[QualitativeSiteObservationTypes] = OBSERVATION_TYPE()
+    #: The rank of the observation.
     rank: Series[Rank] = RANK_FIELD()
+    #: The description of the observation.
     description: Series[str] = DESCRIPTION_FIELD()
 
     class Config:
-        """The configuration for the schema."""
+        """The configuration for the schema.
+
+        Enforces the primary key.
+        """
 
         # Dataframe checks.
         pk_check = {"pk_cols": [Columns.FORM_ID, Columns.SITE_ID]}
@@ -391,30 +492,30 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
 class FormMetadataCleaned(FormMetadataVerified):
     """Schema for the form metadata cleaned.
 
-    PK: form_id.
+    PK: `form_id`.
     """
 
 
 class InvestigatorsCleaned(InvestigatorsVerified):
     """Schema for the investigators cleaned.
 
-    PK: form_id, investigator.
-    FK: metadata.form_id (unenforced).
+    PK: `form_id`, `investigator`.
+    FK: `FormMetadata.form_id` (unenforced).
     """
 
 
 class SiteObservationsCleaned(SiteObservationsVerified):
     """Schema for the observations cleaned.
 
-    PK: form_id, site_id.
-    FK: metadata.form_id (unenforced).
-    FK: ?.bottle_no (unenforced).
+    PK: `form_id`, `site_id`.
+    FK: `FormMetadata.form_id` (unenforced).
+    FK: ?.`bottle_no` (unenforced).
     """
 
 
 class QualitativeSiteObservationsCleaned(QualitativeSiteObservationsVerified):
     """Schema for the qualitative site observations cleaned.
 
-    PK: form_id, site_id (unenforced).
-    FK: metadata.form_id (unenforced).
+    PK: `form_id`, `site_id` (unenforced).
+    FK: `FormMetadata.form_id` (unenforced).
     """
