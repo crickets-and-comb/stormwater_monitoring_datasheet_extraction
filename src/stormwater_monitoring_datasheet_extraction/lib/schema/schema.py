@@ -7,6 +7,7 @@ import pandera as pa
 from pandera.typing import Series
 
 from stormwater_monitoring_datasheet_extraction.lib.constants import (
+    CharLimits,
     City,
     Columns,
     Flow,
@@ -18,8 +19,6 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import (
 )
 from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa: F401
 
-# TODO: Set field restrictions.
-# See/use field_datasheet_data_definition.json metadata.
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
 # TODO: Set dataframe-level checks.
@@ -120,7 +119,9 @@ OBSERVATION_TYPE: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.OBSERVA
 RANK_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.RANK)
 RANK_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.RANK)
 DESCRIPTION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
-DESCRIPTION_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DESCRIPTION)
+DESCRIPTION_FIELD: Final[Callable] = partial(
+    _COERCE_FIELD, alias=Columns.DESCRIPTION, limit_char=CharLimits.DESCRIPTION
+)
 
 
 class FormMetadataExtracted(pa.DataFrameSchema):
@@ -355,8 +356,6 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     class Config:
         """The configuration for the schema."""
 
-        # Dataframe checks.
-
         # Field checks.
         # TODO: Field checks:
         # - Date is formatted and valid. (Make a class for this?)
@@ -462,9 +461,6 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
     FK: `FormMetadata.form_id` (unenforced).
     """
 
-    # TODO: Ensure observations for non-dry outfalls exist, but none for dry outfalls.
-    # Will need to be done in the final validation, outside of schema definitions
-    # (unless we duplicated `dry_outfall` here, but that's not a good idea).
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key.
@@ -484,9 +480,6 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
 
         # Dataframe checks.
         pk_check = {"pk_cols": [Columns.FORM_ID, Columns.SITE_ID]}
-
-        # TODO: Field checks:
-        # - varchar limit description.
 
 
 class FormMetadataCleaned(FormMetadataVerified):

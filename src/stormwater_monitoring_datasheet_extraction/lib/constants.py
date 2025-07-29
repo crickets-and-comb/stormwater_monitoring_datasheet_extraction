@@ -6,6 +6,12 @@ from typing import Any, Dict, Final
 from comb_utils import DocString
 
 
+class CharLimits:
+    """Character limits for fields."""
+
+    DESCRIPTION: Final[int] = 250
+
+
 class City(StrEnum):
     """Options for the city field."""
 
@@ -168,8 +174,8 @@ class Weather(StrEnum):
     PRECIP_SNOW = "precip_snow"
 
 
-# TODO: Make custom date and time classes with __str__ and __repr__?
-# Extend String so it can be used as type hint and render as a string?
+# TODO: Make custom date and time classes with __str__ and __repr__
+# to handle errors better.
 DATE_FORMAT: Final[str] = "YYYY-MM-DD"
 TIME_FORMAT: Final[str] = "HH:MM"
 
