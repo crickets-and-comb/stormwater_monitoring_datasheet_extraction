@@ -12,9 +12,11 @@ This package extracts stormwater monitoring field observations from datasheet PD
 
 Currently, data collectors in the field handwrite observations in a printed PDF, and then periodically someone manually enters these observations into the database. It takes quite a bit of time to do, so they batch it out, and so it can be a while before it gets done, costing volunteer and paid hours along with creating a lag in the availability of research data for analysis and reporting.
 
-Ultimately, we might like to create a mobile app for data collectors to enter observations into directly. But, for now, we've decided to start with their existing habits and build something smaller and perhaps more managable. So, we're using computer vision to read the hand-filled forms and extract the observations. This allows the users to continue to use pen and paper while shortening the time and labor needed to enter the data from the froms into the database.
+Ultimately, we might like to create a mobile app for data collectors to enter observations into directly, or further instrument existing instruments to upload directly. But, for now, we've decided to start with their existing habits and build something smaller and perhaps more managable. So, leaving a human in the loop for verification, we're using computer vision to read the hand-filled forms and extract the observations. This allows the users to continue to use pen and paper while shortening the time and labor needed to enter the data from the froms into the database.
 
-The intended workflow, then, is to pass the tool a path to the directory with images of the datasheets, and for each datasheet, the image will pop up along with the extracted data for the user to confirm or edit via a prompt.
+The intended workflow, then, is to pass the tool a path to the directory with images of the datasheets, and for each datasheet, the image will pop up along with the extracted data for the user to confirm or edit via a prompt. The first iteration will be a simple CLI, but a GUI may be more conducive to the task on future interations.
+
+That said, producing and supporting the CLI may serve to gain enough user trust to allow us to take bigger strides to a mobile solution.
 
 This is a [Crickets and Comb](https://cricketsandcomb.org) resource.
 
