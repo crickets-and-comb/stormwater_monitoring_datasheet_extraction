@@ -418,7 +418,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     flow: Series[Flow] = FLOW_FIELD()
     #: The flow compared to expected. Nullable, but only if `dry_outfall` is false.
     flow_compared_to_expected: Series[FlowComparedToExpected] = (
-        FLOW_COMPARED_TO_EXPECTED_FIELD_LAX()
+        FLOW_COMPARED_TO_EXPECTED_FIELD()
     )
     #: The air temperature. Nullable, but only if `dry_outfall` is false.
     air_temp: Series[float] = AIR_TEMP_FIELD()
