@@ -120,7 +120,9 @@ RANK_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.RANK)
 RANK_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.RANK)
 DESCRIPTION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
 DESCRIPTION_FIELD: Final[Callable] = partial(
-    _COERCE_FIELD, alias=Columns.DESCRIPTION, limit_char=CharLimits.DESCRIPTION
+    _COERCE_FIELD,
+    alias=Columns.DESCRIPTION,
+    checks=pa.Check.str_length(max_value=CharLimits.DESCRIPTION),
 )
 
 
