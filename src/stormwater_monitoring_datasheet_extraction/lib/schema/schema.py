@@ -32,7 +32,7 @@ from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa
 # https://github.com/crickets-and-comb/bfb_delivery/blob/main/src/bfb_delivery/lib/dispatch/write_to_circuit.py#L111
 # 1. Move from `bfb_delivery` to `comb_utils`.
 # 2. Add feature to pass in custom error handler function,
-# with default that uses generally useful DataFrameSchema error features.
+# with default that uses generally useful DataFrameModel error features.
 
 _COERCE_FIELD: Final[Callable] = partial(pa.Field, coerce=True)
 _LAX_FIELD: Final[Callable] = partial(pa.Field, coerce=False, unique=False, nullable=True)
@@ -126,7 +126,7 @@ DESCRIPTION_FIELD: Final[Callable] = partial(
 )
 
 
-class FormMetadataExtracted(pa.DataFrameSchema):
+class FormMetadataExtracted(pa.DataFrameModel):
     """Schema for the form metadata extracted from the datasheets.
 
     PK: `form_id`.
@@ -168,7 +168,7 @@ class FormMetadataExtracted(pa.DataFrameSchema):
         pk_check = {"pk_cols": [Columns.FORM_ID]}
 
 
-class InvestigatorsExtracted(pa.DataFrameSchema):
+class InvestigatorsExtracted(pa.DataFrameModel):
     """Schema for the investigators extracted from the datasheets.
 
     PK: `form_id`, `investigator` (unenforced).
@@ -193,7 +193,7 @@ class InvestigatorsExtracted(pa.DataFrameSchema):
         strict = False
 
 
-class SiteObservationsExtracted(pa.DataFrameSchema):
+class SiteObservationsExtracted(pa.DataFrameModel):
     """Schema for the observations precleaned.
 
     PK: `form_id`, `site_id` (unenforced).
@@ -237,7 +237,7 @@ class SiteObservationsExtracted(pa.DataFrameSchema):
         strict = False
 
 
-class QualitativeSiteObservationsExtracted(pa.DataFrameSchema):
+class QualitativeSiteObservationsExtracted(pa.DataFrameModel):
     """Schema for the qualitative site observations extracted from the datasheets.
 
     PK: `form_id`, `site_id` (unenforced).
