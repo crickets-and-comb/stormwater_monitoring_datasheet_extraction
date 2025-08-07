@@ -99,10 +99,10 @@ def extract(
         Raw extraction split into form metadata, investigators,
             and site observations.
     """
-    form_metadata = DataFrame()
-    investigators = DataFrame()
-    site_observations = DataFrame()
-    qualitative_site_observations = DataFrame()
+    form_metadata = DataFrame(schema.FormMetadataExtracted)
+    investigators = DataFrame(schema.InvestigatorsExtracted)
+    site_observations = DataFrame(schema.SiteObservationsExtracted)
+    qualitative_site_observations = DataFrame(schema.QualitativeSiteObservationsExtracted)
     # TODO: Use data definition as source of truth rather than schema.
     ...
 
@@ -145,10 +145,12 @@ def preclean(
     # define __str__/__repr__/__int__ etc. as needed,
     # and use the class as a type in the schema to coerce the data.
     # Use data definition as source of truth rather than schema.
-    precleaned_metadata = raw_metadata.copy()
-    precleaned_investigators = raw_investigators.copy()
-    precleaned_site_observations = raw_site_observations.copy()
-    precleaned_qualitative_site_observations = raw_qualitative_site_observations.copy()
+    precleaned_metadata = DataFrame(schema.FormMetadataPrecleaned)
+    precleaned_investigators = DataFrame(schema.InvestigatorsPrecleaned)
+    precleaned_site_observations = DataFrame(schema.SiteObservationsPrecleaned)
+    precleaned_qualitative_site_observations = DataFrame(
+        schema.QualitativeSiteObservationsPrecleaned
+    )
     ...
 
     return (
@@ -188,10 +190,12 @@ def verify(
     Returns:
         User-verified metadata, investigators, and site observations.
     """
-    verified_metadata = precleaned_metadata.copy()
-    verified_investigators = precleaned_investigators.copy()
-    verified_site_observations = precleaned_site_observations.copy()
-    verified_qualitative_site_observations = precleaned_qualitative_site_observations.copy()
+    verified_metadata = DataFrame(schema.FormMetadataVerified)
+    verified_investigators = DataFrame(schema.InvestigatorsVerified)
+    verified_site_observations = DataFrame(schema.SiteObservationsVerified)
+    verified_qualitative_site_observations = DataFrame(
+        schema.QualitativeSiteObservationsVerified
+    )
     ...
     # TODO: Offer some immediate feedback:
     # Offer enumerated options for categorical data.
@@ -238,10 +242,12 @@ def clean(
     Returns:
         Cleaned metadata, investigators, and site observations.
     """
-    cleaned_metadata = verified_metadata.copy()
-    cleaned_investigators = verified_investigators.copy()
-    cleaned_site_observations = verified_site_observations.copy()
-    cleaned_qualitative_site_observations = verified_qualitative_site_observations.copy()
+    cleaned_metadata = DataFrame(schema.FormMetadataCleaned)
+    cleaned_investigators = DataFrame(schema.InvestigatorsCleaned)
+    cleaned_site_observations = DataFrame(schema.SiteObservationsCleaned)
+    cleaned_qualitative_site_observations = DataFrame(
+        schema.QualitativeSiteObservationsCleaned
+    )
     ...
     # TODO: Inferred/courtesy imputations? (nulls/empties, don't overstep)
 
