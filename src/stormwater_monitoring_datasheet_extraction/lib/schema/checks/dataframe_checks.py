@@ -1,7 +1,7 @@
 """DataFrame checks."""
 
 import pandas as pd
-import pandera.extensions as extensions
+from pandera import extensions
 
 
 # TODO: Abstract to `comb_utils`.
