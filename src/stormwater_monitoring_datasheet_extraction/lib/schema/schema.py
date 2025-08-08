@@ -122,7 +122,7 @@ DESCRIPTION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DESCR
 DESCRIPTION_FIELD: Final[Callable] = partial(
     _COERCE_FIELD,
     alias=Columns.DESCRIPTION,
-    checks=pa.Check.str_length(max_value=CharLimits.DESCRIPTION),
+    str_length={"max_value": CharLimits.DESCRIPTION},
 )
 
 
