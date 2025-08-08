@@ -1,7 +1,7 @@
 """Constants for the `lib` module."""
 
 from enum import IntEnum, StrEnum
-from typing import Any, Dict, Final
+from typing import Any, Final
 
 from comb_utils import DocString
 
@@ -180,7 +180,7 @@ DATE_FORMAT: Final[str] = "YYYY-MM-DD"
 TIME_FORMAT: Final[str] = "HH:MM"
 
 # TODO: Version data definitions by form type and version.
-FIELD_DATA_DEFINITION: Final[Dict[str, Any]] = {
+FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
     # TODO: Resolve these notes.
     # "dev_notes": [
     #     (

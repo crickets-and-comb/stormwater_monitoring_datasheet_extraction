@@ -1,7 +1,8 @@
 """Pandera schemas for ETL steps."""
 
+from collections.abc import Callable
 from functools import partial
-from typing import Callable, Final
+from typing import Final
 
 import pandera as pa
 from pandera.typing import Series

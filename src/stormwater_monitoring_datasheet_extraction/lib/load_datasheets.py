@@ -1,7 +1,7 @@
 """Top-level module for stormwater monitoring datasheet ETL."""
 
 from pathlib import Path
-from typing import Any, Dict, Tuple, cast
+from typing import Any, cast
 
 import pandas as pd
 import pandera as pa
@@ -83,7 +83,7 @@ run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 @pa.check_types(with_pydantic=True, lazy=True)
 def extract(
     input_dir: Path,
-) -> Tuple[
+) -> tuple[
     pt.DataFrame[schema.FormMetadataExtracted],
     pt.DataFrame[schema.InvestigatorsExtracted],
     pt.DataFrame[schema.SiteObservationsExtracted],
@@ -127,7 +127,7 @@ def preclean(
     raw_qualitative_site_observations: pt.DataFrame[
         schema.QualitativeSiteObservationsExtracted
     ],
-) -> Tuple[
+) -> tuple[
     pt.DataFrame[schema.FormMetadataPrecleaned],
     pt.DataFrame[schema.InvestigatorsPrecleaned],
     pt.DataFrame[schema.SiteObservationsPrecleaned],
@@ -184,7 +184,7 @@ def verify(
     precleaned_qualitative_site_observations: pt.DataFrame[
         schema.QualitativeSiteObservationsPrecleaned
     ],
-) -> Tuple[
+) -> tuple[
     pt.DataFrame[schema.FormMetadataVerified],
     pt.DataFrame[schema.InvestigatorsVerified],
     pt.DataFrame[schema.SiteObservationsVerified],
@@ -242,7 +242,7 @@ def clean(
     verified_qualitative_site_observations: pt.DataFrame[
         schema.QualitativeSiteObservationsVerified
     ],
-) -> Tuple[
+) -> tuple[
     pt.DataFrame[schema.FormMetadataCleaned],
     pt.DataFrame[schema.InvestigatorsCleaned],
     pt.DataFrame[schema.SiteObservationsCleaned],
@@ -307,7 +307,7 @@ def restructure_extraction(
     cleaned_qualitative_site_observations: pt.DataFrame[
         schema.QualitativeSiteObservationsCleaned
     ],
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Restructure the cleaned extraction into a JSON schema.
 
     Args:
@@ -327,7 +327,7 @@ def restructure_extraction(
 
 # TODO: Implement this.
 @typechecked
-def load(restructured_json: Dict[str, Any], output_dir: Path) -> Path:
+def load(restructured_json: dict[str, Any], output_dir: Path) -> Path:
     """Load the cleaned data into the output directory.
 
     Saves the cleaned data to the specified output directory in a structured format.
