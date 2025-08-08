@@ -1,7 +1,7 @@
 """Top-level module for stormwater monitoring datasheet ETL."""
 
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, cast
 
 import pandas as pd
 import pandera as pa
@@ -10,6 +10,18 @@ from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib import schema
 from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
+
+# def _noop_check_types(*args: Any, **kwargs: Any) -> Callable[..., Any]:  # noqa: ANN401
+#     def _wrap(fn: Any) -> Any:  # noqa: ANN401
+#         return fn
+
+#     return _wrap
+
+
+# # TODO: Swap back to pandera.check_types when implementing.
+# # Use this while stubbing to avoid import-time Pandera introspection:
+# check_types = _noop_check_types
+check_types = pa.check_types
 
 # TODO: To check observations threshholds, need a site-type map:
 # creek or outfall, and if creek:
@@ -80,7 +92,7 @@ run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 
 
 # TODO: Implement this.
-@pa.check_types(with_pydantic=True, lazy=True)
+@check_types(with_pydantic=True, lazy=True)
 def extract(
     input_dir: Path,
 ) -> Tuple[
@@ -100,10 +112,12 @@ def extract(
         Raw extraction split into form metadata, investigators,
             and site observations.
     """
-    form_metadata = pd.DataFrame()
-    investigators = pd.DataFrame()
-    site_observations = pd.DataFrame()
-    qualitative_site_observations = pd.DataFrame()
+    form_metadata = cast("pt.DataFrame[schema.FormMetadataExtracted]", pd.DataFrame())
+    investigators = cast("pt.DataFrame[schema.InvestigatorsExtracted]", pd.DataFrame())
+    site_observations = cast("pt.DataFrame[schema.SiteObservationsExtracted]", pd.DataFrame())
+    qualitative_site_observations = cast(
+        "pt.DataFrame[schema.QualitativeSiteObservationsExtracted]", pd.DataFrame()
+    )
     # TODO: Use data definition as source of truth rather than schema.
     ...
 
@@ -148,10 +162,16 @@ def preclean(
     # define __str__/__repr__/__int__ etc. as needed,
     # and use the class as a type in the schema to coerce the data.
     # Use data definition as source of truth rather than schema.
-    precleaned_metadata = pd.DataFrame()
-    precleaned_investigators = pd.DataFrame()
-    precleaned_site_observations = pd.DataFrame()
-    precleaned_qualitative_site_observations = pd.DataFrame()
+    precleaned_metadata = cast("pt.DataFrame[schema.FormMetadataPrecleaned]", pd.DataFrame())
+    precleaned_investigators = cast(
+        "pt.DataFrame[schema.InvestigatorsPrecleaned]", pd.DataFrame()
+    )
+    precleaned_site_observations = cast(
+        "pt.DataFrame[schema.SiteObservationsPrecleaned]", pd.DataFrame()
+    )
+    precleaned_qualitative_site_observations = cast(
+        "pt.DataFrame[schema.QualitativeSiteObservationsPrecleaned]", pd.DataFrame()
+    )
     ...
 
     return (
@@ -163,7 +183,7 @@ def preclean(
 
 
 # TODO: Implement this.
-@pa.check_types(with_pydantic=True, lazy=True)
+@check_types(with_pydantic=True, lazy=True)
 def verify(
     precleaned_metadata: pt.DataFrame[schema.FormMetadataPrecleaned],
     precleaned_investigators: pt.DataFrame[schema.InvestigatorsPrecleaned],
@@ -191,10 +211,16 @@ def verify(
     Returns:
         User-verified metadata, investigators, and site observations.
     """
-    verified_metadata = pd.DataFrame()
-    verified_investigators = pd.DataFrame()
-    verified_site_observations = pd.DataFrame()
-    verified_qualitative_site_observations = pd.DataFrame()
+    verified_metadata = cast("pt.DataFrame[schema.FormMetadataVerified]", pd.DataFrame())
+    verified_investigators = cast(
+        "pt.DataFrame[schema.InvestigatorsVerified]", pd.DataFrame()
+    )
+    verified_site_observations = cast(
+        "pt.DataFrame[schema.SiteObservationsVerified]", pd.DataFrame()
+    )
+    verified_qualitative_site_observations = cast(
+        "pt.DataFrame[schema.QualitativeSiteObservationsVerified]", pd.DataFrame()
+    )
     ...
     # TODO: Offer some immediate feedback:
     # Offer enumerated options for categorical data.
@@ -212,7 +238,7 @@ def verify(
 
 
 # TODO: Implement this.
-@pa.check_types(with_pydantic=True, lazy=True)
+@check_types(with_pydantic=True, lazy=True)
 def clean(
     verified_metadata: pt.DataFrame[schema.FormMetadataVerified],
     verified_investigators: pt.DataFrame[schema.InvestigatorsVerified],
@@ -241,10 +267,14 @@ def clean(
     Returns:
         Cleaned metadata, investigators, and site observations.
     """
-    cleaned_metadata = pd.DataFrame()
-    cleaned_investigators = pd.DataFrame()
-    cleaned_site_observations = pd.DataFrame()
-    cleaned_qualitative_site_observations = pd.DataFrame()
+    cleaned_metadata = cast("pt.DataFrame[schema.FormMetadataCleaned]", pd.DataFrame())
+    cleaned_investigators = cast("pt.DataFrame[schema.InvestigatorsCleaned]", pd.DataFrame())
+    cleaned_site_observations = cast(
+        "pt.DataFrame[schema.SiteObservationsCleaned]", pd.DataFrame()
+    )
+    cleaned_qualitative_site_observations = cast(
+        "pt.DataFrame[schema.QualitativeSiteObservationsCleaned]", pd.DataFrame()
+    )
     ...
     # TODO: Inferred/courtesy imputations? (nulls/empties, don't overstep)
 
@@ -268,7 +298,7 @@ def clean(
 
 
 # TODO: Implement this.
-@pa.check_types(with_pydantic=True, lazy=True)
+@check_types(with_pydantic=True, lazy=True)
 def restructure_extraction(
     cleaned_metadata: pt.DataFrame[schema.FormMetadataCleaned],
     cleaned_investigators: pt.DataFrame[schema.InvestigatorsCleaned],
