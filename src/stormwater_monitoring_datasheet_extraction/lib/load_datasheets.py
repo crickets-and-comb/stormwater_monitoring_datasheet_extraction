@@ -11,18 +11,6 @@ from typeguard import typechecked
 from stormwater_monitoring_datasheet_extraction.lib import schema
 from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 
-# def _noop_check_types(*args: Any, **kwargs: Any) -> Callable[..., Any]:  # noqa: ANN401
-#     def _wrap(fn: Any) -> Any:  # noqa: ANN401
-#         return fn
-
-#     return _wrap
-
-
-# # TODO: Swap back to pandera.check_types when implementing.
-# # Use this while stubbing to avoid import-time Pandera introspection:
-# check_types = _noop_check_types
-check_types = pa.check_types
-
 # TODO: To check observations threshholds, need a site-type map:
 # creek or outfall, and if creek:
 # habitat, spawn, rear, or migrate.
@@ -92,7 +80,7 @@ run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 
 
 # TODO: Implement this.
-@check_types(with_pydantic=True, lazy=True)
+@pa.check_types(with_pydantic=True, lazy=True)
 def extract(
     input_dir: Path,
 ) -> Tuple[
@@ -112,6 +100,8 @@ def extract(
         Raw extraction split into form metadata, investigators,
             and site observations.
     """
+    # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
+    # It will cast and validate on return.
     form_metadata = cast("pt.DataFrame[schema.FormMetadataExtracted]", pd.DataFrame())
     investigators = cast("pt.DataFrame[schema.InvestigatorsExtracted]", pd.DataFrame())
     site_observations = cast("pt.DataFrame[schema.SiteObservationsExtracted]", pd.DataFrame())
@@ -162,6 +152,8 @@ def preclean(
     # define __str__/__repr__/__int__ etc. as needed,
     # and use the class as a type in the schema to coerce the data.
     # Use data definition as source of truth rather than schema.
+    # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
+    # It will cast and validate on return.
     precleaned_metadata = cast("pt.DataFrame[schema.FormMetadataPrecleaned]", pd.DataFrame())
     precleaned_investigators = cast(
         "pt.DataFrame[schema.InvestigatorsPrecleaned]", pd.DataFrame()
@@ -183,7 +175,7 @@ def preclean(
 
 
 # TODO: Implement this.
-@check_types(with_pydantic=True, lazy=True)
+@pa.check_types(with_pydantic=True, lazy=True)
 def verify(
     precleaned_metadata: pt.DataFrame[schema.FormMetadataPrecleaned],
     precleaned_investigators: pt.DataFrame[schema.InvestigatorsPrecleaned],
@@ -211,6 +203,8 @@ def verify(
     Returns:
         User-verified metadata, investigators, and site observations.
     """
+    # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
+    # It will cast and validate on return.
     verified_metadata = cast("pt.DataFrame[schema.FormMetadataVerified]", pd.DataFrame())
     verified_investigators = cast(
         "pt.DataFrame[schema.InvestigatorsVerified]", pd.DataFrame()
@@ -238,7 +232,7 @@ def verify(
 
 
 # TODO: Implement this.
-@check_types(with_pydantic=True, lazy=True)
+@pa.check_types(with_pydantic=True, lazy=True)
 def clean(
     verified_metadata: pt.DataFrame[schema.FormMetadataVerified],
     verified_investigators: pt.DataFrame[schema.InvestigatorsVerified],
@@ -267,6 +261,8 @@ def clean(
     Returns:
         Cleaned metadata, investigators, and site observations.
     """
+    # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
+    # It will cast and validate on return.
     cleaned_metadata = cast("pt.DataFrame[schema.FormMetadataCleaned]", pd.DataFrame())
     cleaned_investigators = cast("pt.DataFrame[schema.InvestigatorsCleaned]", pd.DataFrame())
     cleaned_site_observations = cast(
@@ -298,7 +294,7 @@ def clean(
 
 
 # TODO: Implement this.
-@check_types(with_pydantic=True, lazy=True)
+@pa.check_types(with_pydantic=True, lazy=True)
 def restructure_extraction(
     cleaned_metadata: pt.DataFrame[schema.FormMetadataCleaned],
     cleaned_investigators: pt.DataFrame[schema.InvestigatorsCleaned],
