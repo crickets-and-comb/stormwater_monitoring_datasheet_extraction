@@ -240,11 +240,10 @@ class SiteObservationsExtracted(pa.DataFrameModel):
 class QualitativeSiteObservationsExtracted(pa.DataFrameModel):
     """Schema for the qualitative site observations extracted from the datasheets.
 
-    PK: `form_id`, `site_id` (unenforced).
+    PK: `form_id`, `site_id`, `observation_type` (unenforced).
     FK: `FormMetadata.form_id` (unenforced).
     """
 
-    # TODO: Type should be part of the PK.
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
@@ -316,7 +315,7 @@ class SiteObservationsPrecleaned(SiteObservationsExtracted):
 class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted):
     """Schema for the qualitative site observations precleaned.
 
-    PK: `form_id`, `site_id` (unenforced).
+    PK: `form_id`, `site_id`, `observation_type` (unenforced).
     FK: `FormMetadata.form_id` (unenforced).
     """
 
@@ -459,7 +458,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
 class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned):
     """Schema for the qualitative site observations verified by the user.
 
-    PK: `form_id`, `site_id`.
+    PK: `form_id`, `site_id`, `observation_type`.
     FK: `FormMetadata.form_id` (unenforced).
     """
 
@@ -481,7 +480,7 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
         """
 
         # Dataframe checks.
-        pk_check = {"pk_cols": [Columns.FORM_ID, Columns.SITE_ID]}
+        pk_check = {"pk_cols": [Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]}
 
 
 class FormMetadataCleaned(FormMetadataVerified):
@@ -511,6 +510,6 @@ class SiteObservationsCleaned(SiteObservationsVerified):
 class QualitativeSiteObservationsCleaned(QualitativeSiteObservationsVerified):
     """Schema for the qualitative site observations cleaned.
 
-    PK: `form_id`, `site_id` (unenforced).
+    PK: `form_id`, `site_id`, `observation_type`.
     FK: `FormMetadata.form_id` (unenforced).
     """
