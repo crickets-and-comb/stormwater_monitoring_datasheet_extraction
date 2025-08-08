@@ -3,8 +3,9 @@
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
+import pandas as pd
 import pandera as pa
-from pandera.typing import DataFrame
+import pandera.typing as pt
 from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib import schema
@@ -83,10 +84,10 @@ run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 def extract(
     input_dir: Path,
 ) -> Tuple[
-    DataFrame[schema.FormMetadataExtracted],
-    DataFrame[schema.InvestigatorsExtracted],
-    DataFrame[schema.SiteObservationsExtracted],
-    DataFrame[schema.QualitativeSiteObservationsExtracted],
+    pt.DataFrame[schema.FormMetadataExtracted],
+    pt.DataFrame[schema.InvestigatorsExtracted],
+    pt.DataFrame[schema.SiteObservationsExtracted],
+    pt.DataFrame[schema.QualitativeSiteObservationsExtracted],
 ]:
     """Extracts data from the images in the input directory.
 
@@ -99,10 +100,10 @@ def extract(
         Raw extraction split into form metadata, investigators,
             and site observations.
     """
-    form_metadata = DataFrame(schema.FormMetadataExtracted)
-    investigators = DataFrame(schema.InvestigatorsExtracted)
-    site_observations = DataFrame(schema.SiteObservationsExtracted)
-    qualitative_site_observations = DataFrame(schema.QualitativeSiteObservationsExtracted)
+    form_metadata = pd.DataFrame()
+    investigators = pd.DataFrame()
+    site_observations = pd.DataFrame()
+    qualitative_site_observations = pd.DataFrame()
     # TODO: Use data definition as source of truth rather than schema.
     ...
 
@@ -116,15 +117,17 @@ def extract(
 
 # TODO: Implement this.
 def preclean(
-    raw_metadata: DataFrame[schema.FormMetadataExtracted],
-    raw_investigators: DataFrame[schema.InvestigatorsExtracted],
-    raw_site_observations: DataFrame[schema.SiteObservationsExtracted],
-    raw_qualitative_site_observations: DataFrame[schema.QualitativeSiteObservationsExtracted],
+    raw_metadata: pt.DataFrame[schema.FormMetadataExtracted],
+    raw_investigators: pt.DataFrame[schema.InvestigatorsExtracted],
+    raw_site_observations: pt.DataFrame[schema.SiteObservationsExtracted],
+    raw_qualitative_site_observations: pt.DataFrame[
+        schema.QualitativeSiteObservationsExtracted
+    ],
 ) -> Tuple[
-    DataFrame[schema.FormMetadataPrecleaned],
-    DataFrame[schema.InvestigatorsPrecleaned],
-    DataFrame[schema.SiteObservationsPrecleaned],
-    DataFrame[schema.QualitativeSiteObservationsPrecleaned],
+    pt.DataFrame[schema.FormMetadataPrecleaned],
+    pt.DataFrame[schema.InvestigatorsPrecleaned],
+    pt.DataFrame[schema.SiteObservationsPrecleaned],
+    pt.DataFrame[schema.QualitativeSiteObservationsPrecleaned],
 ]:
     """Preclean the raw extraction.
 
@@ -145,12 +148,10 @@ def preclean(
     # define __str__/__repr__/__int__ etc. as needed,
     # and use the class as a type in the schema to coerce the data.
     # Use data definition as source of truth rather than schema.
-    precleaned_metadata = DataFrame(schema.FormMetadataPrecleaned)
-    precleaned_investigators = DataFrame(schema.InvestigatorsPrecleaned)
-    precleaned_site_observations = DataFrame(schema.SiteObservationsPrecleaned)
-    precleaned_qualitative_site_observations = DataFrame(
-        schema.QualitativeSiteObservationsPrecleaned
-    )
+    precleaned_metadata = pd.DataFrame()
+    precleaned_investigators = pd.DataFrame()
+    precleaned_site_observations = pd.DataFrame()
+    precleaned_qualitative_site_observations = pd.DataFrame()
     ...
 
     return (
@@ -164,17 +165,17 @@ def preclean(
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def verify(
-    precleaned_metadata: DataFrame[schema.FormMetadataPrecleaned],
-    precleaned_investigators: DataFrame[schema.InvestigatorsPrecleaned],
-    precleaned_site_observations: DataFrame[schema.SiteObservationsPrecleaned],
-    precleaned_qualitative_site_observations: DataFrame[
+    precleaned_metadata: pt.DataFrame[schema.FormMetadataPrecleaned],
+    precleaned_investigators: pt.DataFrame[schema.InvestigatorsPrecleaned],
+    precleaned_site_observations: pt.DataFrame[schema.SiteObservationsPrecleaned],
+    precleaned_qualitative_site_observations: pt.DataFrame[
         schema.QualitativeSiteObservationsPrecleaned
     ],
 ) -> Tuple[
-    DataFrame[schema.FormMetadataVerified],
-    DataFrame[schema.InvestigatorsVerified],
-    DataFrame[schema.SiteObservationsVerified],
-    DataFrame[schema.QualitativeSiteObservationsVerified],
+    pt.DataFrame[schema.FormMetadataVerified],
+    pt.DataFrame[schema.InvestigatorsVerified],
+    pt.DataFrame[schema.SiteObservationsVerified],
+    pt.DataFrame[schema.QualitativeSiteObservationsVerified],
 ]:
     """Verifies the raw extraction with the user.
 
@@ -190,12 +191,10 @@ def verify(
     Returns:
         User-verified metadata, investigators, and site observations.
     """
-    verified_metadata = DataFrame(schema.FormMetadataVerified)
-    verified_investigators = DataFrame(schema.InvestigatorsVerified)
-    verified_site_observations = DataFrame(schema.SiteObservationsVerified)
-    verified_qualitative_site_observations = DataFrame(
-        schema.QualitativeSiteObservationsVerified
-    )
+    verified_metadata = pd.DataFrame()
+    verified_investigators = pd.DataFrame()
+    verified_site_observations = pd.DataFrame()
+    verified_qualitative_site_observations = pd.DataFrame()
     ...
     # TODO: Offer some immediate feedback:
     # Offer enumerated options for categorical data.
@@ -215,17 +214,17 @@ def verify(
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def clean(
-    verified_metadata: DataFrame[schema.FormMetadataVerified],
-    verified_investigators: DataFrame[schema.InvestigatorsVerified],
-    verified_site_observations: DataFrame[schema.SiteObservationsVerified],
-    verified_qualitative_site_observations: DataFrame[
+    verified_metadata: pt.DataFrame[schema.FormMetadataVerified],
+    verified_investigators: pt.DataFrame[schema.InvestigatorsVerified],
+    verified_site_observations: pt.DataFrame[schema.SiteObservationsVerified],
+    verified_qualitative_site_observations: pt.DataFrame[
         schema.QualitativeSiteObservationsVerified
     ],
 ) -> Tuple[
-    DataFrame[schema.FormMetadataCleaned],
-    DataFrame[schema.InvestigatorsCleaned],
-    DataFrame[schema.SiteObservationsCleaned],
-    DataFrame[schema.QualitativeSiteObservationsCleaned],
+    pt.DataFrame[schema.FormMetadataCleaned],
+    pt.DataFrame[schema.InvestigatorsCleaned],
+    pt.DataFrame[schema.SiteObservationsCleaned],
+    pt.DataFrame[schema.QualitativeSiteObservationsCleaned],
 ]:
     """Clean the user-verified extraction.
 
@@ -242,12 +241,10 @@ def clean(
     Returns:
         Cleaned metadata, investigators, and site observations.
     """
-    cleaned_metadata = DataFrame(schema.FormMetadataCleaned)
-    cleaned_investigators = DataFrame(schema.InvestigatorsCleaned)
-    cleaned_site_observations = DataFrame(schema.SiteObservationsCleaned)
-    cleaned_qualitative_site_observations = DataFrame(
-        schema.QualitativeSiteObservationsCleaned
-    )
+    cleaned_metadata = pd.DataFrame()
+    cleaned_investigators = pd.DataFrame()
+    cleaned_site_observations = pd.DataFrame()
+    cleaned_qualitative_site_observations = pd.DataFrame()
     ...
     # TODO: Inferred/courtesy imputations? (nulls/empties, don't overstep)
 
@@ -273,10 +270,10 @@ def clean(
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def restructure_extraction(
-    cleaned_metadata: DataFrame[schema.FormMetadataCleaned],
-    cleaned_investigators: DataFrame[schema.InvestigatorsCleaned],
-    cleaned_site_observations: DataFrame[schema.SiteObservationsCleaned],
-    cleaned_qualitative_site_observations: DataFrame[
+    cleaned_metadata: pt.DataFrame[schema.FormMetadataCleaned],
+    cleaned_investigators: pt.DataFrame[schema.InvestigatorsCleaned],
+    cleaned_site_observations: pt.DataFrame[schema.SiteObservationsCleaned],
+    cleaned_qualitative_site_observations: pt.DataFrame[
         schema.QualitativeSiteObservationsCleaned
     ],
 ) -> Dict[str, Any]:
