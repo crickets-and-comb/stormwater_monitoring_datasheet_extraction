@@ -154,15 +154,16 @@ def preclean(
     # Use data definition as source of truth rather than schema.
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
-    precleaned_metadata = cast("pt.DataFrame[schema.FormMetadataPrecleaned]", pd.DataFrame())
+    precleaned_metadata = cast("pt.DataFrame[schema.FormMetadataPrecleaned]", raw_metadata)
     precleaned_investigators = cast(
-        "pt.DataFrame[schema.InvestigatorsPrecleaned]", pd.DataFrame()
+        "pt.DataFrame[schema.InvestigatorsPrecleaned]", raw_investigators
     )
     precleaned_site_observations = cast(
-        "pt.DataFrame[schema.SiteObservationsPrecleaned]", pd.DataFrame()
+        "pt.DataFrame[schema.SiteObservationsPrecleaned]", raw_site_observations
     )
     precleaned_qualitative_site_observations = cast(
-        "pt.DataFrame[schema.QualitativeSiteObservationsPrecleaned]", pd.DataFrame()
+        "pt.DataFrame[schema.QualitativeSiteObservationsPrecleaned]",
+        raw_qualitative_site_observations,
     )
     ...
 
@@ -205,15 +206,16 @@ def verify(
     """
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
-    verified_metadata = cast("pt.DataFrame[schema.FormMetadataVerified]", pd.DataFrame())
+    verified_metadata = cast("pt.DataFrame[schema.FormMetadataVerified]", precleaned_metadata)
     verified_investigators = cast(
-        "pt.DataFrame[schema.InvestigatorsVerified]", pd.DataFrame()
+        "pt.DataFrame[schema.InvestigatorsVerified]", precleaned_investigators
     )
     verified_site_observations = cast(
-        "pt.DataFrame[schema.SiteObservationsVerified]", pd.DataFrame()
+        "pt.DataFrame[schema.SiteObservationsVerified]", precleaned_site_observations
     )
     verified_qualitative_site_observations = cast(
-        "pt.DataFrame[schema.QualitativeSiteObservationsVerified]", pd.DataFrame()
+        "pt.DataFrame[schema.QualitativeSiteObservationsVerified]",
+        precleaned_qualitative_site_observations,
     )
     ...
     # TODO: Offer some immediate feedback:
@@ -263,13 +265,16 @@ def clean(
     """
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
-    cleaned_metadata = cast("pt.DataFrame[schema.FormMetadataCleaned]", pd.DataFrame())
-    cleaned_investigators = cast("pt.DataFrame[schema.InvestigatorsCleaned]", pd.DataFrame())
+    cleaned_metadata = cast("pt.DataFrame[schema.FormMetadataCleaned]", verified_metadata)
+    cleaned_investigators = cast(
+        "pt.DataFrame[schema.InvestigatorsCleaned]", verified_investigators
+    )
     cleaned_site_observations = cast(
-        "pt.DataFrame[schema.SiteObservationsCleaned]", pd.DataFrame()
+        "pt.DataFrame[schema.SiteObservationsCleaned]", verified_site_observations
     )
     cleaned_qualitative_site_observations = cast(
-        "pt.DataFrame[schema.QualitativeSiteObservationsCleaned]", pd.DataFrame()
+        "pt.DataFrame[schema.QualitativeSiteObservationsCleaned]",
+        verified_qualitative_site_observations,
     )
     ...
     # TODO: Inferred/courtesy imputations? (nulls/empties, don't overstep)
