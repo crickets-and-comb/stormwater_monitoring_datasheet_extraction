@@ -35,96 +35,62 @@ from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa
 # 2. Add feature to pass in custom error handler function,
 # with default that uses generally useful DataFrameModel error features.
 
-_COERCE_FIELD: Final[Callable] = partial(pa.Field, coerce=True)
-_LAX_FIELD: Final[Callable] = partial(pa.Field, coerce=False, unique=False, nullable=True)
-_NULLABLE_FIELD: Final[Callable] = partial(_COERCE_FIELD, nullable=True)
-_UNIQUE_FIELD: Final[Callable] = partial(_COERCE_FIELD, unique=True)
+_LAX_KWARGS: Final[dict] = {
+    "coerce": False,
+    "unique": False,
+    "nullable": True,
+}
+_NULLABLE_KWARGS: Final[dict] = {"coerce": True, "nullable": True}
 
 
 # Form metadata.
 # NOTE: `form_id` is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
 # If all files are from the same directory in a single extraction, then it will be unique.
 # But, that doesn't guarantee uniqueness across multiple extractions to the same DB.
-FORM_ID_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FORM_ID)
-FORM_ID_FIELD_UNQ: Final[Callable] = partial(_UNIQUE_FIELD, alias=Columns.FORM_ID)
-FORM_TYPE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.FORM_TYPE)
-FORM_TYPE_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FORM_TYPE)
-FORM_VERSION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.FORM_VERSION)
-FORM_VERSION_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.FORM_VERSION)
-CITY_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.CITY)
-CITY_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.CITY)
-DATE_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DATE)
-DATE_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DATE)
-NOTES_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.NOTES)
-NOTES_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.NOTES)
+FORM_ID_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.FORM_ID, coerce=True)
+_FORM_TYPE_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.FORM_TYPE)
+_FORM_VERSION_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.FORM_VERSION)
+_CITY_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.CITY)
+_DATE_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.DATE)
+_NOTES_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.NOTES)
 
 # Form metadata: Field observations.
-TIDE_HEIGHT_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.TIDE_HEIGHT)
-TIDE_HEIGHT_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.TIDE_HEIGHT)
-TIDE_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.TIDE_TIME)
-TIDE_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.TIDE_TIME)
-PAST_24HR_RAINFALL_FIELD_LAX: Final[Callable] = partial(
-    _LAX_FIELD, alias=Columns.PAST_24HR_RAINFALL
+_TIDE_HEIGHT_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.TIDE_HEIGHT)
+_TIDE_TIME_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.TIDE_TIME)
+_PAST_24HR_RAINFALL_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.PAST_24HR_RAINFALL
 )
-PAST_24HR_RAINFALL_FIELD: Final[Callable] = partial(
-    _COERCE_FIELD, alias=Columns.PAST_24HR_RAINFALL
-)
-WEATHER_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.WEATHER)
-WEATHER_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.WEATHER)
+_WEATHER_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.WEATHER)
 
 # Investigators.
-INVESTIGATOR_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.INVESTIGATOR)
-INVESTIGATOR_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.INVESTIGATOR)
-START_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.START_TIME)
-START_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.START_TIME)
-END_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.END_TIME)
-END_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.END_TIME)
+_INVESTIGATOR_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.INVESTIGATOR)
+_START_TIME_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.START_TIME)
+_END_TIME_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.END_TIME)
 
 # Site observations.
-SITE_ID_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.SITE_ID)
-SITE_ID_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.SITE_ID)
-BOTTLE_NO_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.BACTERIA_BOTTLE_NO)
-BOTTLE_NO_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.BACTERIA_BOTTLE_NO)
-DRY_OUTFALL_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DRY_OUTFALL)
-DRY_OUTFALL_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.DRY_OUTFALL)
-ARRIVAL_TIME_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.ARRIVAL_TIME)
-ARRIVAL_TIME_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.ARRIVAL_TIME)
-FLOW_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.FLOW)
-FLOW_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.FLOW)
-FLOW_COMPARED_TO_EXPECTED_FIELD_LAX: Final[Callable] = partial(
-    _LAX_FIELD, alias=Columns.FLOW_COMPARED_TO_EXPECTED
+_SITE_ID_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.SITE_ID)
+SITE_ID_FIELD_LAX: Final[Callable] = partial(_SITE_ID_FIELD, **_LAX_KWARGS)
+SITE_ID_FIELD: Final[Callable] = partial(_SITE_ID_FIELD, coerce=True)
+_BOTTLE_NO_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.BACTERIA_BOTTLE_NO)
+_DRY_OUTFALL_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.DRY_OUTFALL)
+_ARRIVAL_TIME_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.ARRIVAL_TIME)
+_FLOW_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.FLOW)
+_FLOW_COMPARED_TO_EXPECTED_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.FLOW_COMPARED_TO_EXPECTED
 )
-FLOW_COMPARED_TO_EXPECTED_FIELD: Final[Callable] = partial(
-    _NULLABLE_FIELD, alias=Columns.FLOW_COMPARED_TO_EXPECTED
+_AIR_TEMP_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.AIR_TEMP)
+_WATER_TEMP_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.WATER_TEMP)
+_DO_MG_PER_L_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.DO_MG_PER_L)
+_SPS_MICRO_S_PER_CM_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.SPS_MICRO_S_PER_CM
 )
-AIR_TEMP_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.AIR_TEMP)
-AIR_TEMP_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.AIR_TEMP)
-WATER_TEMP_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.WATER_TEMP)
-WATER_TEMP_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.WATER_TEMP)
-DO_MG_PER_L_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DO_MG_PER_L)
-DO_MG_PER_L_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.DO_MG_PER_L)
-SPS_MICRO_S_PER_CM_FIELD_LAX: Final[Callable] = partial(
-    _LAX_FIELD, alias=Columns.SPS_MICRO_S_PER_CM
-)
-SPS_MICRO_S_PER_CM_FIELD: Final[Callable] = partial(
-    _NULLABLE_FIELD, alias=Columns.SPS_MICRO_S_PER_CM
-)
-SALINITY_PPT_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.SALINITY_PPT)
-SALINITY_PPT_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.SALINITY_PPT)
-PH_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.PH)
-PH_FIELD: Final[Callable] = partial(_NULLABLE_FIELD, alias=Columns.PH)
+_SALINITY_PPT_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.SALINITY_PPT)
+_PH_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.PH)
 
 # Qualitative site observations: color, odor, visual.
-OBSERVATION_TYPE_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.OBSERVATION_TYPE)
-OBSERVATION_TYPE: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.OBSERVATION_TYPE)
-RANK_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.RANK)
-RANK_FIELD: Final[Callable] = partial(_COERCE_FIELD, alias=Columns.RANK)
-DESCRIPTION_FIELD_LAX: Final[Callable] = partial(_LAX_FIELD, alias=Columns.DESCRIPTION)
-DESCRIPTION_FIELD: Final[Callable] = partial(
-    _COERCE_FIELD,
-    alias=Columns.DESCRIPTION,
-    str_length={"max_value": CharLimits.DESCRIPTION},
-)
+_OBSERVATION_TYPE_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.OBSERVATION_TYPE)
+_RANK_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.RANK)
+_DESCRIPTION_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.DESCRIPTION)
 
 
 class FormMetadataExtracted(pa.DataFrameModel):
@@ -135,25 +101,25 @@ class FormMetadataExtracted(pa.DataFrameModel):
 
     # TODO: May need to loosen the typehints.
     #: The form ID, sole primary key.
-    form_id: Series[str] = FORM_ID_FIELD_UNQ()
+    form_id: Series[str] = partial(FORM_ID_FIELD, unique=True)
     #: The form type. Nullable. Unenforced `FormType`.
-    form_type: Series[FormType] = FORM_TYPE_FIELD_LAX()
+    form_type: Series[FormType] = partial(_FORM_TYPE_FIELD, **_LAX_KWARGS)
     #: The form version. Nullable.
-    form_version: Series[str] = FORM_VERSION_FIELD_LAX()
+    form_version: Series[str] = partial(_FORM_VERSION_FIELD, **_LAX_KWARGS)
     #: The date of observations. Nullable.
-    date: Series[str] = DATE_FIELD_LAX()
+    date: Series[str] = partial(_DATE_FIELD, **_LAX_KWARGS)
     #: The city of observations. Nullable. Unenforced `City`.
-    city: Series[City] = CITY_FIELD_LAX()
+    city: Series[City] = partial(_CITY_FIELD, **_LAX_KWARGS)
     #: The tide height at the time of observations. Nullable.
-    tide_height: Series[float] = TIDE_HEIGHT_FIELD_LAX()
+    tide_height: Series[float] = partial(_TIDE_HEIGHT_FIELD, **_LAX_KWARGS)
     #: The tide time at the time of observations. Nullable.
-    tide_time: Series[str] = TIDE_TIME_FIELD_LAX()
+    tide_time: Series[str] = partial(_TIDE_TIME_FIELD, **_LAX_KWARGS)
     #: The past 24-hour rainfall. Nullable.
-    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD_LAX()
+    past_24hr_rainfall: Series[float] = partial(_PAST_24HR_RAINFALL_FIELD, **_LAX_KWARGS)
     #: The weather at the time of observations. Nullable. Unenforced `Weather`.
-    weather: Series[Weather] = WEATHER_FIELD_LAX()
+    weather: Series[Weather] = partial(_WEATHER_FIELD, **_LAX_KWARGS)
     #: Investigator notes. Nullable.
-    notes: Series[str] = NOTES_FIELD_LAX()
+    notes: Series[str] = partial(_NOTES_FIELD, **_LAX_KWARGS)
 
     class Config:
         """The configuration for the schema.
@@ -180,11 +146,11 @@ class InvestigatorsExtracted(pa.DataFrameModel):
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
     #: The investigator, part of the primary key, but nullable at this stage.
-    investigator: Series[str] = INVESTIGATOR_FIELD_LAX()
+    investigator: Series[str] = partial(_INVESTIGATOR_FIELD, **_LAX_KWARGS)
     #: The start time of the investigation. Nullable.
-    start_time: Series[str] = START_TIME_FIELD_LAX()
+    start_time: Series[str] = partial(_START_TIME_FIELD, **_LAX_KWARGS)
     #: The end time of the investigation. Nullable.
-    end_time: Series[str] = END_TIME_FIELD_LAX()
+    end_time: Series[str] = partial(_END_TIME_FIELD, **_LAX_KWARGS)
 
     class Config:
         """The configuration for the schema.
@@ -209,29 +175,29 @@ class SiteObservationsExtracted(pa.DataFrameModel):
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Series[str] = SITE_ID_FIELD_LAX()
     #: The bottle number. Nullable.
-    bottle_no: Series[str] = BOTTLE_NO_FIELD_LAX()
+    bottle_no: Series[str] = partial(_BOTTLE_NO_FIELD, **_LAX_KWARGS)
     #: Whether the outfall was dry. Nullable.
-    dry_outfall: Series[bool] = DRY_OUTFALL_FIELD_LAX()
+    dry_outfall: Series[bool] = partial(_DRY_OUTFALL_FIELD, **_LAX_KWARGS)
     #: The arrival time of the investigation. Nullable.
-    arrival_time: Series[str] = ARRIVAL_TIME_FIELD_LAX()
+    arrival_time: Series[str] = partial(_ARRIVAL_TIME_FIELD, **_LAX_KWARGS)
     #: The flow. Nullable. Unenforced `Flow`.
-    flow: Series[Flow] = FLOW_FIELD_LAX()
+    flow: Series[Flow] = partial(_FLOW_FIELD, **_LAX_KWARGS)
     #: The flow compared to expected. Nullable. Unenforced `FlowComparedToExpected`.
-    flow_compared_to_expected: Series[FlowComparedToExpected] = (
-        FLOW_COMPARED_TO_EXPECTED_FIELD_LAX()
+    flow_compared_to_expected: Series[FlowComparedToExpected] = partial(
+        _FLOW_COMPARED_TO_EXPECTED_FIELD, **_LAX_KWARGS
     )
     #: The air temperature. Nullable.
-    air_temp: Series[float] = AIR_TEMP_FIELD_LAX()
+    air_temp: Series[float] = partial(_AIR_TEMP_FIELD, **_LAX_KWARGS)
     #: The water temperature. Nullable.
-    water_temp: Series[float] = WATER_TEMP_FIELD_LAX()
+    water_temp: Series[float] = partial(_WATER_TEMP_FIELD, **_LAX_KWARGS)
     #: The dissolved oxygen. Nullable.
-    DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD_LAX()
+    DO_mg_per_l: Series[float] = partial(_DO_MG_PER_L_FIELD, **_LAX_KWARGS)
     #: The specific conductance. Nullable.
-    SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD_LAX()
+    SPS_micro_S_per_cm: Series[float] = partial(_SPS_MICRO_S_PER_CM_FIELD, **_LAX_KWARGS)
     #: The salinity. Nullable.
-    salinity_ppt: Series[float] = SALINITY_PPT_FIELD_LAX()
+    salinity_ppt: Series[float] = partial(_SALINITY_PPT_FIELD, **_LAX_KWARGS)
     #: The pH. Nullable.
-    pH: Series[float] = PH_FIELD_LAX()
+    pH: Series[float] = partial(_PH_FIELD, **_LAX_KWARGS)
 
     class Config:
         """The configuration for the schema.
@@ -255,11 +221,13 @@ class QualitativeSiteObservationsExtracted(pa.DataFrameModel):
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Series[str] = SITE_ID_FIELD_LAX()
     #: The observation type. Nullable. Unenforced `QualitativeSiteObservationTypes`.
-    type: Series[QualitativeSiteObservationTypes] = OBSERVATION_TYPE_LAX()
+    type: Series[QualitativeSiteObservationTypes] = partial(
+        _OBSERVATION_TYPE_FIELD, **_LAX_KWARGS
+    )
     #: The rank of the observation. Nullable. Unenforced `Rank`.
-    rank: Series[Rank] = RANK_FIELD_LAX()
+    rank: Series[Rank] = partial(_RANK_FIELD, **_LAX_KWARGS)
     #: The description of the observation. Nullable.
-    description: Series[str] = DESCRIPTION_FIELD_LAX()
+    description: Series[str] = partial(_DESCRIPTION_FIELD, **_LAX_KWARGS)
 
     class Config:
         """The configuration for the schema.
@@ -341,24 +309,24 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     """
 
     #: The form type.
-    form_type: Series[FormType] = FORM_TYPE_FIELD()
+    form_type: Series[FormType] = partial(_FORM_TYPE_FIELD, coerce=True)
     #: The form version.
-    form_version: Series[str] = FORM_VERSION_FIELD()
+    form_version: Series[str] = partial(_FORM_VERSION_FIELD, coerce=True)
     # TODO: Maybe we might as well cast to datetime at this step.
     #: The date of observations.
-    date: Series[str] = DATE_FIELD()
+    date: Series[str] = partial(_DATE_FIELD, coerce=True)
     #: The city of observations.
-    city: Series[City] = CITY_FIELD()
+    city: Series[City] = partial(_CITY_FIELD, coerce=True)
     #: The tide height at the time of observations.
-    tide_height: Series[float] = TIDE_HEIGHT_FIELD()
+    tide_height: Series[float] = partial(_TIDE_HEIGHT_FIELD, coerce=True)
     #: The tide time at the time of observations.
-    tide_time: Series[str] = TIDE_TIME_FIELD()
+    tide_time: Series[str] = partial(_TIDE_TIME_FIELD, coerce=True)
     #: The past 24-hour rainfall.
-    past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD()
+    past_24hr_rainfall: Series[float] = partial(_PAST_24HR_RAINFALL_FIELD, coerce=True)
     #: The weather at the time of observations.
-    weather: Series[Weather] = WEATHER_FIELD()
+    weather: Series[Weather] = partial(_WEATHER_FIELD, coerce=True)
     #: Investigator notes.
-    notes: Series[str] = NOTES_FIELD()
+    notes: Series[str] = partial(_NOTES_FIELD, **_NULLABLE_KWARGS)
 
     class Config:
         """The configuration for the schema."""
@@ -380,11 +348,11 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
     #: The investigator, part of the primary key.
-    investigator: Series[str] = INVESTIGATOR_FIELD()
+    investigator: Series[str] = partial(_INVESTIGATOR_FIELD, coerce=True)
     #: The start time of the investigation.
-    start_time: Series[str] = START_TIME_FIELD()
+    start_time: Series[str] = partial(_START_TIME_FIELD, coerce=True)
     #: The end time of the investigation.
-    end_time: Series[str] = END_TIME_FIELD()
+    end_time: Series[str] = partial(_END_TIME_FIELD, coerce=True)
 
     class Config:
         """The configuration for the schema.
@@ -416,29 +384,29 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     #: The site ID, part of the primary key.
     site_id: Series[str] = SITE_ID_FIELD()
     #: Whether the outfall was dry.
-    dry_outfall: Series[bool] = DRY_OUTFALL_FIELD()
+    dry_outfall: Series[bool] = partial(_DRY_OUTFALL_FIELD, coerce=True)
     #: The bottle number. Nullable, but only if `dry_outfall` is true.
-    bottle_no: Series[str] = BOTTLE_NO_FIELD()
+    bottle_no: Series[str] = partial(_BOTTLE_NO_FIELD, **_NULLABLE_KWARGS)
     #: The arrival time of the investigation.
-    arrival_time: Series[str] = ARRIVAL_TIME_FIELD()
+    arrival_time: Series[str] = partial(_ARRIVAL_TIME_FIELD, coerce=True)
     #: The flow. Nullable, but only if `dry_outfall` is false.
-    flow: Series[Flow] = FLOW_FIELD()
+    flow: Series[Flow] = partial(_FLOW_FIELD, **_NULLABLE_KWARGS)
     #: The flow compared to expected. Nullable, but only if `dry_outfall` is false.
-    flow_compared_to_expected: Series[FlowComparedToExpected] = (
-        FLOW_COMPARED_TO_EXPECTED_FIELD()
+    flow_compared_to_expected: Series[FlowComparedToExpected] = partial(
+        _FLOW_COMPARED_TO_EXPECTED_FIELD, **_NULLABLE_KWARGS
     )
     #: The air temperature. Nullable, but only if `dry_outfall` is false.
-    air_temp: Series[float] = AIR_TEMP_FIELD()
+    air_temp: Series[float] = partial(_AIR_TEMP_FIELD, **_NULLABLE_KWARGS)
     #: The water temperature. Nullable, but only if `dry_outfall` is false.
-    water_temp: Series[float] = WATER_TEMP_FIELD()
+    water_temp: Series[float] = partial(_WATER_TEMP_FIELD, **_NULLABLE_KWARGS)
     #: The dissolved oxygen. Nullable, but only if `dry_outfall` is false.
-    DO_mg_per_l: Series[float] = DO_MG_PER_L_FIELD()
+    DO_mg_per_l: Series[float] = partial(_DO_MG_PER_L_FIELD, **_NULLABLE_KWARGS)
     #: The specific conductance. Nullable, but only if `dry_outfall` is false.
-    SPS_micro_S_per_cm: Series[float] = SPS_MICRO_S_PER_CM_FIELD()
+    SPS_micro_S_per_cm: Series[float] = partial(_SPS_MICRO_S_PER_CM_FIELD, **_NULLABLE_KWARGS)
     #: The salinity. Nullable, but only if `dry_outfall` is false.
-    salinity_ppt: Series[float] = SALINITY_PPT_FIELD()
+    salinity_ppt: Series[float] = partial(_SALINITY_PPT_FIELD, **_NULLABLE_KWARGS)
     #: The pH. Nullable, but only if `dry_outfall` is false.
-    pH: Series[float] = PH_FIELD()
+    pH: Series[float] = partial(_PH_FIELD, **_NULLABLE_KWARGS)
 
     class Config:
         """The configuration for the schema.
@@ -473,11 +441,17 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
     #: The site ID, part of the primary key.
     site_id: Series[str] = SITE_ID_FIELD()
     #: The observation type.
-    type: Series[QualitativeSiteObservationTypes] = OBSERVATION_TYPE()
+    type: Series[QualitativeSiteObservationTypes] = partial(
+        _OBSERVATION_TYPE_FIELD, coerce=True
+    )
     #: The rank of the observation.
-    rank: Series[Rank] = RANK_FIELD()
+    rank: Series[Rank] = partial(_RANK_FIELD, coerce=True)
     #: The description of the observation.
-    description: Series[str] = DESCRIPTION_FIELD()
+    description: Series[str] = partial(
+        _DESCRIPTION_FIELD,
+        coerce=True,
+        str_length={"max_value": CharLimits.DESCRIPTION},
+    )
 
     class Config:
         """The configuration for the schema.
