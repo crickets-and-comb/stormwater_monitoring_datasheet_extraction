@@ -26,12 +26,12 @@ from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa
 # See/use field_datasheet_data_definition.json metadata.
 # NOTE: Validations should be lax for extraction, stricter after cleaning,
 # stricter after user verification, and strictest after final cleaning.
-# TODO: Implement and use `schema_error_handler` decorator.
+# TODO: Use `schema_error_handler` decorator.
 # Helps catch/handle schema errors more gracefully.
 # 0. Copy `schema_error_handler` from `bfb_delivery`.
 # https://github.com/crickets-and-comb/bfb_delivery/blob/main/src/bfb_delivery/lib/schema/utils.py#L8
 # https://github.com/crickets-and-comb/bfb_delivery/blob/main/src/bfb_delivery/lib/dispatch/write_to_circuit.py#L111
-# 1. Move from `bfb_delivery` to `comb_utils`.
+# 1. Move from `bfb_delivery` to `comb_utils` and replace with imports.
 # 2. Add feature to pass in custom error handler function,
 # with default that uses generally useful DataFrameModel error features.
 
@@ -133,16 +133,17 @@ class FormMetadataExtracted(pa.DataFrameModel):
     PK: `form_id`.
     """
 
+    # TODO: May need to loosen the typehints.
     #: The form ID, sole primary key.
     form_id: Series[str] = FORM_ID_FIELD_UNQ()
     #: The form type. Nullable. Unenforced `FormType`.
-    form_type: Series[str] = FORM_TYPE_FIELD_LAX()
+    form_type: Series[FormType] = FORM_TYPE_FIELD_LAX()
     #: The form version. Nullable.
     form_version: Series[str] = FORM_VERSION_FIELD_LAX()
     #: The date of observations. Nullable.
     date: Series[str] = DATE_FIELD_LAX()
     #: The city of observations. Nullable. Unenforced `City`.
-    city: Series[str] = CITY_FIELD_LAX()
+    city: Series[City] = CITY_FIELD_LAX()
     #: The tide height at the time of observations. Nullable.
     tide_height: Series[float] = TIDE_HEIGHT_FIELD_LAX()
     #: The tide time at the time of observations. Nullable.
@@ -150,7 +151,7 @@ class FormMetadataExtracted(pa.DataFrameModel):
     #: The past 24-hour rainfall. Nullable.
     past_24hr_rainfall: Series[float] = PAST_24HR_RAINFALL_FIELD_LAX()
     #: The weather at the time of observations. Nullable. Unenforced `Weather`.
-    weather: Series[str] = WEATHER_FIELD_LAX()
+    weather: Series[Weather] = WEATHER_FIELD_LAX()
     #: Investigator notes. Nullable.
     notes: Series[str] = NOTES_FIELD_LAX()
 
@@ -202,6 +203,7 @@ class SiteObservationsExtracted(pa.DataFrameModel):
     FK: ?.`bottle_no` (unenforced).
     """
 
+    # TODO: May need to loosen the typehints.
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
@@ -213,9 +215,11 @@ class SiteObservationsExtracted(pa.DataFrameModel):
     #: The arrival time of the investigation. Nullable.
     arrival_time: Series[str] = ARRIVAL_TIME_FIELD_LAX()
     #: The flow. Nullable. Unenforced `Flow`.
-    flow: Series[str] = FLOW_FIELD_LAX()
+    flow: Series[Flow] = FLOW_FIELD_LAX()
     #: The flow compared to expected. Nullable. Unenforced `FlowComparedToExpected`.
-    flow_compared_to_expected: Series[str] = FLOW_COMPARED_TO_EXPECTED_FIELD_LAX()
+    flow_compared_to_expected: Series[FlowComparedToExpected] = (
+        FLOW_COMPARED_TO_EXPECTED_FIELD_LAX()
+    )
     #: The air temperature. Nullable.
     air_temp: Series[float] = AIR_TEMP_FIELD_LAX()
     #: The water temperature. Nullable.
@@ -245,14 +249,15 @@ class QualitativeSiteObservationsExtracted(pa.DataFrameModel):
     FK: `FormMetadata.form_id` (unenforced).
     """
 
+    # TODO: May need to loosen the typehints.
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Series[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Series[str] = SITE_ID_FIELD_LAX()
     #: The observation type. Nullable. Unenforced `QualitativeSiteObservationTypes`.
-    type: Series[str] = OBSERVATION_TYPE_LAX()
+    type: Series[QualitativeSiteObservationTypes] = OBSERVATION_TYPE_LAX()
     #: The rank of the observation. Nullable. Unenforced `Rank`.
-    rank: Series[int] = RANK_FIELD_LAX()
+    rank: Series[Rank] = RANK_FIELD_LAX()
     #: The description of the observation. Nullable.
     description: Series[str] = DESCRIPTION_FIELD_LAX()
 
@@ -335,11 +340,11 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     PK: `form_id`.
     """
 
-    # TODO: If fields are not coerced before this, can't we still type them as their enums?
     #: The form type.
     form_type: Series[FormType] = FORM_TYPE_FIELD()
     #: The form version.
     form_version: Series[str] = FORM_VERSION_FIELD()
+    # TODO: Maybe we might as well cast to datetime at this step.
     #: The date of observations.
     date: Series[str] = DATE_FIELD()
     #: The city of observations.
