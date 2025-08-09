@@ -1,5 +1,6 @@
 """Top-level module for stormwater monitoring datasheet ETL."""
 
+import logging
 from pathlib import Path
 from typing import Any, cast
 
@@ -15,10 +16,14 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 # creek or outfall, and if creek:
 # habitat, spawn, rear, or migrate.
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-# TODO: Set up logging.
+
 @typechecked
 def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
+    logger.info("Starting ETL process...")
+
     # TODO, NOTE: This is an estimated outline, not a hard requirement.
     # We may need to adjust the steps based on the actual implementation details.
     (
@@ -100,6 +105,8 @@ def extract(
         Raw extraction split into form metadata, investigators,
             and site observations.
     """
+    logger.info(f"Extracting data from images in {input_dir} ...")
+
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
     form_metadata = cast("pt.DataFrame[schema.FormMetadataExtracted]", pd.DataFrame())
@@ -145,6 +152,8 @@ def preclean(
     Returns:
         Precleaned metadata, investigators, and site observations.
     """
+    logger.info("Precleaning raw extraction data...")
+
     # TODO: Light cleaning before user verification.
     # E.g., strip whitespace, try to cast, check range, but warn don't fail.
     # Much of this might be done by creating a custom class for each field
@@ -204,6 +213,8 @@ def verify(
     Returns:
         User-verified metadata, investigators, and site observations.
     """
+    logger.info("Verifying precleaned data with user...")
+
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
     verified_metadata = cast("pt.DataFrame[schema.FormMetadataVerified]", precleaned_metadata)
@@ -263,6 +274,8 @@ def clean(
     Returns:
         Cleaned metadata, investigators, and site observations.
     """
+    logger.info("Cleaning verified data...")
+
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
     cleaned_metadata = cast("pt.DataFrame[schema.FormMetadataCleaned]", verified_metadata)
@@ -319,6 +332,8 @@ def restructure_extraction(
     Returns:
         Restructured JSON schema.
     """
+    logger.info("Restructuring cleaned data into JSON schema...")
+
     restructured_json = {}
 
     ...
@@ -341,6 +356,8 @@ def load(restructured_json: dict[str, Any], output_dir: Path) -> Path:
     Returns:
         Path to the saved cleaned data file.
     """
+    logger.info(f"Loading cleaned data to {output_dir} ...")
+
     final_output_path = Path()
 
     ...
