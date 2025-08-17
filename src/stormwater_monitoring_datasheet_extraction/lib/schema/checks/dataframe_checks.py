@@ -1,4 +1,4 @@
-"""DataFrame checks."""
+"""Schema dataframe checks."""
 
 import pandas as pd
 from pandera import extensions

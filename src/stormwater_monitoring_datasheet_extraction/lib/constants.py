@@ -175,7 +175,7 @@ class Weather(StrEnum):
 
 
 # TODO: Make custom date and time classes with __str__ and __repr__
-# to handle errors better.
+# to handle errors better?
 DATE_FORMAT: Final[str] = "YYYY-MM-DD"
 TIME_FORMAT: Final[str] = "HH:MM"
 

@@ -8,6 +8,7 @@ import pandera as pa
 from pandera.typing import Series
 
 from stormwater_monitoring_datasheet_extraction.lib.constants import (
+    DATE_FORMAT,
     CharLimits,
     City,
     Columns,
@@ -313,8 +314,14 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     #: The form version.
     form_version: Series[str] = partial(_FORM_VERSION_FIELD, coerce=True)
     # TODO: Maybe we might as well cast to datetime at this step.
-    #: The date of observations.
-    date: Series[str] = partial(_DATE_FIELD, coerce=True)
+    # date: Series[pa.DateTime] = partial(
+    #: The date of observations (must be "YYYY-MM-DD").
+    date: Series[str] = partial(
+        _DATE_FIELD,
+        coerce=True,
+        str_matches={"pattern": r"^\d{4}-\d{2}-\d{2}$"},
+        is_valid_date={"format": DATE_FORMAT},
+    )
     #: The city of observations.
     city: Series[City] = partial(_CITY_FIELD, coerce=True)
     #: The tide height at the time of observations.
