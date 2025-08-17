@@ -4,6 +4,7 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_chec
     pk_check,
 )
 from stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks import (
+    date_le_today,
     is_valid_date,
 )
 

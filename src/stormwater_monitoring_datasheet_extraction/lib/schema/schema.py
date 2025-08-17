@@ -310,11 +310,12 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     form_version: Series[str] = partial(_FORM_VERSION_FIELD, coerce=True)
     # TODO: Maybe we might as well cast to datetime at this step.
     # date: Series[pa.DateTime] = partial(
-    #: The date of observations (must be "YYYY-MM-DD", `constants.DATE_FORMAT`).
+    #: The date of observations (must be "YYYY-MM-DD", on or before today).
     date: Series[str] = partial(
         _DATE_FIELD,
         coerce=True,
         is_valid_date={"format": constants.DATE_FORMAT},
+        date_le_today={"flag": True},
     )
     #: The city of observations.
     city: Series[constants.City] = partial(_CITY_FIELD, coerce=True)
@@ -334,7 +335,7 @@ class FormMetadataVerified(FormMetadataPrecleaned):
 
         # Field checks.
         # TODO: Field checks:
-        # - Date is formatted and valid. (Make a class for this?)
+        # - Date is formatted and valid (on or before today). (Make a class for this?)
         # - Time is formatted and valid. (Make a class for this?)
         # - Rainfall is positive. (Extant class/type?)
 
