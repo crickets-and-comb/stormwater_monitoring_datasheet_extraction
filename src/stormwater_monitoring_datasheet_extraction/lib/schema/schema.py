@@ -329,7 +329,9 @@ class FormMetadataVerified(FormMetadataPrecleaned):
         time_le_now={"flag": True},
     )
     #: The past 24-hour rainfall.
-    past_24hr_rainfall: Series[float] = partial(_PAST_24HR_RAINFALL_FIELD, coerce=True)
+    past_24hr_rainfall: Series[float] = partial(
+        _PAST_24HR_RAINFALL_FIELD, coerce=True, greater_than_or_equal_to={"min_value": 0}
+    )
     #: The weather at the time of observations.
     weather: Series[constants.Weather] = partial(_WEATHER_FIELD, coerce=True)
     #: Investigator notes.
@@ -340,8 +342,6 @@ class FormMetadataVerified(FormMetadataPrecleaned):
 
         # Field checks.
         # TODO: Field checks:
-        # - Time is formatted and valid. (Make a class for this?)
-        # - Rainfall is positive. (Extant class/type?)
         # - Notes within varchar limit.
 
 
