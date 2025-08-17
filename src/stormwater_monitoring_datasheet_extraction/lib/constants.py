@@ -10,6 +10,7 @@ class CharLimits:
     """Character limits for fields."""
 
     DESCRIPTION: Final[int] = 250
+    NOTES: Final[int] = 500
 
 
 class City(StrEnum):

@@ -335,14 +335,9 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     #: The weather at the time of observations.
     weather: Series[constants.Weather] = partial(_WEATHER_FIELD, coerce=True)
     #: Investigator notes.
-    notes: Series[str] = partial(_NOTES_FIELD, **_NULLABLE_KWARGS)
-
-    class Config:
-        """The configuration for the schema."""
-
-        # Field checks.
-        # TODO: Field checks:
-        # - Notes within varchar limit.
+    notes: Series[str] = partial(
+        _NOTES_FIELD, **_NULLABLE_KWARGS, str_length={"max": constants.CharLimits.NOTES}
+    )
 
 
 class InvestigatorsVerified(InvestigatorsPrecleaned):
