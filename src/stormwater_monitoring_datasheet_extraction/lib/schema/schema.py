@@ -322,7 +322,12 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     #: The tide height at the time of observations.
     tide_height: Series[float] = partial(_TIDE_HEIGHT_FIELD, coerce=True)
     #: The tide time at the time of observations.
-    tide_time: Series[str] = partial(_TIDE_TIME_FIELD, coerce=True)
+    tide_time: Series[str] = partial(
+        _TIDE_TIME_FIELD,
+        coerce=True,
+        is_valid_time={"format": constants.TIME_FORMAT},
+        time_le_now={"flag": True},
+    )
     #: The past 24-hour rainfall.
     past_24hr_rainfall: Series[float] = partial(_PAST_24HR_RAINFALL_FIELD, coerce=True)
     #: The weather at the time of observations.
@@ -337,6 +342,7 @@ class FormMetadataVerified(FormMetadataPrecleaned):
         # TODO: Field checks:
         # - Time is formatted and valid. (Make a class for this?)
         # - Rainfall is positive. (Extant class/type?)
+        # - Notes within varchar limit.
 
 
 class InvestigatorsVerified(InvestigatorsPrecleaned):

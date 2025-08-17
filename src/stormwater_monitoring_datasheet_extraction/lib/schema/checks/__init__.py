@@ -6,6 +6,8 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_chec
 from stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks import (
     date_le_today,
     is_valid_date,
+    is_valid_time,
+    time_le_now,
 )
 
 # TODO: An alternative approach would be to create a custom class for the field type,
