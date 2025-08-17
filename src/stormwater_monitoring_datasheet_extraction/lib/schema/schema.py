@@ -310,11 +310,10 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     form_version: Series[str] = partial(_FORM_VERSION_FIELD, coerce=True)
     # TODO: Maybe we might as well cast to datetime at this step.
     # date: Series[pa.DateTime] = partial(
-    #: The date of observations (must be "YYYY-MM-DD").
+    #: The date of observations (must be "YYYY-MM-DD", `constants.DATE_FORMAT`).
     date: Series[str] = partial(
         _DATE_FIELD,
         coerce=True,
-        str_matches={"pattern": r"^\d{4}-\d{2}-\d{2}$"},
         is_valid_date={"format": constants.DATE_FORMAT},
     )
     #: The city of observations.
