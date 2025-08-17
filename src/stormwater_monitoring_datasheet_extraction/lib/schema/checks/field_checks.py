@@ -7,7 +7,7 @@ from pandera import extensions
 @extensions.register_check_method(statistics=["format"])
 def is_valid_date(series: pd.Series, format: str) -> bool:
     """Every value parses with the given format."""
-    parsed = pd.to_datetime(series, format=format)
+    parsed = pd.to_datetime(series, format=format, errors="coerce")
     return parsed.notna().all()
 
 
