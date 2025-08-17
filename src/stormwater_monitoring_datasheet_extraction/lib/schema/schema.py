@@ -335,7 +335,6 @@ class FormMetadataVerified(FormMetadataPrecleaned):
 
         # Field checks.
         # TODO: Field checks:
-        # - Date is formatted and valid (on or before today). (Make a class for this?)
         # - Time is formatted and valid. (Make a class for this?)
         # - Rainfall is positive. (Extant class/type?)
 
