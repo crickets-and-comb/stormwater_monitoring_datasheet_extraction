@@ -180,6 +180,8 @@ class Weather(StrEnum):
 DATE_FORMAT: Final[str] = "YYYY-MM-DD"
 TIME_FORMAT: Final[str] = "HH:MM"
 
+N_FAILURE_CASES: Final[int] = 5
+
 # TODO: Version data definitions by form type and version.
 FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
     # TODO: Resolve these notes.
