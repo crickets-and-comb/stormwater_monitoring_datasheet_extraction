@@ -13,7 +13,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
 # - Add missing columns in lax schema. (And reverse in strict children.)
-# - Use `strict="filter"` in preclean.
 # - Use builtin checks where applicable.
 # - Set for all, but use `raise_warning=True` for lax fields.
 # - Use `n_failure_cases`.
@@ -262,7 +261,7 @@ class FormMetadataPrecleaned(FormMetadataExtracted):
 
         multiindex_strict = "filter"
         multiindex_unique = True
-        strict = True
+        strict = "filter"
 
 
 class InvestigatorsPrecleaned(InvestigatorsExtracted):
@@ -279,7 +278,7 @@ class InvestigatorsPrecleaned(InvestigatorsExtracted):
         """
 
         multiindex_strict = "filter"
-        strict = True
+        strict = "filter"
 
 
 class SiteObservationsPrecleaned(SiteObservationsExtracted):
@@ -297,7 +296,7 @@ class SiteObservationsPrecleaned(SiteObservationsExtracted):
         """
 
         multiindex_strict = "filter"
-        strict = True
+        strict = "filter"
 
 
 class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted):
@@ -314,7 +313,7 @@ class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted
         """
 
         multiindex_strict = "filter"
-        strict = True
+        strict = "filter"
 
 
 class FormMetadataVerified(FormMetadataPrecleaned):
@@ -362,6 +361,7 @@ class FormMetadataVerified(FormMetadataPrecleaned):
         """The configuration for the schema."""
 
         multiindex_strict = True
+        strict = True
 
 
 class InvestigatorsVerified(InvestigatorsPrecleaned):
@@ -388,6 +388,7 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
 
         multiindex_strict = True
         multiindex_unique = True
+        strict = True
 
         # TODO: Field checks:
         # - Start time is formatted and valid. (Make a class for this?)
@@ -442,6 +443,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
 
         multiindex_strict = True
         multiindex_unique = True
+        strict = True
 
         # TODO: To check threshholds, need a site-type map:
         # creek or outfall, and if creek:
@@ -487,6 +489,7 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
 
         multiindex_strict = True
         multiindex_unique = True
+        strict = True
 
 
 class FormMetadataCleaned(FormMetadataVerified):
