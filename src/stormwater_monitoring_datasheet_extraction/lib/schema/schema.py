@@ -5,13 +5,22 @@ from functools import partial
 from typing import Final
 
 import pandera as pa
-from pandera.typing import Series
+from pandera.typing import Index, Series
 
 from stormwater_monitoring_datasheet_extraction.lib import constants
 from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa: F401
 
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
+# - Add missing columns in lax schema. (And reverse in strict children.)
+# - Use builtin checks where applicable.
+# - Set for all, but use `raise_warning=True` for lax fields.
+# - Use `n_failure_cases`.
+# - Set categoricals as `Series[Annotated[pd.CategoricalDtype, <enum>, <bool>]]`.
+# - Replace registered checks with class methods with `@pa.check`:
+#   https://pandera.readthedocs.io/en/v0.22.1/dataframe_models.html#column-index-checks
+# - Replace dataframe checks with class methods with `@pa.dataframe_check`:
+#   https://pandera.readthedocs.io/en/v0.22.1/dataframe_models.html#dataframe-checks
 # TODO: Set dataframe-level checks.
 # See/use field_datasheet_data_definition.json metadata.
 # NOTE: Validations should be lax for extraction, stricter after cleaning,
@@ -97,7 +106,7 @@ class FormMetadataExtracted(pa.DataFrameModel):
 
     # TODO: May need to loosen the typehints.
     #: The form ID, sole primary key.
-    form_id: Series[str] = partial(FORM_ID_FIELD, unique=True)
+    form_id: Index[str] = partial(FORM_ID_FIELD)
     #: The form type. Nullable. Unenforced `constants.FormType`.
     form_type: Series[constants.FormType] = partial(_FORM_TYPE_FIELD, **_LAX_KWARGS)
     #: The form version. Nullable.
@@ -125,11 +134,9 @@ class FormMetadataExtracted(pa.DataFrameModel):
         We do enforce the primary key since it's created by the extraction process.
         """
 
+        multiindex_strict = "filter"
+        multiindex_unique = True
         strict = False
-
-        # Dataframe checks.
-        # NOTE: Redundant to `FORM_ID_FIELD_UNQ` but included for clarity.
-        pk_check = {"pk_cols": [constants.Columns.FORM_ID]}
 
 
 class InvestigatorsExtracted(pa.DataFrameModel):
@@ -348,9 +355,9 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     """
 
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
-    form_id: Series[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD()
     #: The investigator, part of the primary key.
-    investigator: Series[str] = partial(_INVESTIGATOR_FIELD, coerce=True)
+    investigator: Index[str] = partial(_INVESTIGATOR_FIELD, coerce=True)
     #: The start time of the investigation.
     start_time: Series[str] = partial(_START_TIME_FIELD, coerce=True)
     #: The end time of the investigation.
@@ -362,8 +369,8 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
         Enforces the primary key.
         """
 
-        # Dataframe checks.
-        pk_check = {"pk_cols": [constants.Columns.FORM_ID, constants.Columns.INVESTIGATOR]}
+        multiindex_strict = True
+        multiindex_unique = True
 
         # TODO: Field checks:
         # - Start time is formatted and valid. (Make a class for this?)
@@ -382,9 +389,9 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     """
 
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
-    form_id: Series[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key.
-    site_id: Series[str] = SITE_ID_FIELD()
+    site_id: Index[str] = SITE_ID_FIELD()
     #: Whether the outfall was dry.
     dry_outfall: Series[bool] = partial(_DRY_OUTFALL_FIELD, coerce=True)
     #: The bottle number. Nullable, but only if `dry_outfall` is true.
@@ -416,8 +423,8 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         Enforces the primary key.
         """
 
-        # Dataframe checks.
-        pk_check = {"pk_cols": [constants.Columns.FORM_ID, constants.Columns.SITE_ID]}
+        multiindex_strict = True
+        multiindex_unique = True
 
         # TODO: To check threshholds, need a site-type map:
         # creek or outfall, and if creek:
@@ -439,11 +446,11 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
     """
 
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
-    form_id: Series[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key.
-    site_id: Series[str] = SITE_ID_FIELD()
+    site_id: Index[str] = SITE_ID_FIELD()
     #: The observation type.
-    type: Series[constants.QualitativeSiteObservationTypes] = partial(
+    type: Index[constants.QualitativeSiteObservationTypes] = partial(
         _OBSERVATION_TYPE_FIELD, coerce=True
     )
     #: The rank of the observation.
@@ -461,14 +468,8 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
         Enforces the primary key.
         """
 
-        # Dataframe checks.
-        pk_check = {
-            "pk_cols": [
-                constants.Columns.FORM_ID,
-                constants.Columns.SITE_ID,
-                constants.Columns.OBSERVATION_TYPE,
-            ]
-        }
+        multiindex_strict = True
+        multiindex_unique = True
 
 
 class FormMetadataCleaned(FormMetadataVerified):
