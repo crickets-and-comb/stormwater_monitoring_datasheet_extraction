@@ -12,7 +12,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa
 
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
-# - Add missing columns in lax schema. (And reverse in strict children.)
 # - Use builtin checks where applicable.
 # - Set for all, but use `raise_warning=True` for lax fields.
 # - Use `n_failure_cases`.
@@ -259,6 +258,7 @@ class FormMetadataPrecleaned(FormMetadataExtracted):
         A strict schema, requires all fields to be present.
         """
 
+        add_missing_columns = True
         multiindex_strict = "filter"
         multiindex_unique = True
         strict = "filter"
@@ -277,6 +277,7 @@ class InvestigatorsPrecleaned(InvestigatorsExtracted):
         A strict schema, requires all fields to be present.
         """
 
+        add_missing_columns = True
         multiindex_strict = "filter"
         strict = "filter"
 
@@ -295,6 +296,7 @@ class SiteObservationsPrecleaned(SiteObservationsExtracted):
         A strict schema, requires all fields to be present.
         """
 
+        add_missing_columns = True
         multiindex_strict = "filter"
         strict = "filter"
 
@@ -312,6 +314,7 @@ class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted
         A strict schema, requires all fields to be present.
         """
 
+        add_missing_columns = True
         multiindex_strict = "filter"
         strict = "filter"
 
@@ -360,6 +363,7 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     class Config:
         """The configuration for the schema."""
 
+        add_missing_columns = False
         multiindex_strict = True
         strict = True
 
@@ -386,6 +390,7 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
         Enforces the primary key.
         """
 
+        add_missing_columns = False
         multiindex_strict = True
         multiindex_unique = True
         strict = True
@@ -441,6 +446,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         Enforces the primary key.
         """
 
+        add_missing_columns = False
         multiindex_strict = True
         multiindex_unique = True
         strict = True
@@ -487,6 +493,7 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
         Enforces the primary key.
         """
 
+        add_missing_columns = False
         multiindex_strict = True
         multiindex_unique = True
         strict = True
