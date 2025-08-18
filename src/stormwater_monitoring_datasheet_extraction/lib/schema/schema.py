@@ -13,6 +13,7 @@ from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
 # - Add missing columns in lax schema. (And reverse in strict children.)
+# - Use `strict="filter"` in preclean.
 # - Use builtin checks where applicable.
 # - Set for all, but use `raise_warning=True` for lax fields.
 # - Use `n_failure_cases`.
@@ -134,8 +135,8 @@ class FormMetadataExtracted(pa.DataFrameModel):
         We do enforce the primary key since it's created by the extraction process.
         """
 
-        multiindex_strict = "filter"
-        multiindex_unique = True
+        multiindex_strict = False
+        multiindex_unique = False
         strict = False
 
 
@@ -161,6 +162,8 @@ class InvestigatorsExtracted(pa.DataFrameModel):
         Not a strict schema at this stage since it's the "raw" extracted data.
         """
 
+        multiindex_strict = False
+        multiindex_unique = False
         strict = False
 
 
@@ -174,11 +177,11 @@ class SiteObservationsExtracted(pa.DataFrameModel):
 
     # TODO: May need to loosen the typehints.
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
-    form_id: Series[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
-    site_id: Series[str] = SITE_ID_FIELD_LAX()
+    site_id: Index[str] = SITE_ID_FIELD_LAX()
     #: The bottle number. Nullable.
-    bottle_no: Series[str] = partial(_BOTTLE_NO_FIELD, **_LAX_KWARGS)
+    bottle_no: Index[str] = partial(_BOTTLE_NO_FIELD, **_LAX_KWARGS)
     #: Whether the outfall was dry. Nullable.
     dry_outfall: Series[bool] = partial(_DRY_OUTFALL_FIELD, **_LAX_KWARGS)
     #: The arrival time of the investigation. Nullable.
@@ -208,6 +211,8 @@ class SiteObservationsExtracted(pa.DataFrameModel):
         Not a strict schema at this stage since it's the "raw" extracted data.
         """
 
+        multiindex_strict = False
+        multiindex_unique = False
         strict = False
 
 
@@ -220,7 +225,7 @@ class QualitativeSiteObservationsExtracted(pa.DataFrameModel):
 
     # TODO: May need to loosen the typehints.
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
-    form_id: Series[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Series[str] = SITE_ID_FIELD_LAX()
     #: The observation type. Nullable. Unenforced `constants.QualitativeSiteObservationTypes`.
@@ -238,6 +243,8 @@ class QualitativeSiteObservationsExtracted(pa.DataFrameModel):
         Not a strict schema at this stage since it's the "raw" extracted data.
         """
 
+        multiindex_strict = False
+        multiindex_unique = False
         strict = False
 
 
@@ -253,6 +260,8 @@ class FormMetadataPrecleaned(FormMetadataExtracted):
         A strict schema, requires all fields to be present.
         """
 
+        multiindex_strict = "filter"
+        multiindex_unique = True
         strict = True
 
 
@@ -269,6 +278,7 @@ class InvestigatorsPrecleaned(InvestigatorsExtracted):
         A strict schema, requires all fields to be present.
         """
 
+        multiindex_strict = "filter"
         strict = True
 
 
@@ -286,6 +296,7 @@ class SiteObservationsPrecleaned(SiteObservationsExtracted):
         A strict schema, requires all fields to be present.
         """
 
+        multiindex_strict = "filter"
         strict = True
 
 
@@ -302,6 +313,7 @@ class QualitativeSiteObservationsPrecleaned(QualitativeSiteObservationsExtracted
         A strict schema, requires all fields to be present.
         """
 
+        multiindex_strict = "filter"
         strict = True
 
 
@@ -345,6 +357,11 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     notes: Series[str] = partial(
         _NOTES_FIELD, **_NULLABLE_KWARGS, str_length={"max": constants.CharLimits.NOTES}
     )
+
+    class Config:
+        """The configuration for the schema."""
+
+        multiindex_strict = True
 
 
 class InvestigatorsVerified(InvestigatorsPrecleaned):
