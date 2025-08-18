@@ -12,8 +12,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa
 
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
-# - Use builtin checks where applicable.
-# - Set for all, but use `raise_warning=True` for lax fields.
 # - Use `n_failure_cases`.
 # - Set categoricals as `Series[Annotated[pd.CategoricalDtype, <enum>, <bool>]]`.
 # - Replace registered checks with class methods with `@pa.check`:
@@ -37,6 +35,7 @@ _LAX_KWARGS: Final[dict] = {
     "coerce": False,
     "unique": False,
     "nullable": True,
+    "raise_warning": True,
 }
 _NULLABLE_KWARGS: Final[dict] = {"coerce": True, "nullable": True}
 
