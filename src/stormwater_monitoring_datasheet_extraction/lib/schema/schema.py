@@ -397,8 +397,16 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     #: The tide time at the time of observations.
     tide_time: Series[str] = partial(_TIDE_TIME_FIELD, coerce=True)
     #: The past 24-hour rainfall.
+    # TODO: Make equality check subject to inclusive rule in data definition.
+    # - Use helper to set kwargs.
     past_24hr_rainfall: Series[float] = partial(
-        _PAST_24HR_RAINFALL_FIELD, coerce=True, greater_than_or_equal_to={"min_value": 0}
+        _PAST_24HR_RAINFALL_FIELD,
+        coerce=True,
+        greater_than_or_equal_to={
+            "min_value": constants.FIELD_DATA_DEFINITION[constants.Columns.METADATA][
+                constants.Columns.PAST_24HR_RAINFALL
+            ][constants.Columns.LOWER][constants.Columns.VALUE]
+        },
     )
     #: The weather at the time of observations.
     # TODO: Are we going to make weather ordered?
@@ -453,6 +461,16 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     #: The end time of the investigation.
     end_time: Series[str] = partial(_END_TIME_FIELD, coerce=True)
 
+    # @pa.check("start_time", name="is_valid_time")
+    # def start_time_is_valid_time(cls, start_time: Series) -> Series[bool]:  # noqa: B902
+    #     """Every `start_time` parses with the given format."""
+    #     return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
+
+    # @pa.check("end_time", name="is_valid_time")
+    # def end_time_is_valid_time(cls, end_time: Series) -> Series[bool]:  # noqa: B902
+    #     """Every `end_time` parses with the given format."""
+    #     return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
+
     class Config:
         """The configuration for the schema.
 
@@ -463,10 +481,6 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
         multiindex_strict = True
         multiindex_unique = True
         strict = True
-
-        # TODO: Field checks:
-        # - Start time is formatted and valid. (Make a class for this?)
-        # - End time is formatted and valid. (Make a class for this?)
 
         # TODO: Dataframe checks:
         # - Start time is before end time.

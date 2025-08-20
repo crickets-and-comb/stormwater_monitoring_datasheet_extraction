@@ -282,7 +282,10 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
             Columns.END_TIME: {Columns.FORMAT: TIME_FORMAT},
             Columns.START_TIME: {Columns.FORMAT: TIME_FORMAT},
         },
-        Columns.PAST_24HR_RAINFALL: {Columns.UNITS: Units.INCHES},
+        Columns.PAST_24HR_RAINFALL: {
+            Columns.UNITS: Units.INCHES,
+            Columns.LOWER: {Columns.VALUE: 0, Columns.INCLUSIVE: True},
+        },
         Columns.TIDE_HEIGHT: {Columns.UNITS: Units.FEET},
         Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
         Columns.WEATHER: {
