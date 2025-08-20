@@ -2,8 +2,9 @@
 
 from collections.abc import Callable
 from functools import partial
-from typing import Final
+from typing import Annotated, Final
 
+import pandas as pd
 import pandera as pa
 from pandera.typing import Index, Series
 
@@ -12,7 +13,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa
 
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
-# - Set categoricals as `Series[Annotated[pd.CategoricalDtype, <enum>, <bool>]]`.
 # - Replace registered checks with class methods with `@pa.check`:
 #   https://pandera.readthedocs.io/en/v0.22.1/dataframe_models.html#column-index-checks
 # - Replace dataframe checks with class methods with `@pa.dataframe_check`:
@@ -381,7 +381,9 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     """
 
     #: The form type.
-    form_type: Series[constants.FormType] = partial(_FORM_TYPE_FIELD, coerce=True)
+    form_type: Series[Annotated[pd.CategoricalDtype, list(constants.FormType), False]] = (
+        partial(_FORM_TYPE_FIELD, coerce=True)
+    )
     #: The form version.
     form_version: Series[str] = partial(_FORM_VERSION_FIELD, coerce=True)
     # TODO: Maybe we might as well cast to datetime at this step.
@@ -394,7 +396,9 @@ class FormMetadataVerified(FormMetadataPrecleaned):
         date_le_today={"flag": True},
     )
     #: The city of observations.
-    city: Series[constants.City] = partial(_CITY_FIELD, coerce=True)
+    city: Series[Annotated[pd.CategoricalDtype, list(constants.City), False]] = partial(
+        _CITY_FIELD, coerce=True
+    )
     #: The tide height at the time of observations.
     tide_height: Series[float] = partial(_TIDE_HEIGHT_FIELD, coerce=True)
     #: The tide time at the time of observations.
@@ -409,7 +413,10 @@ class FormMetadataVerified(FormMetadataPrecleaned):
         _PAST_24HR_RAINFALL_FIELD, coerce=True, greater_than_or_equal_to={"min_value": 0}
     )
     #: The weather at the time of observations.
-    weather: Series[constants.Weather] = partial(_WEATHER_FIELD, coerce=True)
+    # TODO: Are we going to make weather ordered?
+    weather: Series[Annotated[pd.CategoricalDtype, list(constants.Weather), True]] = partial(
+        _WEATHER_FIELD, coerce=True
+    )
     #: Investigator notes.
     notes: Series[str] = partial(
         _NOTES_FIELD, **_NULLABLE_KWARGS, str_length={"max": constants.CharLimits.NOTES}
@@ -477,11 +484,13 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     #: The arrival time of the investigation.
     arrival_time: Series[str] = partial(_ARRIVAL_TIME_FIELD, coerce=True)
     #: The flow. Nullable, but only if `dry_outfall` is false.
-    flow: Series[constants.Flow] = partial(_FLOW_FIELD, **_NULLABLE_KWARGS)
-    #: The flow compared to expected. Nullable, but only if `dry_outfall` is false.
-    flow_compared_to_expected: Series[constants.FlowComparedToExpected] = partial(
-        _FLOW_COMPARED_TO_EXPECTED_FIELD, **_NULLABLE_KWARGS
+    flow: Series[Annotated[pd.CategoricalDtype, list(constants.Flow), True]] = partial(
+        _FLOW_FIELD, **_NULLABLE_KWARGS
     )
+    #: The flow compared to expected. Nullable, but only if `dry_outfall` is false.
+    flow_compared_to_expected: Series[
+        Annotated[pd.CategoricalDtype, list(constants.FlowComparedToExpected), True]
+    ] = partial(_FLOW_COMPARED_TO_EXPECTED_FIELD, **_NULLABLE_KWARGS)
     #: The air temperature. Nullable, but only if `dry_outfall` is false.
     air_temp: Series[float] = partial(_AIR_TEMP_FIELD, **_NULLABLE_KWARGS)
     #: The water temperature. Nullable, but only if `dry_outfall` is false.
@@ -530,11 +539,13 @@ class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned)
     #: The site ID, part of the primary key.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The observation type.
-    type: Index[constants.QualitativeSiteObservationTypes] = partial(
-        _OBSERVATION_TYPE_FIELD, coerce=True
-    )
+    type: Index[
+        Annotated[pd.CategoricalDtype, list(constants.QualitativeSiteObservationTypes), False]
+    ] = partial(_OBSERVATION_TYPE_FIELD, coerce=True)
     #: The rank of the observation.
-    rank: Series[constants.Rank] = partial(_RANK_FIELD, coerce=True)
+    rank: Series[Annotated[pd.CategoricalDtype, list(constants.Rank), True]] = partial(
+        _RANK_FIELD, coerce=True
+    )
     #: The description of the observation.
     description: Series[str] = partial(
         _DESCRIPTION_FIELD,
