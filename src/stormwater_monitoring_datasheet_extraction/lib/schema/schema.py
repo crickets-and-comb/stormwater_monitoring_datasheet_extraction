@@ -9,16 +9,14 @@ import pandera as pa
 from pandera.typing import Index, Series
 
 from stormwater_monitoring_datasheet_extraction.lib import constants
-from stormwater_monitoring_datasheet_extraction.lib.schema import checks  # noqa: F401
+from stormwater_monitoring_datasheet_extraction.lib.schema.checks import field_checks
 
 # TODO: Set field-level checks.
 # See/use field_datasheet_data_definition.json metadata.
-# - Replace registered checks with class methods with `@pa.check`:
-#   https://pandera.readthedocs.io/en/v0.22.1/dataframe_models.html#column-index-checks
-# - Replace dataframe checks with class methods with `@pa.dataframe_check`:
-#   https://pandera.readthedocs.io/en/v0.22.1/dataframe_models.html#dataframe-checks
 # TODO: Set dataframe-level checks.
 # See/use field_datasheet_data_definition.json metadata.
+# - Use class methods with `@pa.dataframe_check`:
+#   https://pandera.readthedocs.io/en/v0.22.1/dataframe_models.html#dataframe-checks
 # NOTE: Validations should be lax for extraction, stricter after cleaning,
 # stricter after user verification, and strictest after final cleaning.
 # TODO: Use `schema_error_handler` decorator.
@@ -388,13 +386,8 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     form_version: Series[str] = partial(_FORM_VERSION_FIELD, coerce=True)
     # TODO: Maybe we might as well cast to datetime at this step.
     # date: Series[pa.DateTime] = partial(
-    #: The date of observations (must be "YYYY-MM-DD", on or before today).
-    date: Series[str] = partial(
-        _DATE_FIELD,
-        coerce=True,
-        is_valid_date={"format": constants.DATE_FORMAT},
-        date_le_today={"flag": True},
-    )
+    #: The date of observations. Must be "YYYY-MM-DD", on or before today.
+    date: Series[str] = partial(_DATE_FIELD, coerce=True)
     #: The city of observations.
     city: Series[Annotated[pd.CategoricalDtype, list(constants.City), False]] = partial(
         _CITY_FIELD, coerce=True
@@ -402,12 +395,7 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     #: The tide height at the time of observations.
     tide_height: Series[float] = partial(_TIDE_HEIGHT_FIELD, coerce=True)
     #: The tide time at the time of observations.
-    tide_time: Series[str] = partial(
-        _TIDE_TIME_FIELD,
-        coerce=True,
-        is_valid_time={"format": constants.TIME_FORMAT},
-        time_le_now={"flag": True},
-    )
+    tide_time: Series[str] = partial(_TIDE_TIME_FIELD, coerce=True)
     #: The past 24-hour rainfall.
     past_24hr_rainfall: Series[float] = partial(
         _PAST_24HR_RAINFALL_FIELD, coerce=True, greater_than_or_equal_to={"min_value": 0}
@@ -421,6 +409,25 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     notes: Series[str] = partial(
         _NOTES_FIELD, **_NULLABLE_KWARGS, str_length={"max": constants.CharLimits.NOTES}
     )
+
+    # Field checks:
+    @pa.check("date", name="date_le_today")
+    def date_le_today(cls, date: Series) -> Series[bool]:  # noqa: B902
+        """Every date is on or before today."""
+        return field_checks.date_le_today(series=date)
+
+    @pa.check("date", name="is_valid_date")
+    def is_valid_date(cls, date: Series) -> Series[bool]:  # noqa: B902
+        """Every date parses with the given format."""
+        return field_checks.is_valid_date(series=date, date_format=constants.DATE_FORMAT)
+
+    @pa.check("tide_time", name="is_valid_time")
+    def is_valid_time(cls, tide_time: Series) -> Series[bool]:  # noqa: B902
+        """Every value parses with the given format."""
+        return field_checks.is_valid_time(series=tide_time, format=constants.TIME_FORMAT)
+
+    # Dateframe checks:
+    # TODO: Every date:tide_time is on or before now.
 
     class Config:
         """The configuration for the schema."""

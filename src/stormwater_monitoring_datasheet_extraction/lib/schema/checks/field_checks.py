@@ -1,34 +1,35 @@
 """Schema field checks."""
 
 import pandas as pd
-from pandera import extensions
+from pandera.typing import Series
+
+# TODO: An alternative approach would be to create custom classes for the field types,
+# handle validation in the class constructor, and then coerce the field to the class.
+# This may allow us to generate better error messages, and may be more flexible
+# for future changes.
+# Consider doing this.
+# On the other hand, would also be vulnerable to changes in nullability. If we find out a
+# field can be null, and we've made a custom class to carry out our validations, we'd need
+# to then coerce the null into the class, which in itself could be tricky, and which would
+# also mean we'd end up with a non-null value, even if empty. (In other words, we'd get too
+# "Pythonic" for real data integrity.)
+# Also, we'd end up having field validations in multiple places unless we chose one approach
+# or the other.
 
 
-@extensions.register_check_method(statistics=["format"])
-def is_valid_date(series: pd.Series, format: str) -> bool:
-    """Every value parses with the given format."""
-    parsed = pd.to_datetime(series, format=format, errors="coerce")
-    return parsed.notna().all()
+def is_valid_date(series: Series, date_format: str) -> Series[bool]:
+    """Every date parses with the given format."""
+    parsed = pd.to_datetime(series, format=date_format, errors="coerce")
+    return parsed.notna()
 
 
-@extensions.register_check_method(statistics=["flag"])
-def date_le_today(series: pd.Series, flag: bool) -> bool:
+def date_le_today(series: Series) -> Series[bool]:
     """Every date is on or before today."""
     parsed = pd.to_datetime(series)
-    return parsed.notna().all() and (parsed <= pd.Timestamp.today()).all() if flag else True
+    return parsed.notna() and parsed <= pd.Timestamp.today()
 
 
-@extensions.register_check_method(statistics=["format"])
-def is_valid_time(series: pd.Series, format: str) -> bool:
+def is_valid_time(series: Series, format: str) -> Series[bool]:
     """Every value parses with the given format."""
     parsed = pd.to_datetime(series, format=format, errors="coerce").dt.time
-    return parsed.notna().all()
-
-
-@extensions.register_check_method(statistics=["flag"])
-def time_le_now(series: pd.Series, flag: bool) -> bool:
-    """Every time is on or before now."""
-    parsed = pd.to_datetime(series, errors="coerce").dt.time
-    return (
-        parsed.notna().all() and (parsed <= pd.Timestamp.now().time()).all() if flag else True
-    )
+    return parsed.notna()
