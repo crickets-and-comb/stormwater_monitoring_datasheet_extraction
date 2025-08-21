@@ -632,7 +632,11 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
 
     @classmethod
     def all_null_observations(cls, df: pd.DataFrame) -> tuple[pd.Series[bool]]:
-        """All observation records are null."""
+        """All observations are (non)null.
+
+        Returns:
+            Two boolean Series, whether all observations are null or all are not null.
+        """
         return df[cls._OBSERVATION_COLUMNS].isnull().all(axis=1), df[
             cls._OBSERVATION_COLUMNS
         ].notnull().all(axis=1)
