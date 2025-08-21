@@ -32,6 +32,6 @@ def datetime_le_now(
     now = pd.Timestamp.now()
 
     is_valid = dt_df["date_time_series"] <= now
-    is_valid = cast("Series[bool]", is_valid)
+    is_valid = cast(Series[bool], is_valid)
 
     return is_valid
