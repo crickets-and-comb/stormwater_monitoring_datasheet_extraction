@@ -18,6 +18,18 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
+_OBSERVATION_COLUMNS: Final[list[str]] = [
+    Columns.BACTERIA_BOTTLE_NO,
+    Columns.FLOW,
+    Columns.FLOW_COMPARED_TO_EXPECTED,
+    Columns.AIR_TEMP,
+    Columns.WATER_TEMP,
+    Columns.DO_MG_PER_L,
+    Columns.SPS_MICRO_S_PER_CM,
+    Columns.SALINITY_PPT,
+    Columns.PH,
+]
+
 # TODO: Add typeguard/check_type errywhrr.
 # TODO: For all int fields, ensure casting won't lose significant data (use np.isclose).
 # - This includes IntEnums.
@@ -536,18 +548,6 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     FK: ?.`bottle_no` (unenforced).
     """
 
-    _OBSERVATION_COLUMNS: Final[list[str]] = [
-        Columns.BACTERIA_BOTTLE_NO,
-        Columns.FLOW,
-        Columns.FLOW_COMPARED_TO_EXPECTED,
-        Columns.AIR_TEMP,
-        Columns.WATER_TEMP,
-        Columns.DO_MG_PER_L,
-        Columns.SPS_MICRO_S_PER_CM,
-        Columns.SALINITY_PPT,
-        Columns.PH,
-    ]
-
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key.
@@ -638,8 +638,8 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         Returns:
             Two boolean Series, whether all observations are null or all are not null.
         """
-        all_null = df[cls._OBSERVATION_COLUMNS].isnull().all(axis=1)
-        all_nonnull = df[cls._OBSERVATION_COLUMNS].notnull().all(axis=1)
+        all_null = df[_OBSERVATION_COLUMNS].isnull().all(axis=1)
+        all_nonnull = df[_OBSERVATION_COLUMNS].notnull().all(axis=1)
 
         return all_null, all_nonnull
 
