@@ -1,5 +1,7 @@
 """Schema field checks."""
 
+from typing import cast
+
 import pandas as pd
 from pandera.typing import Series
 
@@ -20,16 +22,22 @@ from pandera.typing import Series
 def is_valid_date(series: Series, date_format: str) -> Series[bool]:
     """Every date parses with the given format."""
     parsed = pd.to_datetime(series, format=date_format, errors="coerce")
-    return parsed.notna()
+    is_valid = parsed.notna()
+    is_valid = cast("Series[bool]", is_valid)
+    return is_valid
 
 
 def date_le_today(series: Series) -> Series[bool]:
     """Every date is on or before today."""
     parsed = pd.to_datetime(series)
-    return parsed.notna() and parsed <= pd.Timestamp.today()
+    is_valid = parsed.notna() and parsed <= pd.Timestamp.today()
+    is_valid = cast("Series[bool]", is_valid)
+    return is_valid
 
 
 def is_valid_time(series: Series, format: str) -> Series[bool]:
     """Every time parses with the given format."""
     parsed = pd.to_datetime(series, format=format, errors="coerce").dt.time
-    return parsed.notna()
+    is_valid = parsed.notna()
+    is_valid = cast("Series[bool]", is_valid)
+    return is_valid

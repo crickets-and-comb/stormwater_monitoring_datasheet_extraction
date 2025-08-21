@@ -18,7 +18,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
-# TODO: Explicitly cast check returns to `pa.typing.Series`.
 # TODO: Add typeguard/check_type errywhrr.
 # TODO: For all int fields, ensure casting won't lose significant data (use np.isclose).
 # - This includes IntEnums.
