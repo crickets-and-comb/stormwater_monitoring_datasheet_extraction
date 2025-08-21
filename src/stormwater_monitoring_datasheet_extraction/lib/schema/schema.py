@@ -524,7 +524,7 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     def start_time_before_end_time(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
         """Every start_time is before end_time."""
         is_valid = df[Columns.START_TIME] < df[Columns.END_TIME]
-        is_valid = cast(Series[bool], is_valid)
+        is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
 
@@ -592,7 +592,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         is_valid = (
             df.groupby(Columns.FORM_ID)[Columns.BACTERIA_BOTTLE_NO].transform("nunique") == 1
         )
-        is_valid = cast(Series[bool], is_valid)
+        is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
 
@@ -615,7 +615,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         all_null, all_nonnull = cls.all_null_observations(df=df)
 
         is_valid = all_null | all_nonnull
-        is_valid = cast(Series[bool], is_valid)
+        is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
 
@@ -625,7 +625,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         all_null, all_nonnull = cls.all_null_observations(df=df)
 
         is_valid = (df[Columns.DRY_OUTFALL] is True) & all_null | all_nonnull
-        is_valid = cast(Series[bool], is_valid)
+        is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
 
