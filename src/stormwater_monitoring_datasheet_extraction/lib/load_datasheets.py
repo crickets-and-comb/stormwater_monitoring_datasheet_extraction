@@ -155,7 +155,7 @@ def preclean(
     logger.info("Precleaning raw extraction data...")
 
     # TODO: Light cleaning before user verification.
-    # E.g., strip whitespace, try to cast, check range, but warn don't fail.
+    # E.g., strip whitespace, try to cast/format, check range, but warn don't fail.
     # Much of this might be done by creating a custom class for each field
     # that cleans and warns on construction,
     # define __str__/__repr__/__int__ etc. as needed,

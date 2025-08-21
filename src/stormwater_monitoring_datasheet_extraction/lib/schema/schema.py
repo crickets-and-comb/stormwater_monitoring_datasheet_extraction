@@ -15,8 +15,12 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import (
 )
 from stormwater_monitoring_datasheet_extraction.lib.schema.checks import field_checks
 
-# TODO: Set field-level checks.
-# See/use field_datasheet_data_definition.json metadata.
+# TODO: For all int fields, ensure casting won't lose significant data (use np.isclose).
+# - This includes IntEnums.
+# - Could create/extend class to trigger on coercion.
+#   - (Use polymorphism to cover ints and IntEnums.)
+# - Or, could handle in `load_data_sheets.verify()`.
+# - Prefer the former for better connection to centralized schema checks.
 # TODO: Set dataframe-level checks.
 # See/use field_datasheet_data_definition.json metadata.
 # - Use class methods with `@pa.dataframe_check`:
@@ -439,7 +443,7 @@ class FormMetadataVerified(FormMetadataPrecleaned):
         return field_checks.is_valid_time(series=tide_time, format=constants.TIME_FORMAT)
 
     # Dateframe checks:
-    # TODO: Every date:tide_time is on or before now.
+    # - Every date:tide_time is on or before now.
 
     class Config:
         """The configuration for the schema."""
@@ -465,15 +469,16 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     #: The end time of the investigation.
     end_time: Series[str] = partial(_END_TIME_FIELD, coerce=True)
 
-    # @pa.check("start_time", name="is_valid_time")
-    # def start_time_is_valid_time(cls, start_time: Series) -> Series[bool]:  # noqa: B902
-    #     """Every `start_time` parses with the given format."""
-    #     return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
+    # Field checks:
+    @pa.check("start_time", name="is_valid_time")
+    def start_time_is_valid_time(cls, start_time: Series) -> Series[bool]:  # noqa: B902
+        """Every `start_time` parses with the given format."""
+        return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
 
-    # @pa.check("end_time", name="is_valid_time")
-    # def end_time_is_valid_time(cls, end_time: Series) -> Series[bool]:  # noqa: B902
-    #     """Every `end_time` parses with the given format."""
-    #     return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
+    @pa.check("end_time", name="is_valid_time")
+    def end_time_is_valid_time(cls, end_time: Series) -> Series[bool]:  # noqa: B902
+        """Every `end_time` parses with the given format."""
+        return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
 
     class Config:
         """The configuration for the schema.
@@ -488,6 +493,8 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
 
         # TODO: Dataframe checks:
         # - Start time is before end time.
+        # - Every date:start_time is on or before now.
+        # - Every date:end_time is on or before now.
 
 
 class SiteObservationsVerified(SiteObservationsPrecleaned):
@@ -521,13 +528,21 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     #: The water temperature. Nullable, but only if `dry_outfall` is false.
     water_temp: Series[float] = partial(_WATER_TEMP_FIELD, **_NULLABLE_KWARGS)
     #: The dissolved oxygen. Nullable, but only if `dry_outfall` is false.
-    DO_mg_per_l: Series[float] = partial(_DO_MG_PER_L_FIELD, **_NULLABLE_KWARGS)
+    DO_mg_per_l: Series[float] = partial(_DO_MG_PER_L_FIELD, **_NULLABLE_KWARGS, ge=0)
     #: The specific conductance. Nullable, but only if `dry_outfall` is false.
-    SPS_micro_S_per_cm: Series[float] = partial(_SPS_MICRO_S_PER_CM_FIELD, **_NULLABLE_KWARGS)
+    SPS_micro_S_per_cm: Series[float] = partial(
+        _SPS_MICRO_S_PER_CM_FIELD, **_NULLABLE_KWARGS, ge=0
+    )
     #: The salinity. Nullable, but only if `dry_outfall` is false.
-    salinity_ppt: Series[float] = partial(_SALINITY_PPT_FIELD, **_NULLABLE_KWARGS)
+    salinity_ppt: Series[float] = partial(_SALINITY_PPT_FIELD, **_NULLABLE_KWARGS, ge=0)
     #: The pH. Nullable, but only if `dry_outfall` is false.
-    pH: Series[float] = partial(_PH_FIELD, **_NULLABLE_KWARGS)
+    pH: Series[float] = partial(_PH_FIELD, **_NULLABLE_KWARGS, ge=0)
+
+    # Field checks:
+    @pa.check("arrival_time", name="is_valid_time")
+    def arrival_time_is_valid_time(cls, arrival_time: Series) -> Series[bool]:  # noqa: B902
+        """Every `arrival_time` parses with the given format."""
+        return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
 
     class Config:
         """The configuration for the schema.
@@ -540,16 +555,15 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         multiindex_unique = True
         strict = True
 
-        # TODO: To check threshholds, need a site-type map:
-        # creek or outfall, and if creek:
-        # habitat, spawn, rear, or migrate.
-
         # TODO: Dataframe checks:
         # - `bottle_no` should be unique by `form_id`, if not overall.
         # - If dry outfall is true, then observations should be null.
         # - Otherwise, observations should be non-null (unless all null).
         # - Time should be formatted and valid. (Make a class for this?)
-        # - Positives: DO_mg_per_l, SPS_micro_S_per_cm, salinity_ppt, pH.
+        # - Every date:arrival_time is on or before now.
+        # - Check thresholds, but requires site-type map in field definition:
+        #       creek or outfall, and if creek:
+        #           habitat, spawn, rear, or migrate.
 
 
 class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned):

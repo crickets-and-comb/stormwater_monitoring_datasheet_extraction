@@ -30,6 +30,6 @@ def date_le_today(series: Series) -> Series[bool]:
 
 
 def is_valid_time(series: Series, format: str) -> Series[bool]:
-    """Every value parses with the given format."""
+    """Every time parses with the given format."""
     parsed = pd.to_datetime(series, format=format, errors="coerce").dt.time
     return parsed.notna()
