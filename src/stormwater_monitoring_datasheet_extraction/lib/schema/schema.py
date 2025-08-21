@@ -2,7 +2,7 @@
 
 from collections.abc import Callable
 from functools import partial
-from typing import Annotated, Final
+from typing import Annotated, Final, cast
 
 import pandas as pd
 import pandera as pa
@@ -13,18 +13,19 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import (
     FIELD_DATA_DEFINITION,
     Columns,
 )
-from stormwater_monitoring_datasheet_extraction.lib.schema.checks import field_checks
+from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
+    dataframe_checks,
+    field_checks,
+)
 
+# TODO: Explicitly cast check returns to `pa.typing.Series`.
+# TODO: Add typeguard/check_type errywhrr.
 # TODO: For all int fields, ensure casting won't lose significant data (use np.isclose).
 # - This includes IntEnums.
 # - Could create/extend class to trigger on coercion.
 #   - (Use polymorphism to cover ints and IntEnums.)
 # - Or, could handle in `load_data_sheets.verify()`.
 # - Prefer the former for better connection to centralized schema checks.
-# TODO: Set dataframe-level checks.
-# See/use field_datasheet_data_definition.json metadata.
-# - Use class methods with `@pa.dataframe_check`:
-#   https://pandera.readthedocs.io/en/v0.22.1/dataframe_models.html#dataframe-checks
 # NOTE: Validations should be lax for extraction, stricter after cleaning,
 # stricter after user verification, and strictest after final cleaning.
 # TODO: Use `schema_error_handler` decorator.
@@ -426,7 +427,6 @@ class FormMetadataVerified(FormMetadataPrecleaned):
         _NOTES_FIELD, **_NULLABLE_KWARGS, str_length={"max": constants.CharLimits.NOTES}
     )
 
-    # Field checks:
     @pa.check("date", name="date_le_today")
     def date_le_today(cls, date: Series) -> Series[bool]:  # noqa: B902
         """Every date is on or before today."""
@@ -442,8 +442,16 @@ class FormMetadataVerified(FormMetadataPrecleaned):
         """Every value parses with the given format."""
         return field_checks.is_valid_time(series=tide_time, format=constants.TIME_FORMAT)
 
-    # Dateframe checks:
-    # - Every date:tide_time is on or before now.
+    @pa.dataframe_check
+    def tide_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+        """Every date:tide_time is on or before now."""
+        return dataframe_checks.datetime_le_now(
+            df=df,
+            date_col=Columns.DATE,
+            time_col=Columns.TIDE_TIME,
+            date_format=constants.DATE_FORMAT,
+            time_format=constants.TIME_FORMAT,
+        )
 
     class Config:
         """The configuration for the schema."""
@@ -469,7 +477,6 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     #: The end time of the investigation.
     end_time: Series[str] = partial(_END_TIME_FIELD, coerce=True)
 
-    # Field checks:
     @pa.check("start_time", name="is_valid_time")
     def start_time_is_valid_time(cls, start_time: Series) -> Series[bool]:  # noqa: B902
         """Every `start_time` parses with the given format."""
@@ -479,6 +486,36 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     def end_time_is_valid_time(cls, end_time: Series) -> Series[bool]:  # noqa: B902
         """Every `end_time` parses with the given format."""
         return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
+
+    @pa.dataframe_check
+    def start_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+        """Every date:start_time is on or before now."""
+        return dataframe_checks.datetime_le_now(
+            df=df,
+            date_col=Columns.DATE,
+            time_col=Columns.START_TIME,
+            date_format=constants.DATE_FORMAT,
+            time_format=constants.TIME_FORMAT,
+        )
+
+    @pa.dataframe_check
+    def end_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+        """Every date:end_time is on or before now."""
+        return dataframe_checks.datetime_le_now(
+            df=df,
+            date_col=Columns.DATE,
+            time_col=Columns.END_TIME,
+            date_format=constants.DATE_FORMAT,
+            time_format=constants.TIME_FORMAT,
+        )
+
+    @pa.dataframe_check
+    def start_time_before_end_time(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+        """Every start_time is before end_time."""
+        is_valid = df[Columns.START_TIME] < df[Columns.END_TIME]
+        is_valid = cast(Series[bool], is_valid)
+
+        return is_valid
 
     class Config:
         """The configuration for the schema.
@@ -491,11 +528,6 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
         multiindex_unique = True
         strict = True
 
-        # TODO: Dataframe checks:
-        # - Start time is before end time.
-        # - Every date:start_time is on or before now.
-        # - Every date:end_time is on or before now.
-
 
 class SiteObservationsVerified(SiteObservationsPrecleaned):
     """Schema for the observations verified by the user.
@@ -504,6 +536,18 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     FK: `FormMetadata.form_id` (unenforced).
     FK: ?.`bottle_no` (unenforced).
     """
+
+    _OBSERVATION_COLUMNS: Final[list[str]] = [
+        Columns.BACTERIA_BOTTLE_NO,
+        Columns.FLOW,
+        Columns.FLOW_COMPARED_TO_EXPECTED,
+        Columns.AIR_TEMP,
+        Columns.WATER_TEMP,
+        Columns.DO_MG_PER_L,
+        Columns.SPS_MICRO_S_PER_CM,
+        Columns.SALINITY_PPT,
+        Columns.PH,
+    ]
 
     #: The form ID, part of the primary key, foreign key to `FormMetadataExtracted.form_id`.
     form_id: Index[str] = FORM_ID_FIELD()
@@ -538,11 +582,65 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     #: The pH. Nullable, but only if `dry_outfall` is false.
     pH: Series[float] = partial(_PH_FIELD, **_NULLABLE_KWARGS, ge=0)
 
-    # Field checks:
     @pa.check("arrival_time", name="is_valid_time")
     def arrival_time_is_valid_time(cls, arrival_time: Series) -> Series[bool]:  # noqa: B902
         """Every `arrival_time` parses with the given format."""
         return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
+
+    @pa.dataframe_check
+    def bottle_no_unique_by_form_id(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+        """Every `bottle_no` is unique within each `form_id`."""
+        is_valid = (
+            df.groupby(Columns.FORM_ID)[Columns.BACTERIA_BOTTLE_NO].transform("nunique") == 1
+        )
+        is_valid = cast(Series[bool], is_valid)
+
+        return is_valid
+
+    @pa.dataframe_check
+    def arrival_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+        """Every date:arrival_time is on or before now."""
+        return dataframe_checks.datetime_le_now(
+            df=df,
+            date_col=Columns.DATE,
+            time_col=Columns.ARRIVAL_TIME,
+            date_format=constants.DATE_FORMAT,
+            time_format=constants.TIME_FORMAT,
+        )
+
+    @pa.dataframe_check
+    def observations_all_null_or_all_not_null(
+        cls, df: pd.DataFrame  # noqa: B902
+    ) -> Series[bool]:
+        """Observation records are either all null or all not null."""
+        all_null, all_nonnull = cls.all_null_observations(df=df)
+
+        is_valid = all_null | all_nonnull
+        is_valid = cast(Series[bool], is_valid)
+
+        return is_valid
+
+    @pa.dataframe_check
+    def dry_outfall_observations_null(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+        """If dry outfall, then null observations. Otherwise, non-null observations."""
+        all_null, all_nonnull = cls.all_null_observations(df=df)
+
+        is_valid = (df[Columns.DRY_OUTFALL] is True) & all_null | all_nonnull
+        is_valid = cast(Series[bool], is_valid)
+
+        return is_valid
+
+    @classmethod
+    def all_null_observations(cls, df: pd.DataFrame) -> tuple[pd.Series[bool]]:
+        """All observation records are null."""
+        return df[cls._OBSERVATION_COLUMNS].isnull().all(axis=1), df[
+            cls._OBSERVATION_COLUMNS
+        ].notnull().all(axis=1)
+
+    # TODO: Dataframe checks:
+    # - Check thresholds, but requires site-type map in field definition:
+    #       creek or outfall, and if creek:
+    #           habitat, spawn, rear, or migrate.
 
     class Config:
         """The configuration for the schema.
@@ -554,16 +652,6 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         multiindex_strict = True
         multiindex_unique = True
         strict = True
-
-        # TODO: Dataframe checks:
-        # - `bottle_no` should be unique by `form_id`, if not overall.
-        # - If dry outfall is true, then observations should be null.
-        # - Otherwise, observations should be non-null (unless all null).
-        # - Time should be formatted and valid. (Make a class for this?)
-        # - Every date:arrival_time is on or before now.
-        # - Check thresholds, but requires site-type map in field definition:
-        #       creek or outfall, and if creek:
-        #           habitat, spawn, rear, or migrate.
 
 
 class QualitativeSiteObservationsVerified(QualitativeSiteObservationsPrecleaned):
