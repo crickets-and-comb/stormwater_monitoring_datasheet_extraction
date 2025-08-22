@@ -19,12 +19,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
-# TODO: For all int fields, ensure casting won't lose significant data (use np.isclose).
-# - This includes IntEnums.
-# - Could create/extend class to trigger on coercion.
-#   - (Use polymorphism to cover ints and IntEnums.)
-# - Or, could handle in `load_data_sheets.verify()`.
-# - Prefer the former for better connection to centralized schema checks.
 # NOTE: Validations should be lax for extraction, stricter after cleaning,
 # stricter after user verification, and strictest after final cleaning.
 # TODO: Use `schema_error_handler` decorator.
