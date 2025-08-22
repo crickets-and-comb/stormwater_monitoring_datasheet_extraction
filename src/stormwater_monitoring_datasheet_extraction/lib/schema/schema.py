@@ -19,6 +19,8 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
+# TODO: Update docstrings to reflect checks.
+
 # NOTE: Validations should be lax for extraction, stricter after cleaning,
 # stricter after user verification, and strictest after final cleaning.
 # TODO: Use `schema_error_handler` decorator.
