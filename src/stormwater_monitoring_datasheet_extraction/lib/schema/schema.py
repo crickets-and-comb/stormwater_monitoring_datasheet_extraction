@@ -612,7 +612,8 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         cls, df: pd.DataFrame  # noqa: B902
     ) -> Series[bool]:
         """Observation records are either all null or all not null."""
-        all_null, all_nonnull = cls.all_null_observations(df=df)
+        all_null = df[_OBSERVATION_COLUMNS].isnull().all(axis=1)
+        all_nonnull = df[_OBSERVATION_COLUMNS].notnull().all(axis=1)
 
         is_valid = all_null | all_nonnull
         is_valid = cast("Series[bool]", is_valid)
@@ -622,26 +623,13 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     @pa.dataframe_check
     def dry_outfall_observations_null(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
         """If dry outfall, then null observations. Otherwise, non-null observations."""
-        all_null, all_nonnull = cls.all_null_observations(df=df)
+        all_null = df[_OBSERVATION_COLUMNS].isnull().all(axis=1)
+        all_nonnull = df[_OBSERVATION_COLUMNS].notnull().all(axis=1)
 
         is_valid = (df[Columns.DRY_OUTFALL] is True) & all_null | all_nonnull
         is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
-
-    @classmethod
-    def all_null_observations(
-        cls, df: pd.DataFrame
-    ) -> tuple[pd.Series[bool], pd.Series[bool]]:
-        """All observations are (non)null.
-
-        Returns:
-            Two boolean Series, whether all observations are null or all are not null.
-        """
-        all_null = df[_OBSERVATION_COLUMNS].isnull().all(axis=1)
-        all_nonnull = df[_OBSERVATION_COLUMNS].notnull().all(axis=1)
-
-        return all_null, all_nonnull
 
     # TODO: Dataframe checks:
     # - Check thresholds, but requires site-type map in field definition:
