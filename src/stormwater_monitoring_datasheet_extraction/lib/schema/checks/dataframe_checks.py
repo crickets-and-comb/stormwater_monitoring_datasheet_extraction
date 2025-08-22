@@ -4,8 +4,10 @@ from typing import cast
 
 import pandas as pd
 from pandera.typing import Series
+from typeguard import typechecked
 
 
+@typechecked
 def datetime_le_now(
     df: pd.DataFrame,
     date_col: str,

@@ -7,6 +7,7 @@ from typing import Annotated, Final, cast
 import pandas as pd
 import pandera as pa
 from pandera.typing import Index, Series
+from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib import constants
 from stormwater_monitoring_datasheet_extraction.lib.constants import (
@@ -18,7 +19,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
-# TODO: Add typeguard/check_type errywhrr.
 # TODO: For all int fields, ensure casting won't lose significant data (use np.isclose).
 # - This includes IntEnums.
 # - Could create/extend class to trigger on coercion.
@@ -427,21 +427,25 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     )
 
     @pa.check("date", name="date_le_today")
+    @typechecked
     def date_le_today(cls, date: Series) -> Series[bool]:  # noqa: B902
         """Every date is on or before today."""
         return field_checks.date_le_today(series=date)
 
     @pa.check("date", name="is_valid_date")
+    @typechecked
     def is_valid_date(cls, date: Series) -> Series[bool]:  # noqa: B902
         """Every date parses with the given format."""
         return field_checks.is_valid_date(series=date, date_format=constants.DATE_FORMAT)
 
     @pa.check("tide_time", name="is_valid_time")
+    @typechecked
     def is_valid_time(cls, tide_time: Series) -> Series[bool]:  # noqa: B902
         """Every value parses with the given format."""
         return field_checks.is_valid_time(series=tide_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check
+    @typechecked
     def tide_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
         """Every date:tide_time is on or before now."""
         return dataframe_checks.datetime_le_now(
@@ -477,16 +481,19 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     end_time: Series[str] = partial(_END_TIME_FIELD, coerce=True)
 
     @pa.check("start_time", name="is_valid_time")
+    @typechecked
     def start_time_is_valid_time(cls, start_time: Series) -> Series[bool]:  # noqa: B902
         """Every `start_time` parses with the given format."""
         return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
 
     @pa.check("end_time", name="is_valid_time")
+    @typechecked
     def end_time_is_valid_time(cls, end_time: Series) -> Series[bool]:  # noqa: B902
         """Every `end_time` parses with the given format."""
         return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check
+    @typechecked
     def start_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
         """Every date:start_time is on or before now."""
         return dataframe_checks.datetime_le_now(
@@ -498,6 +505,7 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
         )
 
     @pa.dataframe_check
+    @typechecked
     def end_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
         """Every date:end_time is on or before now."""
         return dataframe_checks.datetime_le_now(
@@ -509,6 +517,7 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
         )
 
     @pa.dataframe_check
+    @typechecked
     def start_time_before_end_time(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
         """Every start_time is before end_time."""
         is_valid = df[Columns.START_TIME] < df[Columns.END_TIME]
@@ -582,11 +591,13 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     pH: Series[float] = partial(_PH_FIELD, **_NULLABLE_KWARGS, ge=0)
 
     @pa.check("arrival_time", name="is_valid_time")
+    @typechecked
     def arrival_time_is_valid_time(cls, arrival_time: Series) -> Series[bool]:  # noqa: B902
         """Every `arrival_time` parses with the given format."""
         return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check
+    @typechecked
     def bottle_no_unique_by_form_id(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
         """Every `bottle_no` is unique within each `form_id`."""
         is_valid = (
@@ -597,6 +608,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         return is_valid
 
     @pa.dataframe_check
+    @typechecked
     def arrival_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
         """Every date:arrival_time is on or before now."""
         return dataframe_checks.datetime_le_now(
@@ -608,6 +620,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         )
 
     @pa.dataframe_check
+    @typechecked
     def observations_all_null_or_all_not_null(
         cls, df: pd.DataFrame  # noqa: B902
     ) -> Series[bool]:
@@ -621,6 +634,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         return is_valid
 
     @pa.dataframe_check
+    @typechecked
     def dry_outfall_observations_null(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
         """If dry outfall, then null observations. Otherwise, non-null observations."""
         all_null = df[cls._OBSERVATION_COLUMNS].isnull().all(axis=1)
