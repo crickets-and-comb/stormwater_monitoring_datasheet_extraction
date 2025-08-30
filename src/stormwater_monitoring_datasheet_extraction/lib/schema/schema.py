@@ -19,6 +19,8 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
+# TODO: Choose null strategy for each check.
+# https://pandera.readthedocs.io/en/stable/checks.html#handling-null-values
 # TODO: Update docstrings to reflect checks.
 
 # NOTE: Validations should be lax for extraction, stricter after cleaning,
@@ -476,13 +478,13 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     #: The end time of the investigation.
     end_time: Series[str] = partial(_END_TIME_FIELD, coerce=True)
 
-    @pa.check("start_time", name="is_valid_time")
+    @pa.check("start_time", name="start_time_is_valid_time")
     @typechecked
     def start_time_is_valid_time(cls, start_time: Series) -> Series[bool]:  # noqa: B902
         """Every `start_time` parses with the given format."""
         return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
 
-    @pa.check("end_time", name="is_valid_time")
+    @pa.check("end_time", name="end_time_is_valid_time")
     @typechecked
     def end_time_is_valid_time(cls, end_time: Series) -> Series[bool]:  # noqa: B902
         """Every `end_time` parses with the given format."""
@@ -586,7 +588,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     #: The pH. Nullable, but only if `dry_outfall` is false.
     pH: Series[float] = partial(_PH_FIELD, **_NULLABLE_KWARGS, ge=0)
 
-    @pa.check("arrival_time", name="is_valid_time")
+    @pa.check("arrival_time", name="arrival_time_is_valid_time")
     @typechecked
     def arrival_time_is_valid_time(cls, arrival_time: Series) -> Series[bool]:  # noqa: B902
         """Every `arrival_time` parses with the given format."""
