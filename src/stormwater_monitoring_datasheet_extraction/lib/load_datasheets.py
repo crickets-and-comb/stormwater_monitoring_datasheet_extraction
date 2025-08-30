@@ -294,11 +294,12 @@ def clean(
 
     # TODO: Validations schema can't accomplish:
     # - Referential integrity.
-    # - Date is on or before today.
     # - Ideally, we would verify that site arrival times are within
     #   the investigator's start and end times, but we can't 100% do that
     #   because forms don't assign observations to investigators.
     # - Qualitative observations for non-dry outfalls exist, but none for dry outfalls.
+    # - Investigators start/end datetimes < now.
+    # - SiteObservations arrival datetime < now.
 
     # TODO: If still invalid, alert to the problem, and re-call `verify()`.
     # Use data definition as source of truth rather than schema.

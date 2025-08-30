@@ -8,14 +8,14 @@ from typeguard import typechecked
 
 
 @typechecked
-def datetime_le_now(
+def datetime_lt_now(
     df: pd.DataFrame,
     date_col: str,
     time_col: str,
     date_format: str,
     time_format: str,
 ) -> Series[bool]:
-    """Checks if each date:time is on or before now.
+    """Checks if each date:time is before now.
 
     Arguments:
         df: The DataFrame containing the date and time columns.
@@ -33,7 +33,7 @@ def datetime_le_now(
     dt_df["date_time_series"] = dt_df[date_col] + dt_df[time_col].dt.time
     now = pd.Timestamp.now()
 
-    is_valid = dt_df["date_time_series"] <= now
+    is_valid = dt_df["date_time_series"] < now
     is_valid = cast("Series[bool]", is_valid)
 
     return is_valid
