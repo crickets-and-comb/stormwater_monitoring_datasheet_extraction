@@ -19,8 +19,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
-# TODO: Add sample form images outside source code until we have test images.
-
 # TODO: If we wanted to better normalize
 # (reduce sparseness, improve performance, enhance integrity),
 # we'd split site observations into separate tables, e.g.:
