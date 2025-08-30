@@ -19,9 +19,51 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
-# TODO: Choose null strategy for each check.
-# https://pandera.readthedocs.io/en/stable/checks.html#handling-null-values
 # TODO: Update docstrings to reflect checks.
+# TODO: Add sample form images outside source code until we have test images.
+
+# TODO: If we wanted to better normalize
+# (reduce sparseness, improve performance, enhance integrity),
+# we'd split site observations into separate tables, e.g.:
+#
+# SiteMetadata:
+#   form_id (PK),
+#   site_id (PK),
+#   arrival_time,
+#   dry_outfall
+#
+# QuantitativeObservations:
+#   form_id (PK, FK to SiteMetadata.form_id),
+#   site_id (PK, FK to SiteMetadata.site_id),
+#   bottle_no (FK to table outside our data set, connecting it to lab operations etc.),
+#   tide_height,
+#   tide_time,
+#   ...
+#
+# We don't know whether bottle numbers are unique across extractions, so we assume it's only
+# unique by form, needing form_id and site_id in both tables. Form and site are what define
+# unique observations then, and bottle_no provides more relational/tracking possibilities.
+# We could include bottle_no in both tables, removing the need for site_id in both, but that
+# would lead to storing null bottle_no in SiteMetadata, and we'd still need to include form_id
+# until we know how bottle_no is unique. That said, bottle_no in SiteMetadata would make it
+# easier to validate against dry_outfall. I think we should err toward better normalization
+# and keep bottle_no out of SiteMetadata.
+# In either case, we still need, and are able, to check that bottle_no is always null for dry
+# outfalls and never null for wet outfalls.
+# TODO (reiterated): We should do this, and do it in the JSON definition, too.
+# But, we don't need it to demo, and we need to know how bottle_no is unique.
+# NOTE: dry_outfall could be split into its own table for semantic organization
+# and to further reduce its space by limiting its records to only dry outfalls.
+#
+# DryOutfalls:
+#   form_id (PK, FK to SiteMetadata.form_id),
+#   site_id (PK, FK to SiteMetadata.site_id)
+#
+# But, that doesn't do a whole lot,
+# and it adds some processing to translate to other structures.
+#
+# Or, could add to the QualitativeObservations table if they're independent of dryness.
+# TODO: Should qualitative observations be (non)null depending on dryness, too?
 
 # NOTE: Validations should be lax for extraction, stricter after cleaning,
 # stricter after user verification, and strictest after final cleaning.
@@ -426,25 +468,35 @@ class FormMetadataVerified(FormMetadataPrecleaned):
 
     @pa.check("date", name="date_le_today")
     @typechecked
-    def date_le_today(cls, date: Series) -> Series[bool]:  # noqa: B902
+    def date_le_today(
+        cls, date: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every date is on or before today."""
         return field_checks.date_le_today(series=date)
 
     @pa.check("date", name="is_valid_date")
     @typechecked
-    def is_valid_date(cls, date: Series) -> Series[bool]:  # noqa: B902
+    def is_valid_date(
+        cls, date: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every date parses with the given format."""
         return field_checks.is_valid_date(series=date, date_format=constants.DATE_FORMAT)
 
     @pa.check("tide_time", name="is_valid_time")
     @typechecked
-    def is_valid_time(cls, tide_time: Series) -> Series[bool]:  # noqa: B902
+    def is_valid_time(
+        cls, tide_time: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every value parses with the given format."""
         return field_checks.is_valid_time(series=tide_time, format=constants.TIME_FORMAT)
 
-    @pa.dataframe_check
+    @pa.dataframe_check(
+        ignore_na=False, name="tide_datetime_le_now"  # Since irrelevant fields are nullable.
+    )
     @typechecked
-    def tide_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+    def tide_datetime_le_now(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every date:tide_time is on or before now."""
         return dataframe_checks.datetime_le_now(
             df=df,
@@ -480,19 +532,25 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
 
     @pa.check("start_time", name="start_time_is_valid_time")
     @typechecked
-    def start_time_is_valid_time(cls, start_time: Series) -> Series[bool]:  # noqa: B902
+    def start_time_is_valid_time(
+        cls, start_time: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every `start_time` parses with the given format."""
         return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
 
     @pa.check("end_time", name="end_time_is_valid_time")
     @typechecked
-    def end_time_is_valid_time(cls, end_time: Series) -> Series[bool]:  # noqa: B902
+    def end_time_is_valid_time(
+        cls, end_time: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every `end_time` parses with the given format."""
         return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
 
-    @pa.dataframe_check
+    @pa.dataframe_check(name="start_datetime_le_now")
     @typechecked
-    def start_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+    def start_datetime_le_now(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every date:start_time is on or before now."""
         return dataframe_checks.datetime_le_now(
             df=df,
@@ -502,9 +560,11 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
             time_format=constants.TIME_FORMAT,
         )
 
-    @pa.dataframe_check
+    @pa.dataframe_check(name="end_datetime_le_now")
     @typechecked
-    def end_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+    def end_datetime_le_now(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every date:end_time is on or before now."""
         return dataframe_checks.datetime_le_now(
             df=df,
@@ -514,9 +574,11 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
             time_format=constants.TIME_FORMAT,
         )
 
-    @pa.dataframe_check
+    @pa.dataframe_check(name="start_time_before_end_time")
     @typechecked
-    def start_time_before_end_time(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+    def start_time_before_end_time(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every start_time is before end_time."""
         is_valid = df[Columns.START_TIME] < df[Columns.END_TIME]
         is_valid = cast("Series[bool]", is_valid)
@@ -559,12 +621,12 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
     form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key.
     site_id: Index[str] = SITE_ID_FIELD()
+    #: The arrival time of the investigation.
+    arrival_time: Series[str] = partial(_ARRIVAL_TIME_FIELD, coerce=True)
     #: Whether the outfall was dry.
     dry_outfall: Series[bool] = partial(_DRY_OUTFALL_FIELD, coerce=True)
     #: The bottle number. Nullable, but only if `dry_outfall` is true.
     bottle_no: Series[str] = partial(_BOTTLE_NO_FIELD, **_NULLABLE_KWARGS)
-    #: The arrival time of the investigation.
-    arrival_time: Series[str] = partial(_ARRIVAL_TIME_FIELD, coerce=True)
     #: The flow. Nullable, but only if `dry_outfall` is false.
     flow: Series[Annotated[pd.CategoricalDtype, list(constants.Flow), True]] = partial(
         _FLOW_FIELD, **_NULLABLE_KWARGS
@@ -590,24 +652,40 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
 
     @pa.check("arrival_time", name="arrival_time_is_valid_time")
     @typechecked
-    def arrival_time_is_valid_time(cls, arrival_time: Series) -> Series[bool]:  # noqa: B902
+    def arrival_time_is_valid_time(
+        cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every `arrival_time` parses with the given format."""
         return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
 
-    @pa.dataframe_check
+    @pa.dataframe_check(
+        # TODO: Could rely on `observations_all_null_or_all_not_null` & ignore rows w/ nulls.
+        # Would save use needing to screen nulls in the check logic itself.
+        # But, better to keep checks isolated.
+        # We may end up normalizing later in a way where we can ignore rows with nulls.
+        ignore_na=False,  # Since irrelevant fields are nullable.
+        name="bottle_no_unique_by_form_id",
+    )
     @typechecked
-    def bottle_no_unique_by_form_id(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+    def bottle_no_unique_by_form_id(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every `bottle_no` is unique within each `form_id`."""
-        is_valid = (
-            df.groupby(Columns.FORM_ID)[Columns.BACTERIA_BOTTLE_NO].transform("nunique") == 1
-        )
+        is_valid = df[Columns.BACTERIA_BOTTLE_NO].isnull() | ~df[
+            df[Columns.BACTERIA_BOTTLE_NO].notnull()
+        ].duplicated(subset=[Columns.FORM_ID, Columns.BACTERIA_BOTTLE_NO], keep="first")
         is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
 
-    @pa.dataframe_check
+    @pa.dataframe_check(
+        ignore_na=False,  # Since irrelevant fields are nullable.
+        name="arrival_datetime_le_now",
+    )
     @typechecked
-    def arrival_datetime_le_now(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+    def arrival_datetime_le_now(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """Every date:arrival_time is on or before now."""
         return dataframe_checks.datetime_le_now(
             df=df,
@@ -617,10 +695,10 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
             time_format=constants.TIME_FORMAT,
         )
 
-    @pa.dataframe_check
+    @pa.dataframe_check(ignore_na=False, name="observations_all_null_or_all_not_null")
     @typechecked
     def observations_all_null_or_all_not_null(
-        cls, df: pd.DataFrame  # noqa: B902
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Observation records are either all null or all not null."""
         all_null = df[cls._OBSERVATION_COLUMNS].isnull().all(axis=1)
@@ -631,9 +709,14 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
 
         return is_valid
 
-    @pa.dataframe_check
+    @pa.dataframe_check(
+        ignore_na=False,  # Since irrelevant fields are nullable.
+        name="dry_outfall_observations_null",
+    )
     @typechecked
-    def dry_outfall_observations_null(cls, df: pd.DataFrame) -> Series[bool]:  # noqa: B902
+    def dry_outfall_observations_null(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
         """If dry outfall, then null observations. Otherwise, non-null observations."""
         all_null = df[cls._OBSERVATION_COLUMNS].isnull().all(axis=1)
         all_nonnull = df[cls._OBSERVATION_COLUMNS].notnull().all(axis=1)
