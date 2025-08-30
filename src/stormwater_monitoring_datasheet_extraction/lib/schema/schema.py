@@ -449,7 +449,7 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     tide_time: Series[str] = partial(_TIDE_TIME_FIELD, coerce=True)
     #: The past 24-hour rainfall.
     # TODO: Make equality check subject to inclusive rule in data definition.
-    # - Use helper to set kwargs.
+    # - Use helper to set kwargs as constant.
     past_24hr_rainfall: Series[float] = partial(
         _PAST_24HR_RAINFALL_FIELD,
         coerce=True,
@@ -639,7 +639,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check(
-        # TODO: Could rely on `observations_all_null_or_all_not_null` & ignore rows w/ nulls.
+        # NOTE: Could rely on `observations_all_null_or_all_not_null` & ignore rows w/ nulls.
         # Would save use needing to screen nulls in the check logic itself.
         # But, better to keep checks isolated.
         # We may end up normalizing later in a way where we can ignore rows with nulls.
