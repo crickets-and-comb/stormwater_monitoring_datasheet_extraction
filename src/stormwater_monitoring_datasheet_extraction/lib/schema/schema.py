@@ -29,6 +29,17 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
 #   arrival_time,
 #   dry_outfall
 #
+# QuantitativeObservations:
+#   form_id (PK, FK to ObservationMetadata.form_id),
+#   bottle_no (PK),
+#   tide_height,
+#   tide_time,
+#   ...
+#
+# We don't know whether bottle numbers are unique across extractions, so we assume it's only
+# unique by form, needing to include form_id in the QuantitativeObservations.
+# Otherwise, if bottle_no is unique across forms, we'd join on form_id instead:
+#
 # FormBottle:
 #   form_id (PK, FK to QuantitativeObservations.form_id),
 #   bottle_no (PK)
@@ -39,21 +50,13 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
 #   tide_time,
 #   ...
 #
-# We don't know whether bottle numbers are unique across extractions, so we assume it's only
-# unique by form, needing to join on form_id.
-# Otherwise, we'd join on site_id instead:
-#
-# SiteBottle: (Instead of FormBottle)
-#   site_id (PK, FK to ObservationMetadata.site_id),
-#   bottle_no (PK)
-#
 # In either case, we still need to check that bottle_no is always null for dry
 # outfalls and never null for wet outfalls.
 # TODO (reiterated): We should normalize, and do it in the JSON definition, too.
 # But, we don't need it to demo, and we need to know how bottle_no is unique.
 #
 # NOTE: dry_outfall could be split into its own table for semantic organization
-# and to further reduce its space by limiting its records to only dry outfalls.
+# and to further reduce sparseness by limiting its records to only dry outfalls.
 #
 # DryOutfalls:
 #   form_id (PK, FK to ObservationMetadata.form_id),
