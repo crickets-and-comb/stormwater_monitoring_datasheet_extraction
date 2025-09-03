@@ -455,11 +455,9 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     past_24hr_rainfall: Series[float] = partial(
         _PAST_24HR_RAINFALL_FIELD,
         coerce=True,
-        greater_than_or_equal_to={
-            "min_value": FIELD_DATA_DEFINITION[Columns.METADATA][Columns.PAST_24HR_RAINFALL][
-                Columns.LOWER
-            ][Columns.VALUE]
-        },
+        greater_than_or_equal_to=FIELD_DATA_DEFINITION[Columns.METADATA][
+            Columns.PAST_24HR_RAINFALL
+        ][Columns.LOWER][Columns.VALUE],
     )
     #: The weather at the time of observations.
     # TODO: Are we going to make weather ordered?
