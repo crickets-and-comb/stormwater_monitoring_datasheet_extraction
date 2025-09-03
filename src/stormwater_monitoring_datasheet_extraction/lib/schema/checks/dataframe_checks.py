@@ -24,7 +24,7 @@ def datetime_lt_now(
         date_format: The format string for parsing the date.
         time_format: The format string for parsing the time.
 
-    Return:
+    Returns:
         A boolean Series indicating whether each date:time is on or before now.
     """
     dt_df = df[[date_col, time_col]].copy()
