@@ -182,7 +182,9 @@ _SPS_MICRO_S_PER_CM_FIELD: Final[Callable] = partial(
 _SALINITY_PPT_FIELD: Final[Callable] = partial(
     pa.Field, alias=Columns.SALINITY_PPT, n_failure_cases=constants.N_FAILURE_CASES
 )
-_PH_FIELD: Final[Callable] = partial(pa.Field, alias=Columns.PH)
+_PH_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.PH, n_failure_cases=constants.N_FAILURE_CASES
+)
 
 # Qualitative site observations: color, odor, visual.
 _OBSERVATION_TYPE_FIELD: Final[Callable] = partial(
