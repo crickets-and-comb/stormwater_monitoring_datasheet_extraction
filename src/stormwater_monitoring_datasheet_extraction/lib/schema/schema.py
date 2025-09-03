@@ -651,9 +651,9 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Every `bottle_no` is unique within each `form_id`."""
-        is_valid = df[Columns.BACTERIA_BOTTLE_NO].isnull() | ~df[
-            df[Columns.BACTERIA_BOTTLE_NO].notnull()
-        ].duplicated(subset=[Columns.FORM_ID, Columns.BACTERIA_BOTTLE_NO], keep="first")
+        is_valid = df[Columns.BACTERIA_BOTTLE_NO].isnull() | ~df.duplicated(
+            subset=[Columns.FORM_ID, Columns.BACTERIA_BOTTLE_NO], keep="first"
+        )
         is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
