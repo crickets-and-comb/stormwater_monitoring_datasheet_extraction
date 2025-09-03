@@ -37,36 +37,27 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
 #   ...
 #
 # We don't know whether bottle numbers are unique across extractions, so we assume it's only
-# unique by form, needing to include form_id in the QuantitativeObservations.
-# Otherwise, if bottle_no is unique across forms, we'd join on form_id instead:
-#
-# FormBottle:
-#   form_id (PK, FK to QuantitativeObservations.form_id),
-#   bottle_no (PK)
-#
-# QuantitativeObservations:
-#   bottle_no (PK),
-#   tide_height,
-#   tide_time,
-#   ...
+# unique by form, needing to include form_id in the QuantitativeObservations primary key.
+# Otherwise, we'd not inlcude form_id in the PK, but just as a regular foreign key.
 #
 # In either case, we still need to check that bottle_no is always null for dry
 # outfalls and never null for wet outfalls.
-# TODO (reiterated): We should normalize, and do it in the JSON definition, too.
-# But, we don't need it to demo, and we need to know how bottle_no is unique.
 #
-# NOTE: dry_outfall could be split into its own table for semantic organization
+# dry_outfall could/should be split into its own table for semantic organization
 # and to further reduce sparseness by limiting its records to only dry outfalls.
 #
 # DryOutfalls:
 #   form_id (PK, FK to ObservationMetadata.form_id),
 #   site_id (PK, FK to ObservationMetadata.site_id)
 #
-# But, that doesn't do a whole lot,
-# and it adds some processing to translate to other structures.
+# That doesn't do a whole lot for us up front, and it adds some processing to translate
+# to other structures. But, avoids pitfalls later and may ease standardization between
+# form types.
 #
-# Or, could add to the QualitativeObservations table if they're independent of dryness.
-# TODO: Should qualitative observations be (non)null depending on dryness, too?
+# Or, could add to the QualitativeObservations table since they're independent of dryness.
+#
+# So, we should normalize, and do it in the JSON definition, too.
+# But, we don't need it to demo, and we need to know how bottle_no is unique.
 
 # NOTE: Validations should be lax for extraction, stricter after cleaning,
 # stricter after user verification, and strictest after final cleaning.
