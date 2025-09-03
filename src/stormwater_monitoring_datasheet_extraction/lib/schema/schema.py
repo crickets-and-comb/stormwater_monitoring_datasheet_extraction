@@ -684,7 +684,7 @@ class SiteObservationsVerified(SiteObservationsPrecleaned):
         all_null = df[cls._OBSERVATION_COLUMNS].isnull().all(axis=1)
         all_nonnull = df[cls._OBSERVATION_COLUMNS].notnull().all(axis=1)
 
-        is_valid = (df[Columns.DRY_OUTFALL] is True) & all_null | all_nonnull
+        is_valid = ((df[Columns.DRY_OUTFALL] is True) & all_null) | all_nonnull
         is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
