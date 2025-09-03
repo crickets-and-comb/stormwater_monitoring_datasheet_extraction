@@ -466,7 +466,7 @@ class FormMetadataVerified(FormMetadataPrecleaned):
     )
     #: Investigator notes.
     notes: Series[str] = partial(
-        _NOTES_FIELD, **_NULLABLE_KWARGS, str_length={"max": constants.CharLimits.NOTES}
+        _NOTES_FIELD, **_NULLABLE_KWARGS, str_length={"max_value": constants.CharLimits.NOTES}
     )
 
     @pa.check("date", name="date_le_today")
