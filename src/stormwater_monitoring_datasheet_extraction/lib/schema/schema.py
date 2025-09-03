@@ -54,8 +54,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
 # to other structures. But, avoids pitfalls later and may ease standardization between
 # form types.
 #
-# Or, could add to the QualitativeObservations table since they're independent of dryness.
-#
 # So, we should normalize, and do it in the JSON definition, too.
 # But, we don't need it to demo, and we need to know how bottle_no is unique.
 
