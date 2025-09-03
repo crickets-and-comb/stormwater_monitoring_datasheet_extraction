@@ -33,7 +33,7 @@ def is_valid_date(series: Series, date_format: str) -> Series[bool]:
 def date_le_today(series: Series) -> Series[bool]:
     """Every date is on or before today."""
     parsed = pd.to_datetime(series, errors="coerce")
-    is_valid = parsed.notna() and parsed <= pd.Timestamp.today()
+    is_valid = (parsed.notna()) and (parsed <= pd.Timestamp.today())
     is_valid = cast("Series[bool]", is_valid)
     return is_valid
 
