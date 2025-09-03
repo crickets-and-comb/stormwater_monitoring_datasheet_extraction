@@ -28,13 +28,10 @@ def datetime_lt_now(
         A boolean Series indicating whether each date:time is on or before now.
     """
     dt_df = df[[date_col, time_col]].copy()
-    dt_df[date_col] = pd.to_datetime(dt_df[date_col], format=date_format, errors="coerce")
-    dt_df[time_col] = pd.to_datetime(dt_df[time_col], format=time_format, errors="coerce")
     dt_df["date_time_series"] = pd.to_datetime(
-        dt_df[date_col].dt.strftime("%Y-%m-%d")
-        + " "
-        + dt_df[time_col].dt.strftime("%H:%M:%S"),
-        format="%Y-%m-%d %H:%M:%S",
+        dt_df[date_col] + " " + dt_df[time_col],
+        format=f"{date_format} {time_format}",
+        errors="coerce",
     )
     now = pd.Timestamp.now()
 
