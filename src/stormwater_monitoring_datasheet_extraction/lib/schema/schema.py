@@ -558,7 +558,11 @@ class InvestigatorsVerified(InvestigatorsPrecleaned):
     ) -> Series[bool]:
         """Every start_time is before end_time."""
         # TODO: Make this robust to midnight observations.
-        is_valid = df[Columns.START_TIME] < df[Columns.END_TIME]
+        is_valid = pd.to_datetime(
+            df[Columns.START_TIME], format=constants.TIME_FORMAT, errors="coerce"
+        ) < pd.to_datetime(
+            df[Columns.END_TIME], format=constants.TIME_FORMAT, errors="coerce"
+        )
         is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
