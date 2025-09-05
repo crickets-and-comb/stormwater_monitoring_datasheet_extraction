@@ -10,6 +10,7 @@ class CharLimits:
     """Character limits for fields."""
 
     DESCRIPTION: Final[int] = 250
+    NOTES: Final[int] = 500
 
 
 class City(StrEnum):
@@ -175,9 +176,11 @@ class Weather(StrEnum):
 
 
 # TODO: Make custom date and time classes with __str__ and __repr__
-# to handle errors better.
+# to handle errors better?
 DATE_FORMAT: Final[str] = "YYYY-MM-DD"
 TIME_FORMAT: Final[str] = "HH:MM"
+
+N_FAILURE_CASES: Final[int] = 5
 
 # TODO: Version data definitions by form type and version.
 FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
@@ -235,9 +238,9 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
             Columns.OBSERVATIONS: [
                 {
                     Columns.SITE_ID: str,
-                    Columns.BACTERIA_BOTTLE_NO: str,
-                    Columns.DRY_OUTFALL: bool,
                     Columns.ARRIVAL_TIME: str,
+                    Columns.DRY_OUTFALL: bool,
+                    Columns.BACTERIA_BOTTLE_NO: str,
                     Columns.FLOW: Flow,
                     Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected,
                     Columns.AIR_TEMP: float,
@@ -279,7 +282,10 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
             Columns.END_TIME: {Columns.FORMAT: TIME_FORMAT},
             Columns.START_TIME: {Columns.FORMAT: TIME_FORMAT},
         },
-        Columns.PAST_24HR_RAINFALL: {Columns.UNITS: Units.INCHES},
+        Columns.PAST_24HR_RAINFALL: {
+            Columns.UNITS: Units.INCHES,
+            Columns.LOWER: {Columns.VALUE: 0, Columns.INCLUSIVE: True},
+        },
         Columns.TIDE_HEIGHT: {Columns.UNITS: Units.FEET},
         Columns.TIDE_TIME: {Columns.FORMAT: TIME_FORMAT},
         Columns.WEATHER: {
@@ -532,9 +538,9 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                 Columns.OBSERVATIONS: [
                     {
                         Columns.SITE_ID: "C ST",
-                        Columns.BACTERIA_BOTTLE_NO: "B1",
-                        Columns.DRY_OUTFALL: False,
                         Columns.ARRIVAL_TIME: "14:41",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.BACTERIA_BOTTLE_NO: "B1",
                         Columns.FLOW: Flow.M,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                         Columns.AIR_TEMP: 21.0,
@@ -558,9 +564,9 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                     },
                     {
                         Columns.SITE_ID: "C ST",
-                        Columns.BACTERIA_BOTTLE_NO: "B2",
-                        Columns.DRY_OUTFALL: False,
                         Columns.ARRIVAL_TIME: "14:41",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.BACTERIA_BOTTLE_NO: "B2",
                         Columns.FLOW: Flow.M,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                         Columns.AIR_TEMP: 21.0,
@@ -584,9 +590,9 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                     },
                     {
                         Columns.SITE_ID: "BROADWAY",
-                        Columns.BACTERIA_BOTTLE_NO: "B3",
-                        Columns.DRY_OUTFALL: False,
                         Columns.ARRIVAL_TIME: "15:09",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.BACTERIA_BOTTLE_NO: "B3",
                         Columns.FLOW: Flow.M,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                         Columns.AIR_TEMP: 22.0,
@@ -628,9 +634,9 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                 Columns.OBSERVATIONS: [
                     {
                         Columns.SITE_ID: "PADDEN",
-                        Columns.BACTERIA_BOTTLE_NO: "B5",
-                        Columns.DRY_OUTFALL: False,
                         Columns.ARRIVAL_TIME: "17:10",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.BACTERIA_BOTTLE_NO: "B5",
                         Columns.FLOW: Flow.H,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                         Columns.AIR_TEMP: 16,
@@ -654,9 +660,9 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                     },
                     {
                         Columns.SITE_ID: "BENASFASDF",
-                        Columns.BACTERIA_BOTTLE_NO: "B6",
-                        Columns.DRY_OUTFALL: False,
                         Columns.ARRIVAL_TIME: "17:33",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.BACTERIA_BOTTLE_NO: "B6",
                         Columns.FLOW: Flow.H,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                         Columns.AIR_TEMP: 18,
@@ -680,9 +686,9 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                     },
                     {
                         Columns.SITE_ID: "BEPSODF72",
-                        Columns.BACTERIA_BOTTLE_NO: "B7",
-                        Columns.DRY_OUTFALL: False,
                         Columns.ARRIVAL_TIME: "17:40",
+                        Columns.DRY_OUTFALL: False,
+                        Columns.BACTERIA_BOTTLE_NO: "B7",
                         Columns.FLOW: Flow.H,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
                         Columns.AIR_TEMP: None,
