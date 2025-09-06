@@ -96,16 +96,13 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
 @pa.check_types(with_pydantic=True, lazy=True)
 def extract(
     input_dir: Path,
-):
-    # def extract(
-    #     input_dir: Path,
-    # ) -> tuple[
-    #     pt.DataFrame[schema.FormExtracted],
-    #     pt.DataFrame[schema.FormInvestigatorExtracted],
-    #     pt.DataFrame[schema.SiteVisitExtracted],
-    #     pt.DataFrame[schema.QuantitativeObservationsExtracted],
-    #     pt.DataFrame[schema.QualitativeObservationsExtracted],
-    # ]:
+) -> tuple[
+    pt.DataFrame[schema.FormExtracted],
+    pd.DataFrame,#pt.DataFrame[schema.FormInvestigatorExtracted],
+    pd.DataFrame,#pt.DataFrame[schema.SiteVisitExtracted],
+    pd.DataFrame,#pt.DataFrame[schema.QuantitativeObservationsExtracted],
+    pd.DataFrame,#pt.DataFrame[schema.QualitativeObservationsExtracted],
+]:
     """Extracts data from the images in the input directory.
 
     Using computer vision, extracts data from datasheets.
