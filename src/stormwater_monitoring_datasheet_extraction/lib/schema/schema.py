@@ -2,23 +2,22 @@
 
 from collections.abc import Callable
 from functools import partial
-# from typing import Annotated, Final, cast
-from typing import Final
+from typing import Annotated, Final, cast
 
-# import pandas as pd
+import pandas as pd
 import pandera as pa
 from pandera.typing import Index, Series
-# from typeguard import typechecked
+from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib import constants
 from stormwater_monitoring_datasheet_extraction.lib.constants import (
-    # FIELD_DATA_DEFINITION,
+    FIELD_DATA_DEFINITION,
     Columns,
 )
-# from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
-#     dataframe_checks,
-#     field_checks,
-# )
+from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
+    dataframe_checks,
+    field_checks,
+)
 
 # TODO: Are null descriptions allowed for non-zero, non-null ranks (1-3)?
 # Are non-null descriptions allowed for 0 ranks?
@@ -46,7 +45,7 @@ _LAX_KWARGS: Final[dict] = {
     "raise_warning": True,
     "unique": False,
 }
-# _NULLABLE_KWARGS: Final[dict] = {"coerce": True, "nullable": True}
+_NULLABLE_KWARGS: Final[dict] = {"coerce": True, "nullable": True}
 
 
 # Form metadata.
@@ -91,74 +90,74 @@ _WEATHER_FIELD: Final[Callable] = partial(
     pa.Field, alias=Columns.WEATHER, n_failure_cases=constants.N_FAILURE_CASES
 )
 
-# # FormInvestigator.
-# _INVESTIGATOR_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.INVESTIGATOR, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _START_TIME_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.START_TIME, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _END_TIME_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.END_TIME, n_failure_cases=constants.N_FAILURE_CASES
-# )
+# FormInvestigator.
+_INVESTIGATOR_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.INVESTIGATOR, n_failure_cases=constants.N_FAILURE_CASES
+)
+_START_TIME_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.START_TIME, n_failure_cases=constants.N_FAILURE_CASES
+)
+_END_TIME_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.END_TIME, n_failure_cases=constants.N_FAILURE_CASES
+)
 
-# # Qunatitative observations.
-# _SITE_ID_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.SITE_ID, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# SITE_ID_FIELD_LAX: Final[Callable] = partial(_SITE_ID_FIELD, **_LAX_KWARGS)
-# SITE_ID_FIELD: Final[Callable] = partial(
-#     _SITE_ID_FIELD, coerce=True, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _BOTTLE_NO_FIELD: Final[Callable] = partial(
-#     pa.Field,
-#     alias=Columns.BACTERIA_BOTTLE_NO,
-#     n_failure_cases=constants.N_FAILURE_CASES,
-# )
-# _ARRIVAL_TIME_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.ARRIVAL_TIME, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _FLOW_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.FLOW, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _FLOW_COMPARED_TO_EXPECTED_FIELD: Final[Callable] = partial(
-#     pa.Field,
-#     alias=Columns.FLOW_COMPARED_TO_EXPECTED,
-#     n_failure_cases=constants.N_FAILURE_CASES,
-# )
-# _AIR_TEMP_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.AIR_TEMP, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _WATER_TEMP_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.WATER_TEMP, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _DO_MG_PER_L_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.DO_MG_PER_L, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _SPS_MICRO_S_PER_CM_FIELD: Final[Callable] = partial(
-#     pa.Field,
-#     alias=Columns.SPS_MICRO_S_PER_CM,
-#     n_failure_cases=constants.N_FAILURE_CASES,
-# )
-# _SALINITY_PPT_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.SALINITY_PPT, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _PH_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.PH, n_failure_cases=constants.N_FAILURE_CASES
-# )
+# Qunatitative observations.
+_SITE_ID_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.SITE_ID, n_failure_cases=constants.N_FAILURE_CASES
+)
+SITE_ID_FIELD_LAX: Final[Callable] = partial(_SITE_ID_FIELD, **_LAX_KWARGS)
+SITE_ID_FIELD: Final[Callable] = partial(
+    _SITE_ID_FIELD, coerce=True, n_failure_cases=constants.N_FAILURE_CASES
+)
+_BOTTLE_NO_FIELD: Final[Callable] = partial(
+    pa.Field,
+    alias=Columns.BACTERIA_BOTTLE_NO,
+    n_failure_cases=constants.N_FAILURE_CASES,
+)
+_ARRIVAL_TIME_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.ARRIVAL_TIME, n_failure_cases=constants.N_FAILURE_CASES
+)
+_FLOW_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.FLOW, n_failure_cases=constants.N_FAILURE_CASES
+)
+_FLOW_COMPARED_TO_EXPECTED_FIELD: Final[Callable] = partial(
+    pa.Field,
+    alias=Columns.FLOW_COMPARED_TO_EXPECTED,
+    n_failure_cases=constants.N_FAILURE_CASES,
+)
+_AIR_TEMP_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.AIR_TEMP, n_failure_cases=constants.N_FAILURE_CASES
+)
+_WATER_TEMP_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.WATER_TEMP, n_failure_cases=constants.N_FAILURE_CASES
+)
+_DO_MG_PER_L_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.DO_MG_PER_L, n_failure_cases=constants.N_FAILURE_CASES
+)
+_SPS_MICRO_S_PER_CM_FIELD: Final[Callable] = partial(
+    pa.Field,
+    alias=Columns.SPS_MICRO_S_PER_CM,
+    n_failure_cases=constants.N_FAILURE_CASES,
+)
+_SALINITY_PPT_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.SALINITY_PPT, n_failure_cases=constants.N_FAILURE_CASES
+)
+_PH_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.PH, n_failure_cases=constants.N_FAILURE_CASES
+)
 
-# # Qualitative observations: color, odor, visual.
-# _OBSERVATION_TYPE_FIELD: Final[Callable] = partial(
-#     pa.Field,
-#     alias=Columns.OBSERVATION_TYPE,
-#     n_failure_cases=constants.N_FAILURE_CASES,
-# )
-# _RANK_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.RANK, n_failure_cases=constants.N_FAILURE_CASES
-# )
-# _DESCRIPTION_FIELD: Final[Callable] = partial(
-#     pa.Field, alias=Columns.DESCRIPTION, n_failure_cases=constants.N_FAILURE_CASES
-# )
+# Qualitative observations: color, odor, visual.
+_OBSERVATION_TYPE_FIELD: Final[Callable] = partial(
+    pa.Field,
+    alias=Columns.OBSERVATION_TYPE,
+    n_failure_cases=constants.N_FAILURE_CASES,
+)
+_RANK_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.RANK, n_failure_cases=constants.N_FAILURE_CASES
+)
+_DESCRIPTION_FIELD: Final[Callable] = partial(
+    pa.Field, alias=Columns.DESCRIPTION, n_failure_cases=constants.N_FAILURE_CASES
+)
 
 
 class FormExtracted(pa.DataFrameModel):
@@ -203,643 +202,643 @@ class FormExtracted(pa.DataFrameModel):
         strict = False
 
 
-# class FormInvestigatorExtracted(pa.DataFrameModel):
-#     """Investigators on each form extracted from the datasheets.
+class FormInvestigatorExtracted(pa.DataFrameModel):
+    """Investigators on each form extracted from the datasheets.
 
+    Constraints:
+        PK: `form_id`, `investigator` (unenforced).
+        FK: `form_id`: `Form.form_id` (unenforced).
+    """
+
+    #: The form ID.
+    form_id: Index[str] = FORM_ID_FIELD()
+    #: The investigator, part of the primary key, but nullable at this stage.
+    investigator: Index[str] = partial(_INVESTIGATOR_FIELD, **_LAX_KWARGS)
+    #: The start time of the investigation. Nullable.
+    start_time: Series[str] = partial(_START_TIME_FIELD, **_LAX_KWARGS)
+    #: The end time of the investigation. Nullable.
+    end_time: Series[str] = partial(_END_TIME_FIELD, **_LAX_KWARGS)
+
+    class Config:
+        """The configuration for the schema.
+
+        Not a strict schema at this stage since it's the "raw" extracted data.
+        """
+
+        multiindex_strict = False
+        multiindex_unique = False
+        strict = False
+
+
+# TODO: Create a constant using this schema.
+# class Site(pa.DataFrameModel):
+#     """Site metadata.
+#
 #     Constraints:
-#         PK: `form_id`, `investigator` (unenforced).
-#         FK: `form_id`: `Form.form_id` (unenforced).
+#         PK: `site_id`.
 #     """
-
-#     #: The form ID.
-#     form_id: Index[str] = FORM_ID_FIELD()
-#     #: The investigator, part of the primary key, but nullable at this stage.
-#     investigator: Index[str] = partial(_INVESTIGATOR_FIELD, **_LAX_KWARGS)
-#     #: The start time of the investigation. Nullable.
-#     start_time: Series[str] = partial(_START_TIME_FIELD, **_LAX_KWARGS)
-#     #: The end time of the investigation. Nullable.
-#     end_time: Series[str] = partial(_END_TIME_FIELD, **_LAX_KWARGS)
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Not a strict schema at this stage since it's the "raw" extracted data.
-#         """
-
-#         multiindex_strict = False
-#         multiindex_unique = False
-#         strict = False
-
-
-# # TODO: Create a constant using this schema.
-# # class Site(pa.DataFrameModel):
-# #     """Site metadata.
-# #
-# #     Constraints:
-# #         PK: `site_id`.
-# #     """
-# #
-# #     #: The site ID, sole primary key.
-# #     site_id: Index[str] = SITE_ID_FIELD()
-# #     #: The outfall type. Nullable. Unenforced `constants.OutfallType`.
-# #     outfall_type: Series[constants.OutfallType] = partial(
-# #         pa.Field,
-# #         alias=Columns.OUTFALL_TYPE,
-# #         nullable=False,
-# #         n_failure_cases=constants.N_FAILURE_CASES,
-# #     )
-# #
-# #     class Config:
-# #         """The configuration for the schema.
-# #
-# #         Strict schema enforcement.
-# #         """
-# #
-# #         multiindex_strict = True
-# #         multiindex_unique = True
-# #         strict = True
-
-
-# class SiteVisitExtracted(pa.DataFrameModel):
-#     """Site visit extracted.
-
-#     All site visits, including dry outfalls with no observations.
-
-#     Constraints:
-#         PK: `form_id`, `site_id` (unenforced).
-#         FK: `form_id`: `Form.form_id` (unenforced).
-#         FK: `site_id`: `Site.site_id` (unenforced).
-#     """
-
-#     # TODO: May need to loosen the typehints.
-#     #: The form ID.
-#     form_id: Index[str] = FORM_ID_FIELD()
-#     #: The site ID, part of the primary key, but nullable at this stage.
-#     site_id: Index[str] = SITE_ID_FIELD_LAX()
-#     #: The arrival time of the investigation. Nullable.
-#     arrival_time: Series[str] = partial(_ARRIVAL_TIME_FIELD, **_LAX_KWARGS)
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Not a strict schema at this stage since it's the "raw" extracted data.
-#         """
-
-#         multiindex_strict = False
-#         multiindex_unique = False
-#         strict = False
-
-
-# class QuantitativeObservationsExtracted(pa.DataFrameModel):
-#     """Quantitative observations extracted.
-
-#     All site visits excluding for dry outfalls.
-
-#     Constraints:
-#         PK: `form_id`, `site_id` (unenforced).
-#         FK: `form_id`, `site_id`: SiteVisit(form_id, site_id) (unenforced).
-#         Unique: `form_id`, `bottle_no` (unenforced).
-#     """
-
-#     # TODO: May need to loosen the typehints.
-#     #: The form ID.
-#     form_id: Index[str] = FORM_ID_FIELD()
-#     #: The site ID, part of the primary key, but nullable at this stage.
-#     site_id: Index[str] = SITE_ID_FIELD_LAX()
-#     #: The bottle number.
-#     bottle_no: Series[str] = partial(_BOTTLE_NO_FIELD, **_LAX_KWARGS)
-#     #: The flow. Unenforced `constants.Flow`.
-#     flow: Series[constants.Flow] = partial(_FLOW_FIELD, **_LAX_KWARGS)
-#     #: The flow compared to expected. Unenforced `constants.FlowComparedToExpected`.
-#     flow_compared_to_expected: Series[constants.FlowComparedToExpected] = partial(
-#         _FLOW_COMPARED_TO_EXPECTED_FIELD, **_LAX_KWARGS
-#     )
-#     #: The air temperature.
-#     air_temp: Series[float] = partial(_AIR_TEMP_FIELD, **_LAX_KWARGS)
-#     #: The water temperature.
-#     water_temp: Series[float] = partial(_WATER_TEMP_FIELD, **_LAX_KWARGS)
-#     #: The dissolved oxygen.
-#     DO_mg_per_l: Series[float] = partial(_DO_MG_PER_L_FIELD, **_LAX_KWARGS)
-#     #: The specific conductance.
-#     SPS_micro_S_per_cm: Series[float] = partial(_SPS_MICRO_S_PER_CM_FIELD, **_LAX_KWARGS)
-#     #: The salinity. Nullable.
-#     salinity_ppt: Series[float] = partial(_SALINITY_PPT_FIELD, **_LAX_KWARGS)
-#     #: The pH. Nullable.
-#     pH: Series[float] = partial(_PH_FIELD, **_LAX_KWARGS)
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Not a strict schema at this stage since it's the "raw" extracted data.
-#         """
-
-#         multiindex_strict = False
-#         multiindex_unique = False
-#         strict = False
-
-
-# class QualitativeObservationsExtracted(pa.DataFrameModel):
-#     """Qualitative site observations extracted from the datasheets.
-
-#     Only wet outfalls, but not necessarily all visits.
-
-#     Constraints:
-#         PK: `form_id`, `site_id`, `type` (unenforced).
-#         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
-#     """
-
-#     # TODO: May need to loosen the typehints.
-#     #: The form ID.
-#     form_id: Index[str] = FORM_ID_FIELD()
-#     #: The site ID, part of the primary key, but nullable at this stage.
-#     site_id: Series[str] = SITE_ID_FIELD_LAX()
-#     #: The observation type. Nullable. Unenforced `constants.QualitativeSiteObservationTypes`.
-#     type: Series[constants.QualitativeSiteObservationTypes] = partial(
-#         _OBSERVATION_TYPE_FIELD, **_LAX_KWARGS
-#     )
-#     #: The rank of the observation. Nullable. Unenforced `constants.Rank`.
-#     rank: Series[constants.Rank] = partial(_RANK_FIELD, **_LAX_KWARGS)
-#     #: The description of the observation. Nullable.
-#     description: Series[str] = partial(_DESCRIPTION_FIELD, **_LAX_KWARGS)
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Not a strict schema at this stage since it's the "raw" extracted data.
-#         """
-
-#         multiindex_strict = False
-#         multiindex_unique = False
-#         strict = False
-
-
-# class FormPrecleaned(FormExtracted):
-#     """Form metadata precleaned.
-
-#     Constraints:
-#         PK: `form_id`.
-#     """
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Adds missing columns, drops extra columns, enforces primary key.
-#         """
-
-#         add_missing_columns = True
-#         multiindex_strict = "filter"
-#         multiindex_unique = True
-#         strict = "filter"
-
-
-# class FormInvestigatorPrecleaned(FormInvestigatorExtracted):
-#     """Schema for the investigators precleaned.
-
-#     PK: `form_id`, `investigator` (unenforced).
-#     FK: `form_id`: `Form.form_id` (unenforced).
-#     """
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Adds missing columns, drops extra columns.
-#         """
-
-#         add_missing_columns = True
-#         multiindex_strict = "filter"
-#         strict = "filter"
-
-
-# class SiteVisitPrecleaned(SiteVisitExtracted):
-#     """Site visit precleaned.
-
-#     All site visits, including dry outfalls with no observations.
-
-#     Constraints:
-#         PK: `form_id`, `site_id` (unenforced).
-#         FK: `form_id`: `Form.form_id` (unenforced).
-#         FK: `site_id`: `Site.site_id` (unenforced).
-#     """
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Adds missing columns, drops extra columns.
-#         """
-
-#         add_missing_columns = True
-#         multiindex_strict = "filter"
-#         strict = "filter"
-
-
-# class QuantitativeObservationsPrecleaned(QuantitativeObservationsExtracted):
-#     """Quantitative observations precleaned.
-
-#     All site visits excluding for dry outfalls.
-
-#     Constraints:
-#         PK: `form_id`, `site_id` (unenforced).
-#         FK: `form_id`, `site_id`: SiteVisit(form_id, site_id) (unenforced).
-#         Unique: `form_id`, `bottle_no` (unenforced).
-#     """
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Adds missing columns, drops extra columns.
-#         """
-
-#         add_missing_columns = True
-#         multiindex_strict = "filter"
-#         strict = "filter"
-
-
-# class QualitativeObservationsPrecleaned(QualitativeObservationsExtracted):
-#     """Qualitative site observations precleaned.
-
-#     Only wet outfalls, but not necessarily all visits.
-
-#     Constraints:
-#         PK: `form_id`, `site_id`, `type` (unenforced).
-#         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
-#     """
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Adds missing columns, drops extra columns.
-#         """
-
-#         add_missing_columns = True
-#         multiindex_strict = "filter"
-#         strict = "filter"
-
-
-# class FormVerified(FormPrecleaned):
-#     """Form metadata verified by the user.
-
-#     Constraints:
-#         PK: `form_id`.
-#     """
-
-#     #: The form type.
-#     form_type: Series[Annotated[pd.CategoricalDtype, list(constants.FormType), False]] = (
-#         partial(_FORM_TYPE_FIELD, coerce=True)
-#     )
-#     #: The form version.
-#     form_version: Series[str] = partial(_FORM_VERSION_FIELD, coerce=True)
-#     # TODO: Maybe we might as well cast to datetime at this step.
-#     # date: Series[pa.DateTime] = partial(
-#     # TODO: Make sure we can do multiline docstring comments like this.
-#     #: The date of observations. Must be "YYYY-MM-DD", on or before today.
-#     #: `date` and `tide_time` must be on or before now.
-#     date: Series[str] = partial(_DATE_FIELD, coerce=True)
-#     #: The city of observations.
-#     city: Series[Annotated[pd.CategoricalDtype, list(constants.City), False]] = partial(
-#         _CITY_FIELD, coerce=True
-#     )
-#     #: The tide height at the time of observations.
-#     tide_height: Series[float] = partial(_TIDE_HEIGHT_FIELD, coerce=True)
-#     #: The tide time at the time of observations. Must be "HH:MM".
-#     #: `date` and `tide_time` must be before now.
-#     tide_time: Series[str] = partial(_TIDE_TIME_FIELD, coerce=True)
-#     #: The past 24-hour rainfall.
-#     # TODO: Make equality check subject to inclusive rule in data definition.
-#     # - Use helper to set kwargs as constant.
-#     past_24hr_rainfall: Series[float] = partial(
-#         _PAST_24HR_RAINFALL_FIELD,
-#         coerce=True,
-#         greater_than_or_equal_to=FIELD_DATA_DEFINITION[Columns.METADATA][
-#             Columns.PAST_24HR_RAINFALL
-#         ][Columns.LOWER][Columns.VALUE],
-#     )
-#     #: The weather at the time of observations.
-#     # TODO: Are we going to make weather ordered?
-#     weather: Series[Annotated[pd.CategoricalDtype, list(constants.Weather), True]] = partial(
-#         _WEATHER_FIELD, coerce=True
-#     )
-#     #: Investigator notes.
-#     notes: Series[str] = partial(
-#         _NOTES_FIELD, **_NULLABLE_KWARGS, str_length={"max_value": constants.CharLimits.NOTES}
-#     )
-
-#     @pa.check("date", name="date_le_today")
-#     @typechecked
-#     def date_le_today(
-#         cls, date: Series  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every date is on or before today."""
-#         return field_checks.date_le_today(series=date)
-
-#     @pa.check("date", name="is_valid_date")
-#     @typechecked
-#     def is_valid_date(
-#         cls, date: Series  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every date parses with the given format."""
-#         return field_checks.is_valid_date(series=date, date_format=constants.DATE_FORMAT)
-
-#     @pa.check("tide_time", name="is_valid_time")
-#     @typechecked
-#     def is_valid_time(
-#         cls, tide_time: Series  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every value parses with the given format."""
-#         return field_checks.is_valid_time(series=tide_time, format=constants.TIME_FORMAT)
-
-#     @pa.dataframe_check(
-#         ignore_na=False, name="tide_datetime_le_now"  # Since irrelevant fields are nullable.
-#     )
-#     @typechecked
-#     def tide_datetime_le_now(
-#         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every date:tide_time is before now."""
-#         return dataframe_checks.datetime_lt_now(
-#             df=df,
-#             date_col=Columns.DATE,
-#             time_col=Columns.TIDE_TIME,
-#             date_format=constants.DATE_FORMAT,
-#             time_format=constants.TIME_FORMAT,
-#         )
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Strict schema, enforces primary key.
-#         """
-
-#         add_missing_columns = False
-#         multiindex_strict = True
-#         strict = True
-
-
-# class FormInvestigatorVerified(FormInvestigatorPrecleaned):
-#     """Investigators on each form verified by user.
-
-#     Constraints:
-#         PK: `form_id`, `investigator`.
-#         FK: `form_id`: `Form.form_id` (unenforced).
-#     """
-
-#     #: The form ID.
-#     form_id: Index[str] = FORM_ID_FIELD()
-#     #: The investigator.
-#     investigator: Index[str] = partial(_INVESTIGATOR_FIELD, coerce=True)
-#     #: The start time of the investigation. Must be "HH:MM".
-#     #: `start_time` must be before `end_time`.
-#     start_time: Series[str] = partial(_START_TIME_FIELD, coerce=True)
-#     #: The end time of the investigation. Must be "HH:MM".
-#     #: `start_time` must be before `end_time`.
-#     end_time: Series[str] = partial(_END_TIME_FIELD, coerce=True)
-
-#     @pa.check("start_time", name="start_time_is_valid_time")
-#     @typechecked
-#     def start_time_is_valid_time(
-#         cls, start_time: Series  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every `start_time` parses with the given format."""
-#         return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
-
-#     @pa.check("end_time", name="end_time_is_valid_time")
-#     @typechecked
-#     def end_time_is_valid_time(
-#         cls, end_time: Series  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every `end_time` parses with the given format."""
-#         return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
-
-#     @pa.dataframe_check(name="start_time_before_end_time")
-#     @typechecked
-#     def start_time_before_end_time(
-#         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every start_time is before end_time."""
-#         # TODO: Make this robust to midnight observations.
-#         is_valid = pd.to_datetime(
-#             df[Columns.START_TIME], format=constants.TIME_FORMAT, errors="coerce"
-#         ) < pd.to_datetime(
-#             df[Columns.END_TIME], format=constants.TIME_FORMAT, errors="coerce"
-#         )
-#         is_valid = cast("Series[bool]", is_valid)
-
-#         return is_valid
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Strict schema, enforces the primary key.
-#         """
-
-#         add_missing_columns = False
-#         multiindex_strict = True
-#         multiindex_unique = True
-#         strict = True
-
-
-# class SiteVisitVerified(SiteVisitPrecleaned):
-#     """Site visit verified by user.
-
-#     All site visits, including dry outfalls with no observations.
-
-#     Constraints:
-#         PK: `form_id`, `site_id`.
-#         FK: `form_id`: `Form.form_id` (unenforced).
-#         FK: `site_id`: `Site.site_id` (unenforced).
-#     """
-
-#     #: The form ID.
-#     form_id: Index[str] = FORM_ID_FIELD()
-#     #: The site ID.
+#
+#     #: The site ID, sole primary key.
 #     site_id: Index[str] = SITE_ID_FIELD()
-#     #: The arrival time of the investigation. Must be "HH:MM".
-#     arrival_time: Series[str] = partial(_ARRIVAL_TIME_FIELD, coerce=True)
-
-#     @pa.check("arrival_time", name="arrival_time_is_valid_time")
-#     @typechecked
-#     def arrival_time_is_valid_time(
-#         cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every `arrival_time` parses with the given format."""
-#         return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
-
+#     #: The outfall type. Nullable. Unenforced `constants.OutfallType`.
+#     outfall_type: Series[constants.OutfallType] = partial(
+#         pa.Field,
+#         alias=Columns.OUTFALL_TYPE,
+#         nullable=False,
+#         n_failure_cases=constants.N_FAILURE_CASES,
+#     )
+#
 #     class Config:
 #         """The configuration for the schema.
-
-#         Strict schema, enforces primary key.
+#
+#         Strict schema enforcement.
 #         """
-
-#         add_missing_columns = False
+#
 #         multiindex_strict = True
 #         multiindex_unique = True
 #         strict = True
 
 
-# class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
-#     """Quantitative observations verified by user.
+class SiteVisitExtracted(pa.DataFrameModel):
+    """Site visit extracted.
 
-#     All site visits excluding for dry outfalls.
+    All site visits, including dry outfalls with no observations.
 
-#     Constraints:
-#         PK: `form_id`, `site_id`.
-#         FK: `form_id`, `site_id`: SiteVisit(form_id, site_id) (unenforced).
-#         Unique: `form_id`, `bottle_no`.
-#     """
+    Constraints:
+        PK: `form_id`, `site_id` (unenforced).
+        FK: `form_id`: `Form.form_id` (unenforced).
+        FK: `site_id`: `Site.site_id` (unenforced).
+    """
 
-#     #: The form ID.
-#     form_id: Index[str] = FORM_ID_FIELD()
-#     #: The site ID.
-#     site_id: Index[str] = SITE_ID_FIELD()
-#     #: The bottle number.
-#     #: Must be unique within each `form_id`.
-#     bottle_no: Series[str] = partial(_BOTTLE_NO_FIELD, coerce=True)
-#     #: The flow.
-#     flow: Series[Annotated[pd.CategoricalDtype, list(constants.Flow), True]] = partial(
-#         _FLOW_FIELD, coerce=True
-#     )
-#     #: The flow compared to expected.
-#     flow_compared_to_expected: Series[
-#         Annotated[pd.CategoricalDtype, list(constants.FlowComparedToExpected), True]
-#     ] = partial(_FLOW_COMPARED_TO_EXPECTED_FIELD, coerce=True)
-#     #: The air temperature.
-#     air_temp: Series[float] = partial(_AIR_TEMP_FIELD, coerce=True)
-#     #: The water temperature.
-#     water_temp: Series[float] = partial(_WATER_TEMP_FIELD, coerce=True)
-#     #: The dissolved oxygen.
-#     DO_mg_per_l: Series[float] = partial(_DO_MG_PER_L_FIELD, coerce=True, ge=0)
-#     #: The specific conductance.
-#     SPS_micro_S_per_cm: Series[float] = partial(_SPS_MICRO_S_PER_CM_FIELD, coerce=True, ge=0)
-#     #: The salinity.
-#     salinity_ppt: Series[float] = partial(_SALINITY_PPT_FIELD, coerce=True, ge=0)
-#     #: The pH.
-#     pH: Series[float] = partial(_PH_FIELD, coerce=True, ge=0)
+    # TODO: May need to loosen the typehints.
+    #: The form ID.
+    form_id: Index[str] = FORM_ID_FIELD()
+    #: The site ID, part of the primary key, but nullable at this stage.
+    site_id: Index[str] = SITE_ID_FIELD_LAX()
+    #: The arrival time of the investigation. Nullable.
+    arrival_time: Series[str] = partial(_ARRIVAL_TIME_FIELD, **_LAX_KWARGS)
 
-#     @pa.check("arrival_time", name="arrival_time_is_valid_time")
-#     @typechecked
-#     def arrival_time_is_valid_time(
-#         cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every `arrival_time` parses with the given format."""
-#         return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
+    class Config:
+        """The configuration for the schema.
 
-#     @pa.dataframe_check(name="bottle_no_unique_by_form_id")
-#     @typechecked
-#     def bottle_no_unique_by_form_id(
-#         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
-#     ) -> Series[bool]:
-#         """Every `bottle_no` is unique within each `form_id`."""
-#         is_valid = ~df.duplicated(
-#             subset=[Columns.FORM_ID, Columns.BACTERIA_BOTTLE_NO], keep="first"
-#         )
-#         is_valid = cast("Series[bool]", is_valid)
+        Not a strict schema at this stage since it's the "raw" extracted data.
+        """
 
-#         return is_valid
-
-#     # TODO: Dataframe checks:
-#     # - Check thresholds, but requires site-type map in field definition:
-#     #       creek or outfall, and if creek:
-#     #           habitat, spawn, rear, or migrate.
-
-#     class Config:
-#         """The configuration for the schema.
-
-#         Strict schema, enforces primary key.
-#         """
-
-#         add_missing_columns = False
-#         multiindex_strict = True
-#         multiindex_unique = True
-#         strict = True
+        multiindex_strict = False
+        multiindex_unique = False
+        strict = False
 
 
-# class QualitativeObservationsVerified(QualitativeObservationsPrecleaned):
-#     """Qualitative site observations verified by user.
+class QuantitativeObservationsExtracted(pa.DataFrameModel):
+    """Quantitative observations extracted.
 
-#     Only wet outfalls, but not necessarily all visits.
+    All site visits excluding for dry outfalls.
 
-#     Constraints:
-#         PK: `form_id`, `site_id`, `type`.
-#         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
-#     """
+    Constraints:
+        PK: `form_id`, `site_id` (unenforced).
+        FK: `form_id`, `site_id`: SiteVisit(form_id, site_id) (unenforced).
+        Unique: `form_id`, `bottle_no` (unenforced).
+    """
 
-#     #: The form ID, part of the primary key, foreign key to `FormExtracted.form_id`.
-#     form_id: Index[str] = FORM_ID_FIELD()
-#     #: The site ID, part of the primary key.
-#     site_id: Index[str] = SITE_ID_FIELD()
-#     #: The observation type.
-#     type: Index[
-#         Annotated[pd.CategoricalDtype, list(constants.QualitativeSiteObservationTypes), False]
-#     ] = partial(_OBSERVATION_TYPE_FIELD, coerce=True)
-#     #: The rank of the observation.
-#     rank: Series[Annotated[pd.CategoricalDtype, list(constants.Rank), True]] = partial(
-#         _RANK_FIELD, coerce=True
-#     )
-#     #: The description of the observation.
-#     description: Series[str] = partial(
-#         _DESCRIPTION_FIELD,
-#         coerce=True,
-#         str_length={"max_value": constants.CharLimits.DESCRIPTION},
-#     )
+    # TODO: May need to loosen the typehints.
+    #: The form ID.
+    form_id: Index[str] = FORM_ID_FIELD()
+    #: The site ID, part of the primary key, but nullable at this stage.
+    site_id: Index[str] = SITE_ID_FIELD_LAX()
+    #: The bottle number.
+    bottle_no: Series[str] = partial(_BOTTLE_NO_FIELD, **_LAX_KWARGS)
+    #: The flow. Unenforced `constants.Flow`.
+    flow: Series[constants.Flow] = partial(_FLOW_FIELD, **_LAX_KWARGS)
+    #: The flow compared to expected. Unenforced `constants.FlowComparedToExpected`.
+    flow_compared_to_expected: Series[constants.FlowComparedToExpected] = partial(
+        _FLOW_COMPARED_TO_EXPECTED_FIELD, **_LAX_KWARGS
+    )
+    #: The air temperature.
+    air_temp: Series[float] = partial(_AIR_TEMP_FIELD, **_LAX_KWARGS)
+    #: The water temperature.
+    water_temp: Series[float] = partial(_WATER_TEMP_FIELD, **_LAX_KWARGS)
+    #: The dissolved oxygen.
+    DO_mg_per_l: Series[float] = partial(_DO_MG_PER_L_FIELD, **_LAX_KWARGS)
+    #: The specific conductance.
+    SPS_micro_S_per_cm: Series[float] = partial(_SPS_MICRO_S_PER_CM_FIELD, **_LAX_KWARGS)
+    #: The salinity. Nullable.
+    salinity_ppt: Series[float] = partial(_SALINITY_PPT_FIELD, **_LAX_KWARGS)
+    #: The pH. Nullable.
+    pH: Series[float] = partial(_PH_FIELD, **_LAX_KWARGS)
 
-#     class Config:
-#         """The configuration for the schema.
+    class Config:
+        """The configuration for the schema.
 
-#         Enforces the primary key.
-#         """
+        Not a strict schema at this stage since it's the "raw" extracted data.
+        """
 
-#         add_missing_columns = False
-#         multiindex_strict = True
-#         multiindex_unique = True
-#         strict = True
-
-
-# class FormCleaned(FormVerified):
-#     """Form metadata cleaned.
-
-#     Constraints:
-#         PK: `form_id`.
-#     """
-
-
-# class FormInvestigatorCleaned(FormInvestigatorVerified):
-#     """Investigators on each form cleaned.
-
-#     Constraints:
-#         PK: `form_id`, `investigator`.
-#         FK: `form_id`: `Form.form_id` (unenforced).
-#     """
+        multiindex_strict = False
+        multiindex_unique = False
+        strict = False
 
 
-# class SiteVisitCleaned(SiteVisitVerified):
-#     """Site visit cleaned.
+class QualitativeObservationsExtracted(pa.DataFrameModel):
+    """Qualitative site observations extracted from the datasheets.
 
-#     All site visits, including dry outfalls with no observations.
+    Only wet outfalls, but not necessarily all visits.
 
-#     Constraints:
-#         PK: `form_id`, `site_id`.
-#         FK: `form_id`: `Form.form_id` (unenforced).
-#         FK: `site_id`: `Site.site_id` (unenforced).
-#     """
+    Constraints:
+        PK: `form_id`, `site_id`, `type` (unenforced).
+        FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
+    """
+
+    # TODO: May need to loosen the typehints.
+    #: The form ID.
+    form_id: Index[str] = FORM_ID_FIELD()
+    #: The site ID, part of the primary key, but nullable at this stage.
+    site_id: Series[str] = SITE_ID_FIELD_LAX()
+    #: The observation type. Nullable. Unenforced `constants.QualitativeSiteObservationTypes`.
+    type: Series[constants.QualitativeSiteObservationTypes] = partial(
+        _OBSERVATION_TYPE_FIELD, **_LAX_KWARGS
+    )
+    #: The rank of the observation. Nullable. Unenforced `constants.Rank`.
+    rank: Series[constants.Rank] = partial(_RANK_FIELD, **_LAX_KWARGS)
+    #: The description of the observation. Nullable.
+    description: Series[str] = partial(_DESCRIPTION_FIELD, **_LAX_KWARGS)
+
+    class Config:
+        """The configuration for the schema.
+
+        Not a strict schema at this stage since it's the "raw" extracted data.
+        """
+
+        multiindex_strict = False
+        multiindex_unique = False
+        strict = False
 
 
-# class QuantitativeObservationsCleaned(QuantitativeObservationsVerified):
-#     """Quantitative observations cleaned.
+class FormPrecleaned(FormExtracted):
+    """Form metadata precleaned.
 
-#     All site visits excluding for dry outfalls.
+    Constraints:
+        PK: `form_id`.
+    """
 
-#     Constraints:
-#         PK: `form_id`, `site_id`.
-#         FK: `form_id`, `site_id`: SiteVisit(form_id, site_id) (unenforced).
-#         Unique: `form_id`, `bottle_no`.
-#     """
+    class Config:
+        """The configuration for the schema.
+
+        Adds missing columns, drops extra columns, enforces primary key.
+        """
+
+        add_missing_columns = True
+        multiindex_strict = "filter"
+        multiindex_unique = True
+        strict = "filter"
 
 
-# class QualitativeObservationsCleaned(QualitativeObservationsVerified):
-#     """Qualitative site observations cleaned.
+class FormInvestigatorPrecleaned(FormInvestigatorExtracted):
+    """Schema for the investigators precleaned.
 
-#     Only wet outfalls, but not necessarily all visits.
+    PK: `form_id`, `investigator` (unenforced).
+    FK: `form_id`: `Form.form_id` (unenforced).
+    """
 
-#     Constraints:
-#         PK: `form_id`, `site_id`, `type`.
-#         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
-#     """
+    class Config:
+        """The configuration for the schema.
+
+        Adds missing columns, drops extra columns.
+        """
+
+        add_missing_columns = True
+        multiindex_strict = "filter"
+        strict = "filter"
+
+
+class SiteVisitPrecleaned(SiteVisitExtracted):
+    """Site visit precleaned.
+
+    All site visits, including dry outfalls with no observations.
+
+    Constraints:
+        PK: `form_id`, `site_id` (unenforced).
+        FK: `form_id`: `Form.form_id` (unenforced).
+        FK: `site_id`: `Site.site_id` (unenforced).
+    """
+
+    class Config:
+        """The configuration for the schema.
+
+        Adds missing columns, drops extra columns.
+        """
+
+        add_missing_columns = True
+        multiindex_strict = "filter"
+        strict = "filter"
+
+
+class QuantitativeObservationsPrecleaned(QuantitativeObservationsExtracted):
+    """Quantitative observations precleaned.
+
+    All site visits excluding for dry outfalls.
+
+    Constraints:
+        PK: `form_id`, `site_id` (unenforced).
+        FK: `form_id`, `site_id`: SiteVisit(form_id, site_id) (unenforced).
+        Unique: `form_id`, `bottle_no` (unenforced).
+    """
+
+    class Config:
+        """The configuration for the schema.
+
+        Adds missing columns, drops extra columns.
+        """
+
+        add_missing_columns = True
+        multiindex_strict = "filter"
+        strict = "filter"
+
+
+class QualitativeObservationsPrecleaned(QualitativeObservationsExtracted):
+    """Qualitative site observations precleaned.
+
+    Only wet outfalls, but not necessarily all visits.
+
+    Constraints:
+        PK: `form_id`, `site_id`, `type` (unenforced).
+        FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
+    """
+
+    class Config:
+        """The configuration for the schema.
+
+        Adds missing columns, drops extra columns.
+        """
+
+        add_missing_columns = True
+        multiindex_strict = "filter"
+        strict = "filter"
+
+
+class FormVerified(FormPrecleaned):
+    """Form metadata verified by the user.
+
+    Constraints:
+        PK: `form_id`.
+    """
+
+    #: The form type.
+    form_type: Series[Annotated[pd.CategoricalDtype, list(constants.FormType), False]] = (
+        partial(_FORM_TYPE_FIELD, coerce=True)
+    )
+    #: The form version.
+    form_version: Series[str] = partial(_FORM_VERSION_FIELD, coerce=True)
+    # TODO: Maybe we might as well cast to datetime at this step.
+    # date: Series[pa.DateTime] = partial(
+    # TODO: Make sure we can do multiline docstring comments like this.
+    #: The date of observations. Must be "YYYY-MM-DD", on or before today.
+    #: `date` and `tide_time` must be on or before now.
+    date: Series[str] = partial(_DATE_FIELD, coerce=True)
+    #: The city of observations.
+    city: Series[Annotated[pd.CategoricalDtype, list(constants.City), False]] = partial(
+        _CITY_FIELD, coerce=True
+    )
+    #: The tide height at the time of observations.
+    tide_height: Series[float] = partial(_TIDE_HEIGHT_FIELD, coerce=True)
+    #: The tide time at the time of observations. Must be "HH:MM".
+    #: `date` and `tide_time` must be before now.
+    tide_time: Series[str] = partial(_TIDE_TIME_FIELD, coerce=True)
+    #: The past 24-hour rainfall.
+    # TODO: Make equality check subject to inclusive rule in data definition.
+    # - Use helper to set kwargs as constant.
+    past_24hr_rainfall: Series[float] = partial(
+        _PAST_24HR_RAINFALL_FIELD,
+        coerce=True,
+        greater_than_or_equal_to=FIELD_DATA_DEFINITION[Columns.METADATA][
+            Columns.PAST_24HR_RAINFALL
+        ][Columns.LOWER][Columns.VALUE],
+    )
+    #: The weather at the time of observations.
+    # TODO: Are we going to make weather ordered?
+    weather: Series[Annotated[pd.CategoricalDtype, list(constants.Weather), True]] = partial(
+        _WEATHER_FIELD, coerce=True
+    )
+    #: Investigator notes.
+    notes: Series[str] = partial(
+        _NOTES_FIELD, **_NULLABLE_KWARGS, str_length={"max_value": constants.CharLimits.NOTES}
+    )
+
+    @pa.check("date", name="date_le_today")
+    @typechecked
+    def date_le_today(
+        cls, date: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every date is on or before today."""
+        return field_checks.date_le_today(series=date)
+
+    @pa.check("date", name="is_valid_date")
+    @typechecked
+    def is_valid_date(
+        cls, date: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every date parses with the given format."""
+        return field_checks.is_valid_date(series=date, date_format=constants.DATE_FORMAT)
+
+    @pa.check("tide_time", name="is_valid_time")
+    @typechecked
+    def is_valid_time(
+        cls, tide_time: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every value parses with the given format."""
+        return field_checks.is_valid_time(series=tide_time, format=constants.TIME_FORMAT)
+
+    @pa.dataframe_check(
+        ignore_na=False, name="tide_datetime_le_now"  # Since irrelevant fields are nullable.
+    )
+    @typechecked
+    def tide_datetime_le_now(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every date:tide_time is before now."""
+        return dataframe_checks.datetime_lt_now(
+            df=df,
+            date_col=Columns.DATE,
+            time_col=Columns.TIDE_TIME,
+            date_format=constants.DATE_FORMAT,
+            time_format=constants.TIME_FORMAT,
+        )
+
+    class Config:
+        """The configuration for the schema.
+
+        Strict schema, enforces primary key.
+        """
+
+        add_missing_columns = False
+        multiindex_strict = True
+        strict = True
+
+
+class FormInvestigatorVerified(FormInvestigatorPrecleaned):
+    """Investigators on each form verified by user.
+
+    Constraints:
+        PK: `form_id`, `investigator`.
+        FK: `form_id`: `Form.form_id` (unenforced).
+    """
+
+    #: The form ID.
+    form_id: Index[str] = FORM_ID_FIELD()
+    #: The investigator.
+    investigator: Index[str] = partial(_INVESTIGATOR_FIELD, coerce=True)
+    #: The start time of the investigation. Must be "HH:MM".
+    #: `start_time` must be before `end_time`.
+    start_time: Series[str] = partial(_START_TIME_FIELD, coerce=True)
+    #: The end time of the investigation. Must be "HH:MM".
+    #: `start_time` must be before `end_time`.
+    end_time: Series[str] = partial(_END_TIME_FIELD, coerce=True)
+
+    @pa.check("start_time", name="start_time_is_valid_time")
+    @typechecked
+    def start_time_is_valid_time(
+        cls, start_time: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every `start_time` parses with the given format."""
+        return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
+
+    @pa.check("end_time", name="end_time_is_valid_time")
+    @typechecked
+    def end_time_is_valid_time(
+        cls, end_time: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every `end_time` parses with the given format."""
+        return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
+
+    @pa.dataframe_check(name="start_time_before_end_time")
+    @typechecked
+    def start_time_before_end_time(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every start_time is before end_time."""
+        # TODO: Make this robust to midnight observations.
+        is_valid = pd.to_datetime(
+            df[Columns.START_TIME], format=constants.TIME_FORMAT, errors="coerce"
+        ) < pd.to_datetime(
+            df[Columns.END_TIME], format=constants.TIME_FORMAT, errors="coerce"
+        )
+        is_valid = cast("Series[bool]", is_valid)
+
+        return is_valid
+
+    class Config:
+        """The configuration for the schema.
+
+        Strict schema, enforces the primary key.
+        """
+
+        add_missing_columns = False
+        multiindex_strict = True
+        multiindex_unique = True
+        strict = True
+
+
+class SiteVisitVerified(SiteVisitPrecleaned):
+    """Site visit verified by user.
+
+    All site visits, including dry outfalls with no observations.
+
+    Constraints:
+        PK: `form_id`, `site_id`.
+        FK: `form_id`: `Form.form_id` (unenforced).
+        FK: `site_id`: `Site.site_id` (unenforced).
+    """
+
+    #: The form ID.
+    form_id: Index[str] = FORM_ID_FIELD()
+    #: The site ID.
+    site_id: Index[str] = SITE_ID_FIELD()
+    #: The arrival time of the investigation. Must be "HH:MM".
+    arrival_time: Series[str] = partial(_ARRIVAL_TIME_FIELD, coerce=True)
+
+    @pa.check("arrival_time", name="arrival_time_is_valid_time")
+    @typechecked
+    def arrival_time_is_valid_time(
+        cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every `arrival_time` parses with the given format."""
+        return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
+
+    class Config:
+        """The configuration for the schema.
+
+        Strict schema, enforces primary key.
+        """
+
+        add_missing_columns = False
+        multiindex_strict = True
+        multiindex_unique = True
+        strict = True
+
+
+class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
+    """Quantitative observations verified by user.
+
+    All site visits excluding for dry outfalls.
+
+    Constraints:
+        PK: `form_id`, `site_id`.
+        FK: `form_id`, `site_id`: SiteVisit(form_id, site_id) (unenforced).
+        Unique: `form_id`, `bottle_no`.
+    """
+
+    #: The form ID.
+    form_id: Index[str] = FORM_ID_FIELD()
+    #: The site ID.
+    site_id: Index[str] = SITE_ID_FIELD()
+    #: The bottle number.
+    #: Must be unique within each `form_id`.
+    bottle_no: Series[str] = partial(_BOTTLE_NO_FIELD, coerce=True)
+    #: The flow.
+    flow: Series[Annotated[pd.CategoricalDtype, list(constants.Flow), True]] = partial(
+        _FLOW_FIELD, coerce=True
+    )
+    #: The flow compared to expected.
+    flow_compared_to_expected: Series[
+        Annotated[pd.CategoricalDtype, list(constants.FlowComparedToExpected), True]
+    ] = partial(_FLOW_COMPARED_TO_EXPECTED_FIELD, coerce=True)
+    #: The air temperature.
+    air_temp: Series[float] = partial(_AIR_TEMP_FIELD, coerce=True)
+    #: The water temperature.
+    water_temp: Series[float] = partial(_WATER_TEMP_FIELD, coerce=True)
+    #: The dissolved oxygen.
+    DO_mg_per_l: Series[float] = partial(_DO_MG_PER_L_FIELD, coerce=True, ge=0)
+    #: The specific conductance.
+    SPS_micro_S_per_cm: Series[float] = partial(_SPS_MICRO_S_PER_CM_FIELD, coerce=True, ge=0)
+    #: The salinity.
+    salinity_ppt: Series[float] = partial(_SALINITY_PPT_FIELD, coerce=True, ge=0)
+    #: The pH.
+    pH: Series[float] = partial(_PH_FIELD, coerce=True, ge=0)
+
+    @pa.check("arrival_time", name="arrival_time_is_valid_time")
+    @typechecked
+    def arrival_time_is_valid_time(
+        cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every `arrival_time` parses with the given format."""
+        return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
+
+    @pa.dataframe_check(name="bottle_no_unique_by_form_id")
+    @typechecked
+    def bottle_no_unique_by_form_id(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Every `bottle_no` is unique within each `form_id`."""
+        is_valid = ~df.duplicated(
+            subset=[Columns.FORM_ID, Columns.BACTERIA_BOTTLE_NO], keep="first"
+        )
+        is_valid = cast("Series[bool]", is_valid)
+
+        return is_valid
+
+    # TODO: Dataframe checks:
+    # - Check thresholds, but requires site-type map in field definition:
+    #       creek or outfall, and if creek:
+    #           habitat, spawn, rear, or migrate.
+
+    class Config:
+        """The configuration for the schema.
+
+        Strict schema, enforces primary key.
+        """
+
+        add_missing_columns = False
+        multiindex_strict = True
+        multiindex_unique = True
+        strict = True
+
+
+class QualitativeObservationsVerified(QualitativeObservationsPrecleaned):
+    """Qualitative site observations verified by user.
+
+    Only wet outfalls, but not necessarily all visits.
+
+    Constraints:
+        PK: `form_id`, `site_id`, `type`.
+        FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
+    """
+
+    #: The form ID, part of the primary key, foreign key to `FormExtracted.form_id`.
+    form_id: Index[str] = FORM_ID_FIELD()
+    #: The site ID, part of the primary key.
+    site_id: Index[str] = SITE_ID_FIELD()
+    #: The observation type.
+    type: Index[
+        Annotated[pd.CategoricalDtype, list(constants.QualitativeSiteObservationTypes), False]
+    ] = partial(_OBSERVATION_TYPE_FIELD, coerce=True)
+    #: The rank of the observation.
+    rank: Series[Annotated[pd.CategoricalDtype, list(constants.Rank), True]] = partial(
+        _RANK_FIELD, coerce=True
+    )
+    #: The description of the observation.
+    description: Series[str] = partial(
+        _DESCRIPTION_FIELD,
+        coerce=True,
+        str_length={"max_value": constants.CharLimits.DESCRIPTION},
+    )
+
+    class Config:
+        """The configuration for the schema.
+
+        Enforces the primary key.
+        """
+
+        add_missing_columns = False
+        multiindex_strict = True
+        multiindex_unique = True
+        strict = True
+
+
+class FormCleaned(FormVerified):
+    """Form metadata cleaned.
+
+    Constraints:
+        PK: `form_id`.
+    """
+
+
+class FormInvestigatorCleaned(FormInvestigatorVerified):
+    """Investigators on each form cleaned.
+
+    Constraints:
+        PK: `form_id`, `investigator`.
+        FK: `form_id`: `Form.form_id` (unenforced).
+    """
+
+
+class SiteVisitCleaned(SiteVisitVerified):
+    """Site visit cleaned.
+
+    All site visits, including dry outfalls with no observations.
+
+    Constraints:
+        PK: `form_id`, `site_id`.
+        FK: `form_id`: `Form.form_id` (unenforced).
+        FK: `site_id`: `Site.site_id` (unenforced).
+    """
+
+
+class QuantitativeObservationsCleaned(QuantitativeObservationsVerified):
+    """Quantitative observations cleaned.
+
+    All site visits excluding for dry outfalls.
+
+    Constraints:
+        PK: `form_id`, `site_id`.
+        FK: `form_id`, `site_id`: SiteVisit(form_id, site_id) (unenforced).
+        Unique: `form_id`, `bottle_no`.
+    """
+
+
+class QualitativeObservationsCleaned(QualitativeObservationsVerified):
+    """Qualitative site observations cleaned.
+
+    Only wet outfalls, but not necessarily all visits.
+
+    Constraints:
+        PK: `form_id`, `site_id`, `type`.
+        FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
+    """
