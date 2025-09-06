@@ -2,7 +2,6 @@
 
 from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (  # noqa: F403
     FormExtracted,
-    # FormMetadataExtracted,
     # FormMetadataPrecleaned,
     # FormMetadataVerified,
     # InvestigatorsCleaned,
