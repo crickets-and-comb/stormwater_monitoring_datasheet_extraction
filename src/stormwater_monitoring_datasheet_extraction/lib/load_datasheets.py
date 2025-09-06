@@ -27,53 +27,61 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
     # TODO, NOTE: This is an estimated outline, not a hard requirement.
     # We may need to adjust the steps based on the actual implementation details.
     (
-        raw_metadata,
+        raw_form_metadata,
         raw_investigators,
-        raw_site_observations,
-        raw_qualitative_site_observations,
+        raw_site_visits,
+        raw_quantitative_observations,
+        raw_qualitative_observations,
     ) = extract(input_dir=input_dir)
 
     (
-        precleaned_metadata,
+        precleaned_form_metadata,
         precleaned_investigators,
-        precleaned_site_observations,
-        precleaned_qualitative_site_observations,
+        precleaned_site_visits,
+        precleaned_quantitative_observations,
+        precleaned_qualitative_observations,
     ) = preclean(
-        raw_metadata=raw_metadata,
+        raw_form_metadata=raw_form_metadata,
         raw_investigators=raw_investigators,
-        raw_site_observations=raw_site_observations,
-        raw_qualitative_site_observations=raw_qualitative_site_observations,
+        raw_site_visits=raw_site_visits,
+        raw_quantitative_observations=raw_quantitative_observations,
+        raw_qualitative_observations=raw_qualitative_observations,
     )
 
     (
-        verified_metadata,
+        verified_form_metadata,
         verified_investigators,
-        verified_site_observations,
-        verified_qualitative_site_observations,
+        verified_site_visits,
+        verified_quantitative_observations,
+        verified_qualitative_observations,
     ) = verify(
-        precleaned_metadata=precleaned_metadata,
+        precleaned_form_metadata=precleaned_form_metadata,
         precleaned_investigators=precleaned_investigators,
-        precleaned_site_observations=precleaned_site_observations,
-        precleaned_qualitative_site_observations=precleaned_qualitative_site_observations,
+        precleaned_site_visits=precleaned_site_visits,
+        precleaned_quantitative_observations=precleaned_quantitative_observations,
+        precleaned_qualitative_observations=precleaned_qualitative_observations,
     )
 
     (
-        cleaned_metadata,
+        cleaned_form_metadata,
         cleaned_investigators,
-        cleaned_site_observations,
-        cleaned_qualitative_site_observations,
+        cleaned_site_visits,
+        cleaned_quantitative_observations,
+        cleaned_qualitative_observations,
     ) = clean(
-        verified_metadata=verified_metadata,
+        verified_form_metadata=verified_form_metadata,
         verified_investigators=verified_investigators,
-        verified_site_observations=verified_site_observations,
-        verified_qualitative_site_observations=verified_qualitative_site_observations,
+        verified_site_visits=verified_site_visits,
+        verified_quantitative_observations=verified_quantitative_observations,
+        verified_qualitative_observations=verified_qualitative_observations,
     )
 
     restructured_json = restructure_extraction(
-        cleaned_metadata=cleaned_metadata,
+        cleaned_form_metadata=cleaned_form_metadata,
         cleaned_investigators=cleaned_investigators,
-        cleaned_site_observations=cleaned_site_observations,
-        cleaned_qualitative_site_observations=cleaned_qualitative_site_observations,
+        cleaned_site_visits=cleaned_site_visits,
+        cleaned_quantitative_observations=cleaned_quantitative_observations,
+        cleaned_qualitative_observations=cleaned_qualitative_observations,
     )
 
     final_output_path = load(restructured_json=restructured_json, output_dir=output_dir)
@@ -89,10 +97,11 @@ run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 def extract(
     input_dir: Path,
 ) -> tuple[
-    pt.DataFrame[schema.FormMetadataExtracted],
-    pt.DataFrame[schema.InvestigatorsExtracted],
-    pt.DataFrame[schema.SiteObservationsExtracted],
-    pt.DataFrame[schema.QualitativeSiteObservationsExtracted],
+    pt.DataFrame[schema.FormExtracted],
+    pt.DataFrame[schema.FormInvestigatorExtracted],
+    pt.DataFrame[schema.SiteVisitExtracted],
+    pt.DataFrame[schema.QuantitativeObservationsExtracted],
+    pt.DataFrame[schema.QualitativeObservationsExtracted],
 ]:
     """Extracts data from the images in the input directory.
 
@@ -102,55 +111,60 @@ def extract(
         input_dir: Path to the directory containing the datasheet images.
 
     Returns:
-        Raw extraction split into form metadata, investigators,
-            and site observations.
+        Raw extraction split into normalized relational tables, with no enforcement.
     """
     logger.info(f"Extracting data from images in {input_dir} ...")
 
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
-    form_metadata = cast("pt.DataFrame[schema.FormMetadataExtracted]", pd.DataFrame())
-    investigators = cast("pt.DataFrame[schema.InvestigatorsExtracted]", pd.DataFrame())
-    site_observations = cast("pt.DataFrame[schema.SiteObservationsExtracted]", pd.DataFrame())
-    qualitative_site_observations = cast(
-        "pt.DataFrame[schema.QualitativeSiteObservationsExtracted]", pd.DataFrame()
+    raw_form_metadata = cast("pt.DataFrame[schema.FormExtracted]", pd.DataFrame())
+    raw_investigators = cast("pt.DataFrame[schema.FormInvestigatorExtracted]", pd.DataFrame())
+    raw_site_visits = cast("pt.DataFrame[schema.SiteVisitExtracted]", pd.DataFrame())
+    raw_quantitative_observations = cast(
+        "pt.DataFrame[schema.QuantitativeObservationsExtracted]", pd.DataFrame()
+    )
+    raw_qualitative_observations = cast(
+        "pt.DataFrame[schema.QualitativeObservationsExtracted]", pd.DataFrame()
     )
     # TODO: Use data definition as source of truth rather than schema.
     ...
 
     return (
-        form_metadata,
-        investigators,
-        site_observations,
-        qualitative_site_observations,
+        raw_form_metadata,
+        raw_investigators,
+        raw_site_visits,
+        raw_quantitative_observations,
+        raw_qualitative_observations,
     )
 
 
 # TODO: Implement this.
 def preclean(
-    raw_metadata: pt.DataFrame[schema.FormMetadataExtracted],
-    raw_investigators: pt.DataFrame[schema.InvestigatorsExtracted],
-    raw_site_observations: pt.DataFrame[schema.SiteObservationsExtracted],
-    raw_qualitative_site_observations: pt.DataFrame[
-        schema.QualitativeSiteObservationsExtracted
-    ],
+    raw_form_metadata: pt.DataFrame[schema.FormExtracted],
+    raw_investigators: pt.DataFrame[schema.FormInvestigatorExtracted],
+    raw_site_visits: pt.DataFrame[schema.SiteVisitExtracted],
+    raw_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsExtracted],
+    raw_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsExtracted],
 ) -> tuple[
-    pt.DataFrame[schema.FormMetadataPrecleaned],
-    pt.DataFrame[schema.InvestigatorsPrecleaned],
-    pt.DataFrame[schema.SiteObservationsPrecleaned],
-    pt.DataFrame[schema.QualitativeSiteObservationsPrecleaned],
+    pt.DataFrame[schema.FormPrecleaned],
+    pt.DataFrame[schema.FormInvestigatorPrecleaned],
+    pt.DataFrame[schema.SiteVisitPrecleaned],
+    pt.DataFrame[schema.QuantitativeObservationsPrecleaned],
+    pt.DataFrame[schema.QualitativeObservationsPrecleaned],
 ]:
     """Preclean the raw extraction.
 
     Args:
-        raw_metadata: Metadata extracted from the datasheets.
-        raw_investigators: Investigators extracted from the datasheets.
-        raw_site_observations: Site observations extracted from the datasheets.
-        raw_qualitative_site_observations:
+        raw_form_metadata: Metadata extracted from the datasheets.
+        raw_investigators: FormInvestigator extracted from the datasheets.
+        raw_site_visits: Site observations extracted from the datasheets.
+        raw_quantitative_observations:
+            Quantitative site observations extracted from the datasheets.
+        raw_qualitative_observations:
             Qualitative site observations extracted from the datasheets.
 
     Returns:
-        Precleaned metadata, investigators, and site observations.
+        Precleaned relational tables, with no enforcement.
     """
     logger.info("Precleaning raw extraction data...")
 
@@ -163,70 +177,85 @@ def preclean(
     # Use data definition as source of truth rather than schema.
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
-    precleaned_metadata = cast("pt.DataFrame[schema.FormMetadataPrecleaned]", raw_metadata)
+    precleaned_form_metadata = cast("pt.DataFrame[schema.FormPrecleaned]", raw_form_metadata)
     precleaned_investigators = cast(
-        "pt.DataFrame[schema.InvestigatorsPrecleaned]", raw_investigators
+        "pt.DataFrame[schema.FormInvestigatorPrecleaned]", raw_investigators
     )
-    precleaned_site_observations = cast(
-        "pt.DataFrame[schema.SiteObservationsPrecleaned]", raw_site_observations
+    precleaned_site_visits = cast("pt.DataFrame[schema.SiteVisitPrecleaned]", raw_site_visits)
+    precleaned_quantitative_observations = cast(
+        "pt.DataFrame[schema.QuantitativeObservationsPrecleaned]",
+        raw_quantitative_observations,
     )
-    precleaned_qualitative_site_observations = cast(
-        "pt.DataFrame[schema.QualitativeSiteObservationsPrecleaned]",
-        raw_qualitative_site_observations,
+    precleaned_qualitative_observations = cast(
+        "pt.DataFrame[schema.QualitativeObservationsPrecleaned]",
+        raw_qualitative_observations,
     )
     ...
 
     return (
-        precleaned_metadata,
+        precleaned_form_metadata,
         precleaned_investigators,
-        precleaned_site_observations,
-        precleaned_qualitative_site_observations,
+        precleaned_site_visits,
+        precleaned_quantitative_observations,
+        precleaned_qualitative_observations,
     )
 
 
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def verify(
-    precleaned_metadata: pt.DataFrame[schema.FormMetadataPrecleaned],
-    precleaned_investigators: pt.DataFrame[schema.InvestigatorsPrecleaned],
-    precleaned_site_observations: pt.DataFrame[schema.SiteObservationsPrecleaned],
-    precleaned_qualitative_site_observations: pt.DataFrame[
-        schema.QualitativeSiteObservationsPrecleaned
+    precleaned_form_metadata: pt.DataFrame[schema.FormPrecleaned],
+    precleaned_investigators: pt.DataFrame[schema.FormInvestigatorPrecleaned],
+    precleaned_site_visits: pt.DataFrame[schema.SiteVisitPrecleaned],
+    precleaned_quantitative_observations: pt.DataFrame[
+        schema.QuantitativeObservationsPrecleaned
+    ],
+    precleaned_qualitative_observations: pt.DataFrame[
+        schema.QualitativeObservationsPrecleaned
     ],
 ) -> tuple[
-    pt.DataFrame[schema.FormMetadataVerified],
-    pt.DataFrame[schema.InvestigatorsVerified],
-    pt.DataFrame[schema.SiteObservationsVerified],
-    pt.DataFrame[schema.QualitativeSiteObservationsVerified],
+    pt.DataFrame[schema.FormVerified],
+    pt.DataFrame[schema.FormInvestigatorVerified],
+    pt.DataFrame[schema.SiteVisitVerified],
+    pt.DataFrame[schema.QuantitativeObservationsVerified],
+    pt.DataFrame[schema.QualitativeObservationsVerified],
 ]:
     """Verifies the raw extraction with the user.
 
     Prompts user to check each image against each extraction and edit as needed.
 
     Args:
-        precleaned_metadata: The precleaned metadata.
+        precleaned_form_metadata: The precleaned metadata.
         precleaned_investigators: The precleaned investigators.
-        precleaned_site_observations: The precleaned site observations.
-        precleaned_qualitative_site_observations:
+        precleaned_site_visits: The precleaned site observations.
+        precleaned_quantitative_observations:
+            The precleaned quantitative site observations.
+        precleaned_qualitative_observations:
             The precleaned qualitative site observations.
 
     Returns:
-        User-verified metadata, investigators, and site observations.
+        User-verified relational tables, with some enforcement.
     """
     logger.info("Verifying precleaned data with user...")
 
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
-    verified_metadata = cast("pt.DataFrame[schema.FormMetadataVerified]", precleaned_metadata)
+    verified_form_metadata = cast(
+        "pt.DataFrame[schema.FormVerified]", precleaned_form_metadata
+    )
     verified_investigators = cast(
-        "pt.DataFrame[schema.InvestigatorsVerified]", precleaned_investigators
+        "pt.DataFrame[schema.FormInvestigatorVerified]", precleaned_investigators
     )
-    verified_site_observations = cast(
-        "pt.DataFrame[schema.SiteObservationsVerified]", precleaned_site_observations
+    verified_site_visits = cast(
+        "pt.DataFrame[schema.SiteVisitVerified]", precleaned_site_visits
     )
-    verified_qualitative_site_observations = cast(
-        "pt.DataFrame[schema.QualitativeSiteObservationsVerified]",
-        precleaned_qualitative_site_observations,
+    verified_quantitative_observations = cast(
+        "pt.DataFrame[schema.QuantitativeObservationsVerified]",
+        precleaned_quantitative_observations,
+    )
+    verified_qualitative_observations = cast(
+        "pt.DataFrame[schema.QualitativeObservationsVerified]",
+        precleaned_qualitative_observations,
     )
     ...
     # TODO: Offer some immediate feedback:
@@ -237,27 +266,28 @@ def verify(
     # Use data definition as source of truth rather than schema.
 
     return (
-        verified_metadata,
+        verified_form_metadata,
         verified_investigators,
-        verified_site_observations,
-        verified_qualitative_site_observations,
+        verified_site_visits,
+        verified_quantitative_observations,
+        verified_qualitative_observations,
     )
 
 
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def clean(
-    verified_metadata: pt.DataFrame[schema.FormMetadataVerified],
-    verified_investigators: pt.DataFrame[schema.InvestigatorsVerified],
-    verified_site_observations: pt.DataFrame[schema.SiteObservationsVerified],
-    verified_qualitative_site_observations: pt.DataFrame[
-        schema.QualitativeSiteObservationsVerified
-    ],
+    verified_form_metadata: pt.DataFrame[schema.FormVerified],
+    verified_investigators: pt.DataFrame[schema.FormInvestigatorVerified],
+    verified_site_visits: pt.DataFrame[schema.SiteVisitVerified],
+    verified_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsVerified],
+    verified_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsVerified],
 ) -> tuple[
-    pt.DataFrame[schema.FormMetadataCleaned],
-    pt.DataFrame[schema.InvestigatorsCleaned],
-    pt.DataFrame[schema.SiteObservationsCleaned],
-    pt.DataFrame[schema.QualitativeSiteObservationsCleaned],
+    pt.DataFrame[schema.FormCleaned],
+    pt.DataFrame[schema.FormInvestigatorCleaned],
+    pt.DataFrame[schema.SiteVisitCleaned],
+    pt.DataFrame[schema.QuantitativeObservationsCleaned],
+    pt.DataFrame[schema.QualitativeObservationsCleaned],
 ]:
     """Clean the user-verified extraction.
 
@@ -265,29 +295,31 @@ def clean(
     format, appropriate data types, within specified ranges, etc., and ready to load.
 
     Args:
-        verified_metadata: The user-verified metadata.
+        verified_form_metadata: The user-verified metadata.
         verified_investigators: The user-verified investigators.
-        verified_site_observations: The user-verified site observations.
-        verified_qualitative_site_observations:
-            The user-verified qualitative site observations.
+        verified_site_visits: The user-verified site observations.
+        verified_quantitative_observations: The user-verified quantitative site observations.
+        verified_qualitative_observations: The user-verified qualitative site observations.
 
     Returns:
-        Cleaned metadata, investigators, and site observations.
+        Cleaned relational tables, with full enforcement.
     """
     logger.info("Cleaning verified data...")
 
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
-    cleaned_metadata = cast("pt.DataFrame[schema.FormMetadataCleaned]", verified_metadata)
+    cleaned_form_metadata = cast("pt.DataFrame[schema.FormCleaned]", verified_form_metadata)
     cleaned_investigators = cast(
-        "pt.DataFrame[schema.InvestigatorsCleaned]", verified_investigators
+        "pt.DataFrame[schema.FormInvestigatorCleaned]", verified_investigators
     )
-    cleaned_site_observations = cast(
-        "pt.DataFrame[schema.SiteObservationsCleaned]", verified_site_observations
+    cleaned_site_visits = cast("pt.DataFrame[schema.SiteVisitCleaned]", verified_site_visits)
+    cleaned_quantitative_observations = cast(
+        "pt.DataFrame[schema.QuantitativeObservationsCleaned]",
+        verified_quantitative_observations,
     )
-    cleaned_qualitative_site_observations = cast(
-        "pt.DataFrame[schema.QualitativeSiteObservationsCleaned]",
-        verified_qualitative_site_observations,
+    cleaned_qualitative_observations = cast(
+        "pt.DataFrame[schema.QualitativeObservationsCleaned]",
+        verified_qualitative_observations,
     )
     ...
     # TODO: Inferred/courtesy imputations? (nulls/empties, don't overstep)
@@ -297,41 +329,42 @@ def clean(
     # - Ideally, we would verify that site arrival times are within
     #   the investigator's start and end times, but we can't 100% do that
     #   because forms don't assign observations to investigators.
-    # - Qualitative observations for non-dry outfalls exist, but none for dry outfalls.
-    # - Investigators start/end datetimes < now.
-    # - SiteObservations arrival datetime < now.
+    # - FormInvestigator start/end datetimes < now.
+    # - SiteMetadata arrival datetime < now.
+    # - No dry outfalls in observations tables.
 
     # TODO: If still invalid, alert to the problem, and re-call `verify()`.
     # Use data definition as source of truth rather than schema.
 
     return (
-        cleaned_metadata,
+        cleaned_form_metadata,
         cleaned_investigators,
-        cleaned_site_observations,
-        cleaned_qualitative_site_observations,
+        cleaned_site_visits,
+        cleaned_quantitative_observations,
+        cleaned_qualitative_observations,
     )
 
 
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def restructure_extraction(
-    cleaned_metadata: pt.DataFrame[schema.FormMetadataCleaned],
-    cleaned_investigators: pt.DataFrame[schema.InvestigatorsCleaned],
-    cleaned_site_observations: pt.DataFrame[schema.SiteObservationsCleaned],
-    cleaned_qualitative_site_observations: pt.DataFrame[
-        schema.QualitativeSiteObservationsCleaned
-    ],
+    cleaned_form_metadata: pt.DataFrame[schema.FormCleaned],
+    cleaned_investigators: pt.DataFrame[schema.FormInvestigatorCleaned],
+    cleaned_site_visits: pt.DataFrame[schema.SiteVisitCleaned],
+    cleaned_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsCleaned],
+    cleaned_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsCleaned],
 ) -> dict[str, Any]:
     """Restructure the cleaned extraction into a JSON schema.
 
     Args:
-        cleaned_metadata: The cleaned metadata.
+        cleaned_form_metadata: The cleaned metadata.
         cleaned_investigators: The cleaned investigators.
-        cleaned_site_observations: The cleaned site observations.
-        cleaned_qualitative_site_observations: The cleaned qualitative site observations.
+        cleaned_site_visits: The cleaned site observations.
+        cleaned_quantitative_observations: The cleaned quantitative site observations.
+        cleaned_qualitative_observations: The cleaned qualitative site observations.
 
     Returns:
-        Restructured JSON schema.
+        Cleaned relational tables restructured into JSON schema.
     """
     logger.info("Restructuring cleaned data into JSON schema...")
 
