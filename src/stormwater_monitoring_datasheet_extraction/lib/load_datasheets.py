@@ -9,7 +9,7 @@ import pandera as pa
 import pandera.typing as pt
 from typeguard import typechecked
 
-from stormwater_monitoring_datasheet_extraction.lib import schema
+# from stormwater_monitoring_datasheet_extraction.lib import schema
 from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 
 # TODO: To check observations threshholds, need a site-type map:
@@ -19,10 +19,11 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
+def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
+    return Path()
 # @typechecked
 # def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
-#     logger.info("Starting ETL process...")
+    # logger.info("Starting ETL process...")
 
 #     # TODO, NOTE: This is an estimated outline, not a hard requirement.
 #     # We may need to adjust the steps based on the actual implementation details.
