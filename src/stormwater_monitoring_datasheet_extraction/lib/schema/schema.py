@@ -1,20 +1,20 @@
 """Pandera schemas for ETL steps."""
 
-from collections.abc import Callable
-from functools import partial
+# from collections.abc import Callable
+# from functools import partial
 # from typing import Annotated, Final, cast
-from typing import Final
+# from typing import Final
 
 # import pandas as pd
-import pandera as pa
-from pandera.typing import Index, Series
+# import pandera as pa
+# from pandera.typing import Index, Series
 # from typeguard import typechecked
 
-from stormwater_monitoring_datasheet_extraction.lib import constants
-from stormwater_monitoring_datasheet_extraction.lib.constants import (
-    # FIELD_DATA_DEFINITION,
-    Columns,
-)
+# from stormwater_monitoring_datasheet_extraction.lib import constants
+# from stormwater_monitoring_datasheet_extraction.lib.constants import (
+#     # FIELD_DATA_DEFINITION,
+#     Columns,
+# )
 # from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
 #     dataframe_checks,
 #     field_checks,
@@ -40,56 +40,56 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import (
 # 2. Add feature to pass in custom error handler function,
 # with default that uses generally useful DataFrameModel error features.
 
-_LAX_KWARGS: Final[dict] = {
-    "coerce": False,
-    "nullable": True,
-    "raise_warning": True,
-    "unique": False,
-}
+# _LAX_KWARGS: Final[dict] = {
+#     "coerce": False,
+#     "nullable": True,
+#     "raise_warning": True,
+#     "unique": False,
+# }
 # _NULLABLE_KWARGS: Final[dict] = {"coerce": True, "nullable": True}
 
 
 # Form metadata.
 # NOTE: `form_id` is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
 # If all files are from the same directory in a single extraction, then it will be unique.
-# But, that doesn't guarantee uniqueness across multiple extractions to the same DB.
-FORM_ID_FIELD: Final[Callable] = partial(
-    pa.Field,
-    alias=Columns.FORM_ID,
-    coerce=True,
-    n_failure_cases=constants.N_FAILURE_CASES,
-)
-_FORM_TYPE_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.FORM_TYPE, n_failure_cases=constants.N_FAILURE_CASES
-)
-_FORM_VERSION_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.FORM_VERSION, n_failure_cases=constants.N_FAILURE_CASES
-)
-_CITY_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.CITY, n_failure_cases=constants.N_FAILURE_CASES
-)
-_DATE_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.DATE, n_failure_cases=constants.N_FAILURE_CASES
-)
-_NOTES_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.NOTES, n_failure_cases=constants.N_FAILURE_CASES
-)
+# # But, that doesn't guarantee uniqueness across multiple extractions to the same DB.
+# FORM_ID_FIELD: Final[Callable] = partial(
+#     pa.Field,
+#     alias=Columns.FORM_ID,
+#     coerce=True,
+#     n_failure_cases=constants.N_FAILURE_CASES,
+# )
+# _FORM_TYPE_FIELD: Final[Callable] = partial(
+#     pa.Field, alias=Columns.FORM_TYPE, n_failure_cases=constants.N_FAILURE_CASES
+# )
+# _FORM_VERSION_FIELD: Final[Callable] = partial(
+#     pa.Field, alias=Columns.FORM_VERSION, n_failure_cases=constants.N_FAILURE_CASES
+# )
+# _CITY_FIELD: Final[Callable] = partial(
+#     pa.Field, alias=Columns.CITY, n_failure_cases=constants.N_FAILURE_CASES
+# )
+# _DATE_FIELD: Final[Callable] = partial(
+#     pa.Field, alias=Columns.DATE, n_failure_cases=constants.N_FAILURE_CASES
+# )
+# _NOTES_FIELD: Final[Callable] = partial(
+#     pa.Field, alias=Columns.NOTES, n_failure_cases=constants.N_FAILURE_CASES
+# )
 
-# Form metadata: Field observations.
-_TIDE_HEIGHT_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.TIDE_HEIGHT, n_failure_cases=constants.N_FAILURE_CASES
-)
-_TIDE_TIME_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.TIDE_TIME, n_failure_cases=constants.N_FAILURE_CASES
-)
-_PAST_24HR_RAINFALL_FIELD: Final[Callable] = partial(
-    pa.Field,
-    alias=Columns.PAST_24HR_RAINFALL,
-    n_failure_cases=constants.N_FAILURE_CASES,
-)
-_WEATHER_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.WEATHER, n_failure_cases=constants.N_FAILURE_CASES
-)
+# # Form metadata: Field observations.
+# _TIDE_HEIGHT_FIELD: Final[Callable] = partial(
+#     pa.Field, alias=Columns.TIDE_HEIGHT, n_failure_cases=constants.N_FAILURE_CASES
+# )
+# _TIDE_TIME_FIELD: Final[Callable] = partial(
+#     pa.Field, alias=Columns.TIDE_TIME, n_failure_cases=constants.N_FAILURE_CASES
+# )
+# _PAST_24HR_RAINFALL_FIELD: Final[Callable] = partial(
+#     pa.Field,
+#     alias=Columns.PAST_24HR_RAINFALL,
+#     n_failure_cases=constants.N_FAILURE_CASES,
+# )
+# _WEATHER_FIELD: Final[Callable] = partial(
+#     pa.Field, alias=Columns.WEATHER, n_failure_cases=constants.N_FAILURE_CASES
+# )
 
 # # FormInvestigator.
 # _INVESTIGATOR_FIELD: Final[Callable] = partial(
@@ -161,46 +161,46 @@ _WEATHER_FIELD: Final[Callable] = partial(
 # )
 
 
-class FormExtracted(pa.DataFrameModel):
-    """Form metadata extracted from the datasheets.
+# class FormExtracted(pa.DataFrameModel):
+#     """Form metadata extracted from the datasheets.
 
-    Constraints:
-        PK: `form_id`.
-    """
+#     Constraints:
+#         PK: `form_id`.
+#     """
 
-    # TODO: May need to loosen the typehints.
-    #: The form ID.
-    form_id: Index[str] = partial(FORM_ID_FIELD, unique=True)
-    #: The form type. Nullable. Unenforced `constants.FormType`.
-    form_type: Series[constants.FormType] = partial(_FORM_TYPE_FIELD, **_LAX_KWARGS)
-    #: The form version. Nullable.
-    form_version: Series[str] = partial(_FORM_VERSION_FIELD, **_LAX_KWARGS)
-    #: The date of observations. Nullable.
-    date: Series[str] = partial(_DATE_FIELD, **_LAX_KWARGS)
-    #: The city of observations. Nullable. Unenforced `constants.City`.
-    city: Series[constants.City] = partial(_CITY_FIELD, **_LAX_KWARGS)
-    #: The tide height at the time of observations. Nullable.
-    tide_height: Series[float] = partial(_TIDE_HEIGHT_FIELD, **_LAX_KWARGS)
-    #: The tide time at the time of observations. Nullable.
-    tide_time: Series[str] = partial(_TIDE_TIME_FIELD, **_LAX_KWARGS)
-    #: The past 24-hour rainfall. Nullable.
-    past_24hr_rainfall: Series[float] = partial(_PAST_24HR_RAINFALL_FIELD, **_LAX_KWARGS)
-    #: The weather at the time of observations. Nullable. Unenforced `constants.Weather`.
-    weather: Series[constants.Weather] = partial(_WEATHER_FIELD, **_LAX_KWARGS)
-    #: Investigator notes. Nullable.
-    notes: Series[str] = partial(_NOTES_FIELD, **_LAX_KWARGS)
+#     # TODO: May need to loosen the typehints.
+#     #: The form ID.
+#     form_id: Index[str] = partial(FORM_ID_FIELD, unique=True)
+#     #: The form type. Nullable. Unenforced `constants.FormType`.
+#     form_type: Series[constants.FormType] = partial(_FORM_TYPE_FIELD, **_LAX_KWARGS)
+#     #: The form version. Nullable.
+#     form_version: Series[str] = partial(_FORM_VERSION_FIELD, **_LAX_KWARGS)
+#     #: The date of observations. Nullable.
+#     date: Series[str] = partial(_DATE_FIELD, **_LAX_KWARGS)
+#     #: The city of observations. Nullable. Unenforced `constants.City`.
+#     city: Series[constants.City] = partial(_CITY_FIELD, **_LAX_KWARGS)
+#     #: The tide height at the time of observations. Nullable.
+#     tide_height: Series[float] = partial(_TIDE_HEIGHT_FIELD, **_LAX_KWARGS)
+#     #: The tide time at the time of observations. Nullable.
+#     tide_time: Series[str] = partial(_TIDE_TIME_FIELD, **_LAX_KWARGS)
+#     #: The past 24-hour rainfall. Nullable.
+#     past_24hr_rainfall: Series[float] = partial(_PAST_24HR_RAINFALL_FIELD, **_LAX_KWARGS)
+#     #: The weather at the time of observations. Nullable. Unenforced `constants.Weather`.
+#     weather: Series[constants.Weather] = partial(_WEATHER_FIELD, **_LAX_KWARGS)
+#     #: Investigator notes. Nullable.
+#     notes: Series[str] = partial(_NOTES_FIELD, **_LAX_KWARGS)
 
-    class Config:
-        """The configuration for the schema.
+#     class Config:
+#         """The configuration for the schema.
 
-        Not a strict schema at this stage since it's the "raw" extracted data.
+#         Not a strict schema at this stage since it's the "raw" extracted data.
 
-        We do enforce the primary key since it's created by the extraction process.
-        """
+#         We do enforce the primary key since it's created by the extraction process.
+#         """
 
-        multiindex_strict = False
-        multiindex_unique = False
-        strict = False
+#         multiindex_strict = False
+#         multiindex_unique = False
+#         strict = False
 
 
 # class FormInvestigatorExtracted(pa.DataFrameModel):
@@ -344,7 +344,7 @@ class FormExtracted(pa.DataFrameModel):
 #     Only wet outfalls, but not necessarily all visits.
 
 #     Constraints:
-#         PK: `form_id`, `site_id`, `type` (unenforced).
+#         PK: `form_id`, `site_id`, `observation_type` (unenforced).
 #         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
 #     """
 
@@ -354,7 +354,7 @@ class FormExtracted(pa.DataFrameModel):
 #     #: The site ID, part of the primary key, but nullable at this stage.
 #     site_id: Series[str] = SITE_ID_FIELD_LAX()
 #     #: The observation type. Nullable. Unenforced `constants.QualitativeSiteObservationTypes`.
-#     type: Series[constants.QualitativeSiteObservationTypes] = partial(
+#     observation_type: Series[constants.QualitativeSiteObservationTypes] = partial(
 #         _OBSERVATION_TYPE_FIELD, **_LAX_KWARGS
 #     )
 #     #: The rank of the observation. Nullable. Unenforced `constants.Rank`.
@@ -460,7 +460,7 @@ class FormExtracted(pa.DataFrameModel):
 #     Only wet outfalls, but not necessarily all visits.
 
 #     Constraints:
-#         PK: `form_id`, `site_id`, `type` (unenforced).
+#         PK: `form_id`, `site_id`, `observation_type` (unenforced).
 #         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
 #     """
 
@@ -758,7 +758,7 @@ class FormExtracted(pa.DataFrameModel):
 #     Only wet outfalls, but not necessarily all visits.
 
 #     Constraints:
-#         PK: `form_id`, `site_id`, `type`.
+#         PK: `form_id`, `site_id`, `observation_type`.
 #         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
 #     """
 
@@ -767,7 +767,7 @@ class FormExtracted(pa.DataFrameModel):
 #     #: The site ID, part of the primary key.
 #     site_id: Index[str] = SITE_ID_FIELD()
 #     #: The observation type.
-#     type: Index[
+#     observation_type: Index[
 #         Annotated[pd.CategoricalDtype, list(constants.QualitativeSiteObservationTypes), False]
 #     ] = partial(_OBSERVATION_TYPE_FIELD, coerce=True)
 #     #: The rank of the observation.
@@ -840,6 +840,6 @@ class FormExtracted(pa.DataFrameModel):
 #     Only wet outfalls, but not necessarily all visits.
 
 #     Constraints:
-#         PK: `form_id`, `site_id`, `type`.
+#         PK: `form_id`, `site_id`, `observation_type`.
 #         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
 #     """
