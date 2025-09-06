@@ -96,13 +96,16 @@ run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 @pa.check_types(with_pydantic=True, lazy=True)
 def extract(
     input_dir: Path,
-) -> tuple[
-    pt.DataFrame[schema.FormExtracted],
-    pt.DataFrame[schema.FormInvestigatorExtracted],
-    pt.DataFrame[schema.SiteVisitExtracted],
-    pt.DataFrame[schema.QuantitativeObservationsExtracted],
-    pt.DataFrame[schema.QualitativeObservationsExtracted],
-]:
+):
+    # def extract(
+    #     input_dir: Path,
+    # ) -> tuple[
+    #     pt.DataFrame[schema.FormExtracted],
+    #     pt.DataFrame[schema.FormInvestigatorExtracted],
+    #     pt.DataFrame[schema.SiteVisitExtracted],
+    #     pt.DataFrame[schema.QuantitativeObservationsExtracted],
+    #     pt.DataFrame[schema.QualitativeObservationsExtracted],
+    # ]:
     """Extracts data from the images in the input directory.
 
     Using computer vision, extracts data from datasheets.
@@ -140,18 +143,25 @@ def extract(
 
 # TODO: Implement this.
 def preclean(
-    raw_form_metadata: pt.DataFrame[schema.FormExtracted],
-    raw_investigators: pt.DataFrame[schema.FormInvestigatorExtracted],
-    raw_site_visits: pt.DataFrame[schema.SiteVisitExtracted],
-    raw_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsExtracted],
-    raw_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsExtracted],
-) -> tuple[
-    pt.DataFrame[schema.FormPrecleaned],
-    pt.DataFrame[schema.FormInvestigatorPrecleaned],
-    pt.DataFrame[schema.SiteVisitPrecleaned],
-    pt.DataFrame[schema.QuantitativeObservationsPrecleaned],
-    pt.DataFrame[schema.QualitativeObservationsPrecleaned],
-]:
+    raw_form_metadata,
+    raw_investigators,
+    raw_site_visits,
+    raw_quantitative_observations,
+    raw_qualitative_observations,
+):
+    # def preclean(
+    #     raw_form_metadata: pt.DataFrame[schema.FormExtracted],
+    #     raw_investigators: pt.DataFrame[schema.FormInvestigatorExtracted],
+    #     raw_site_visits: pt.DataFrame[schema.SiteVisitExtracted],
+    #     raw_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsExtracted],
+    #     raw_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsExtracted],
+    # ) -> tuple[
+    #     pt.DataFrame[schema.FormPrecleaned],
+    #     pt.DataFrame[schema.FormInvestigatorPrecleaned],
+    #     pt.DataFrame[schema.SiteVisitPrecleaned],
+    #     pt.DataFrame[schema.QuantitativeObservationsPrecleaned],
+    #     pt.DataFrame[schema.QualitativeObservationsPrecleaned],
+    # ]:
     """Preclean the raw extraction.
 
     Args:
@@ -204,22 +214,29 @@ def preclean(
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def verify(
-    precleaned_form_metadata: pt.DataFrame[schema.FormPrecleaned],
-    precleaned_investigators: pt.DataFrame[schema.FormInvestigatorPrecleaned],
-    precleaned_site_visits: pt.DataFrame[schema.SiteVisitPrecleaned],
-    precleaned_quantitative_observations: pt.DataFrame[
-        schema.QuantitativeObservationsPrecleaned
-    ],
-    precleaned_qualitative_observations: pt.DataFrame[
-        schema.QualitativeObservationsPrecleaned
-    ],
-) -> tuple[
-    pt.DataFrame[schema.FormVerified],
-    pt.DataFrame[schema.FormInvestigatorVerified],
-    pt.DataFrame[schema.SiteVisitVerified],
-    pt.DataFrame[schema.QuantitativeObservationsVerified],
-    pt.DataFrame[schema.QualitativeObservationsVerified],
-]:
+    precleaned_form_metadata,
+    precleaned_investigators,
+    precleaned_site_visits,
+    precleaned_quantitative_observations,
+    precleaned_qualitative_observations,
+):
+    # def verify(
+    #     precleaned_form_metadata: pt.DataFrame[schema.FormPrecleaned],
+    #     precleaned_investigators: pt.DataFrame[schema.FormInvestigatorPrecleaned],
+    #     precleaned_site_visits: pt.DataFrame[schema.SiteVisitPrecleaned],
+    #     precleaned_quantitative_observations: pt.DataFrame[
+    #         schema.QuantitativeObservationsPrecleaned
+    #     ],
+    #     precleaned_qualitative_observations: pt.DataFrame[
+    #         schema.QualitativeObservationsPrecleaned
+    #     ],
+    # ) -> tuple[
+    #     pt.DataFrame[schema.FormVerified],
+    #     pt.DataFrame[schema.FormInvestigatorVerified],
+    #     pt.DataFrame[schema.SiteVisitVerified],
+    #     pt.DataFrame[schema.QuantitativeObservationsVerified],
+    #     pt.DataFrame[schema.QualitativeObservationsVerified],
+    # ]:
     """Verifies the raw extraction with the user.
 
     Prompts user to check each image against each extraction and edit as needed.
@@ -277,18 +294,25 @@ def verify(
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def clean(
-    verified_form_metadata: pt.DataFrame[schema.FormVerified],
-    verified_investigators: pt.DataFrame[schema.FormInvestigatorVerified],
-    verified_site_visits: pt.DataFrame[schema.SiteVisitVerified],
-    verified_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsVerified],
-    verified_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsVerified],
-) -> tuple[
-    pt.DataFrame[schema.FormCleaned],
-    pt.DataFrame[schema.FormInvestigatorCleaned],
-    pt.DataFrame[schema.SiteVisitCleaned],
-    pt.DataFrame[schema.QuantitativeObservationsCleaned],
-    pt.DataFrame[schema.QualitativeObservationsCleaned],
-]:
+    verified_form_metadata,
+    verified_investigators,
+    verified_site_visits,
+    verified_quantitative_observations,
+    verified_qualitative_observations,
+):
+    # def clean(
+    #     verified_form_metadata: pt.DataFrame[schema.FormVerified],
+    #     verified_investigators: pt.DataFrame[schema.FormInvestigatorVerified],
+    #     verified_site_visits: pt.DataFrame[schema.SiteVisitVerified],
+    #     verified_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsVerified],
+    #     verified_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsVerified],
+    # ) -> tuple[
+    #     pt.DataFrame[schema.FormCleaned],
+    #     pt.DataFrame[schema.FormInvestigatorCleaned],
+    #     pt.DataFrame[schema.SiteVisitCleaned],
+    #     pt.DataFrame[schema.QuantitativeObservationsCleaned],
+    #     pt.DataFrame[schema.QualitativeObservationsCleaned],
+    # ]:
     """Clean the user-verified extraction.
 
     Clean and validates the user-verified extraction data, ensuring it is in a consistent
@@ -348,12 +372,19 @@ def clean(
 # TODO: Implement this.
 @pa.check_types(with_pydantic=True, lazy=True)
 def restructure_extraction(
-    cleaned_form_metadata: pt.DataFrame[schema.FormCleaned],
-    cleaned_investigators: pt.DataFrame[schema.FormInvestigatorCleaned],
-    cleaned_site_visits: pt.DataFrame[schema.SiteVisitCleaned],
-    cleaned_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsCleaned],
-    cleaned_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsCleaned],
-) -> dict[str, Any]:
+    cleaned_form_metadata,
+    cleaned_investigators,
+    cleaned_site_visits,
+    cleaned_quantitative_observations,
+    cleaned_qualitative_observations,
+):
+    # def restructure_extraction(
+    #     cleaned_form_metadata: pt.DataFrame[schema.FormCleaned],
+    #     cleaned_investigators: pt.DataFrame[schema.FormInvestigatorCleaned],
+    #     cleaned_site_visits: pt.DataFrame[schema.SiteVisitCleaned],
+    #     cleaned_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsCleaned],
+    #     cleaned_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsCleaned],
+    # ) -> dict[str, Any]:
     """Restructure the cleaned extraction into a JSON schema.
 
     Args:
