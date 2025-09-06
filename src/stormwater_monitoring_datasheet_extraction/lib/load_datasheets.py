@@ -120,7 +120,7 @@ def extract(
 
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
-    raw_form_metadata = cast("pt.DataFrame[schema.FormExtracted]", pd.DataFrame())
+    raw_form_metadata = pd.DataFrame()
     raw_investigators = pd.DataFrame()
     raw_site_visits = pd.DataFrame()
     raw_quantitative_observations = pd.DataFrame()
