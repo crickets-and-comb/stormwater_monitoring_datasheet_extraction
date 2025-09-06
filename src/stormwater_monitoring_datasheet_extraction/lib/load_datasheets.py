@@ -19,21 +19,19 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+@typechecked
 def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
-    return Path()
-# @typechecked
-# def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
-    # logger.info("Starting ETL process...")
+    logger.info("Starting ETL process...")
 
-#     # TODO, NOTE: This is an estimated outline, not a hard requirement.
-#     # We may need to adjust the steps based on the actual implementation details.
-#     (
-#         raw_form_metadata,
-#         raw_investigators,
-#         raw_site_visits,
-#         raw_quantitative_observations,
-#         raw_qualitative_observations,
-#     ) = extract(input_dir=input_dir)
+    # TODO, NOTE: This is an estimated outline, not a hard requirement.
+    # We may need to adjust the steps based on the actual implementation details.
+    (
+        raw_form_metadata,
+        raw_investigators,
+        raw_site_visits,
+        raw_quantitative_observations,
+        raw_qualitative_observations,
+    ) = extract(input_dir=input_dir)
 
 #     (
 #         precleaned_form_metadata,
@@ -88,58 +86,64 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
 #     final_output_path = load(restructured_json=restructured_json, output_dir=output_dir)
 
 #     return final_output_path
+    return Path()
 
 
 # run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
 
 
-# # TODO: Implement this.
-# @pa.check_types(with_pydantic=True, lazy=True)
-# def extract(
-#     input_dir: Path,
-# ):
-#     # def extract(
-#     #     input_dir: Path,
-#     # ) -> tuple[
-#     #     pt.DataFrame[schema.FormExtracted],
-#     #     pt.DataFrame[schema.FormInvestigatorExtracted],
-#     #     pt.DataFrame[schema.SiteVisitExtracted],
-#     #     pt.DataFrame[schema.QuantitativeObservationsExtracted],
-#     #     pt.DataFrame[schema.QualitativeObservationsExtracted],
-#     # ]:
-#     """Extracts data from the images in the input directory.
+# TODO: Implement this.
+@pa.check_types(with_pydantic=True, lazy=True)
+def extract(
+    input_dir: Path,
+):
+    # def extract(
+    #     input_dir: Path,
+    # ) -> tuple[
+    #     pt.DataFrame[schema.FormExtracted],
+    #     pt.DataFrame[schema.FormInvestigatorExtracted],
+    #     pt.DataFrame[schema.SiteVisitExtracted],
+    #     pt.DataFrame[schema.QuantitativeObservationsExtracted],
+    #     pt.DataFrame[schema.QualitativeObservationsExtracted],
+    # ]:
+    """Extracts data from the images in the input directory.
 
-#     Using computer vision, extracts data from datasheets.
+    Using computer vision, extracts data from datasheets.
 
-#     Args:
-#         input_dir: Path to the directory containing the datasheet images.
+    Args:
+        input_dir: Path to the directory containing the datasheet images.
 
-#     Returns:
-#         Raw extraction split into normalized relational tables, with no enforcement.
-#     """
-#     logger.info(f"Extracting data from images in {input_dir} ...")
+    Returns:
+        Raw extraction split into normalized relational tables, with no enforcement.
+    """
+    logger.info(f"Extracting data from images in {input_dir} ...")
 
-#     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
-#     # It will cast and validate on return.
-#     raw_form_metadata = cast("pt.DataFrame[schema.FormExtracted]", pd.DataFrame())
-#     raw_investigators = cast("pt.DataFrame[schema.FormInvestigatorExtracted]", pd.DataFrame())
-#     raw_site_visits = cast("pt.DataFrame[schema.SiteVisitExtracted]", pd.DataFrame())
-#     raw_quantitative_observations = cast(
-#         "pt.DataFrame[schema.QuantitativeObservationsExtracted]", pd.DataFrame()
-#     )
-#     raw_qualitative_observations = cast(
-#         "pt.DataFrame[schema.QualitativeObservationsExtracted]", pd.DataFrame()
-#     )
-#     # TODO: Use data definition as source of truth rather than schema.
-#     ...
+    # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
+    # It will cast and validate on return.
+    raw_form_metadata = pd.DataFrame()
+    raw_investigators = pd.DataFrame()
+    raw_site_visits = pd.DataFrame()
+    raw_quantitative_observations = pd.DataFrame()
+    raw_qualitative_observations = pd.DataFrame()
+    # raw_form_metadata = cast("pt.DataFrame[schema.FormExtracted]", pd.DataFrame())
+    # raw_investigators = cast("pt.DataFrame[schema.FormInvestigatorExtracted]", pd.DataFrame())
+    # raw_site_visits = cast("pt.DataFrame[schema.SiteVisitExtracted]", pd.DataFrame())
+    # raw_quantitative_observations = cast(
+    #     "pt.DataFrame[schema.QuantitativeObservationsExtracted]", pd.DataFrame()
+    # )
+    # raw_qualitative_observations = cast(
+    #     "pt.DataFrame[schema.QualitativeObservationsExtracted]", pd.DataFrame()
+    # )
+    # TODO: Use data definition as source of truth rather than schema.
+    ...
 
-#     return (
-#         raw_form_metadata,
-#         raw_investigators,
-#         raw_site_visits,
-#         raw_quantitative_observations,
-#         raw_qualitative_observations,
-#     )
+    return (
+        raw_form_metadata,
+        raw_investigators,
+        raw_site_visits,
+        raw_quantitative_observations,
+        raw_qualitative_observations,
+    )
 
 
 # # TODO: Implement this.
