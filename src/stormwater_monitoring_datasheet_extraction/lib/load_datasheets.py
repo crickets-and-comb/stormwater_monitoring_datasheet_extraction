@@ -9,15 +9,21 @@ import pandera as pa
 import pandera.typing as pt
 from typeguard import typechecked
 
-from stormwater_monitoring_datasheet_extraction.lib import schema
-from stormwater_monitoring_datasheet_extraction.lib.constants import DocStrings
-
-# TODO: To check observations threshholds, need a site-type map:
-# creek or outfall, and if creek:
-# habitat, spawn, rear, or migrate.
+from stormwater_monitoring_datasheet_extraction.lib import constants, schema
+from stormwater_monitoring_datasheet_extraction.lib.db.read import (
+    get_creek_type_map,
+    get_site_type_map,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# TODO: At risk of overcomplication, we could create a class to hold the entire schema.
+# We could define its relational constraints internally, and have methods to
+# validate an entire extraction at once. Basically make an object-oriented RDB.
+# Wouldn't need to pass around so many parameters/returns, have so many copies of the same
+# data. Could define progressive enforcement levels internally.
+# But might be overkill for this project.
 
 
 @typechecked
@@ -54,6 +60,8 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
         verified_site_visits,
         verified_quantitative_observations,
         verified_qualitative_observations,
+        verified_site_type_map,
+        verified_creek_type_map,
     ) = verify(
         precleaned_form_metadata=precleaned_form_metadata,
         precleaned_investigators=precleaned_investigators,
@@ -68,12 +76,16 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
         cleaned_site_visits,
         cleaned_quantitative_observations,
         cleaned_qualitative_observations,
+        cleaned_site_type_map,
+        cleaned_creek_type_map,
     ) = clean(
         verified_form_metadata=verified_form_metadata,
         verified_investigators=verified_investigators,
         verified_site_visits=verified_site_visits,
         verified_quantitative_observations=verified_quantitative_observations,
         verified_qualitative_observations=verified_qualitative_observations,
+        verified_site_type_map=verified_site_type_map,
+        verified_creek_type_map=verified_creek_type_map,
     )
 
     restructured_json = restructure_extraction(
@@ -82,6 +94,8 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
         cleaned_site_visits=cleaned_site_visits,
         cleaned_quantitative_observations=cleaned_quantitative_observations,
         cleaned_qualitative_observations=cleaned_qualitative_observations,
+        cleaned_site_type_map=cleaned_site_type_map,
+        cleaned_creek_type_map=cleaned_creek_type_map,
     )
 
     final_output_path = load(restructured_json=restructured_json, output_dir=output_dir)
@@ -89,7 +103,7 @@ def run_etl(input_dir: Path, output_dir: Path) -> Path:  # noqa: D103
     return final_output_path
 
 
-run_etl.__doc__ = DocStrings.RUN_ETL.api_docstring
+run_etl.__doc__ = constants.DocStrings.RUN_ETL.api_docstring
 
 
 # TODO: Implement this.
@@ -220,6 +234,8 @@ def verify(
     pt.DataFrame[schema.SiteVisitVerified],
     pt.DataFrame[schema.QuantitativeObservationsVerified],
     pt.DataFrame[schema.QualitativeObservationsVerified],
+    pt.DataFrame[schema.Site],
+    pt.DataFrame[schema.Creek],
 ]:
     """Verifies the raw extraction with the user.
 
@@ -238,6 +254,8 @@ def verify(
         User-verified relational tables, with some enforcement.
     """
     logger.info("Verifying precleaned data with user...")
+
+    site_type_map, creek_type_map = _get_site_creek_maps()
 
     # TODO: When implementing, you can just make a pandas.DataFrame. No need to cast.
     # It will cast and validate on return.
@@ -258,7 +276,10 @@ def verify(
         "pt.DataFrame[schema.QualitativeObservationsVerified]",
         precleaned_qualitative_observations,
     )
+    verified_site_type_map = cast("pt.DataFrame[schema.Site]", site_type_map)
+    verified_creek_type_map = cast("pt.DataFrame[schema.Creek]", creek_type_map)
     ...
+    # TODO: Allow user to modify site/creek type maps as needed, as long as valid.
     # TODO: Offer some immediate feedback:
     # Offer enumerated options for categorical data.
     # Highlight invalid extracted fields as they come to user's focus.
@@ -272,6 +293,8 @@ def verify(
         verified_site_visits,
         verified_quantitative_observations,
         verified_qualitative_observations,
+        verified_site_type_map,
+        verified_creek_type_map,
     )
 
 
@@ -283,12 +306,16 @@ def clean(
     verified_site_visits: pt.DataFrame[schema.SiteVisitVerified],
     verified_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsVerified],
     verified_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsVerified],
+    verified_site_type_map: pt.DataFrame[schema.Site],
+    verified_creek_type_map: pt.DataFrame[schema.Creek],
 ) -> tuple[
     pt.DataFrame[schema.FormCleaned],
     pt.DataFrame[schema.FormInvestigatorCleaned],
     pt.DataFrame[schema.SiteVisitCleaned],
     pt.DataFrame[schema.QuantitativeObservationsCleaned],
     pt.DataFrame[schema.QualitativeObservationsCleaned],
+    pt.DataFrame[schema.Site],
+    pt.DataFrame[schema.Creek],
 ]:
     """Clean the user-verified extraction.
 
@@ -301,6 +328,8 @@ def clean(
         verified_site_visits: The user-verified site observations.
         verified_quantitative_observations: The user-verified quantitative site observations.
         verified_qualitative_observations: The user-verified qualitative site observations.
+        verified_site_type_map: The user-verified site type map.
+        verified_creek_type_map: The user-verified creek type map.
 
     Returns:
         Cleaned relational tables, with full enforcement.
@@ -322,6 +351,8 @@ def clean(
         "pt.DataFrame[schema.QualitativeObservationsCleaned]",
         verified_qualitative_observations,
     )
+    cleaned_site_type_map = cast("pt.DataFrame[schema.Site]", verified_site_type_map)
+    cleaned_creek_type_map = cast("pt.DataFrame[schema.Creek]", verified_creek_type_map)
     ...
     # TODO: Inferred/courtesy imputations? (nulls/empties, don't overstep)
 
@@ -333,6 +364,13 @@ def clean(
     # - FormInvestigator start/end datetimes < now.
     # - SiteMetadata arrival datetime < now.
     # - No dry outfalls in observations tables.
+    # - Validate/warn against thresholds and limits, by outfall type.
+
+    _validate_thresholds(
+        observations=cleaned_quantitative_observations,
+        site_type_map=cleaned_site_type_map,
+        creek_type_map=cleaned_creek_type_map,
+    )
 
     # TODO: If still invalid, alert to the problem, and re-call `verify()`.
     # Use data definition as source of truth rather than schema.
@@ -343,6 +381,8 @@ def clean(
         cleaned_site_visits,
         cleaned_quantitative_observations,
         cleaned_qualitative_observations,
+        cleaned_site_type_map,
+        cleaned_creek_type_map,
     )
 
 
@@ -354,6 +394,8 @@ def restructure_extraction(
     cleaned_site_visits: pt.DataFrame[schema.SiteVisitCleaned],
     cleaned_quantitative_observations: pt.DataFrame[schema.QuantitativeObservationsCleaned],
     cleaned_qualitative_observations: pt.DataFrame[schema.QualitativeObservationsCleaned],
+    cleaned_site_type_map: pt.DataFrame[schema.Site],
+    cleaned_creek_type_map: pt.DataFrame[schema.Creek],
 ) -> dict[str, Any]:
     """Restructure the cleaned extraction into a JSON schema.
 
@@ -398,3 +440,57 @@ def load(restructured_json: dict[str, Any], output_dir: Path) -> Path:
     ...
 
     return final_output_path
+
+
+@pa.check_types(with_pydantic=True, lazy=True)
+def _get_site_creek_maps() -> tuple[pt.DataFrame[schema.Site], pt.DataFrame[schema.Creek]]:
+    """Get the site and creek type maps.
+
+    Returns:
+        A tuple containing:
+            - A DataFrame mapping site IDs to their outfall types.
+            - A DataFrame mapping creek site IDs to their creek types.
+    """
+    site_type_map = get_site_type_map()
+    creek_type_map = get_creek_type_map()
+    _validate_site_creek_map(site_type_map=site_type_map, creek_type_map=creek_type_map)
+
+    return site_type_map, creek_type_map
+
+
+@pa.check_types(with_pydantic=True, lazy=True)
+def _validate_thresholds(
+    observations: pt.DataFrame[schema.QuantitativeObservationsCleaned],
+    site_type_map: pt.DataFrame[schema.Site],
+    creek_type_map: pt.DataFrame[schema.Creek],
+) -> None:
+    """Validate observations against thresholds by site type.
+
+    Args:
+        observations: The cleaned quantitative observations.
+        site_type_map: A DataFrame mapping site IDs to their outfall types.
+        creek_type_map: A DataFrame mapping creek site IDs to their creek types.
+    """
+    # TODO: Differentiate between normal thresholds and absolute limits.
+    # Warn for outside normal thresholds, and error for invalid values.
+    # Codify in data definition. Check in schema itself when possible, and here as needed.
+    # TODO: Add records to site_type_map to determine thresholds.
+    # creek or outfall, and if creek:
+    # habitat, spawn, rear, or migrate.
+    _validate_site_creek_map(site_type_map=site_type_map, creek_type_map=creek_type_map)
+    ...
+
+
+@pa.check_types(with_pydantic=True, lazy=True)
+def _validate_site_creek_map(
+    site_type_map: pt.DataFrame[schema.Site],
+    creek_type_map: pt.DataFrame[schema.Creek],
+) -> None:
+    """Validate the site and creek type maps.
+
+    Args:
+        site_type_map: A DataFrame mapping site IDs to their outfall types.
+        creek_type_map: A DataFrame mapping creek site IDs to their creek types.
+    """
+    ...
+    # TODO: Validate referential integrity.

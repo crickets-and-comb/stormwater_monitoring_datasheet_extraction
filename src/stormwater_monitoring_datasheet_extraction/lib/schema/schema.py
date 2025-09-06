@@ -22,14 +22,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
 # TODO: Are null descriptions allowed for non-zero, non-null ranks (1-3)?
 # Are non-null descriptions allowed for 0 ranks?
 
-# NOTE: We don't know whether bottle numbers are unique across extractions, so we assume it's
-# only unique by form, needing to use form_id:site_id in the QuantitativeObservations primary
-# key. Otherwise, we'd use bottle_no as the PK, and either keep form_id:site_id as FK or
-# include bottle_no in SiteVisit as a nullable FK to QuantitativeObservations.
-
-# NOTE: Validations should be lax for extraction, stricter after cleaning,
-# stricter after user verification, and strictest after final cleaning.
-
 # TODO: Use `schema_error_handler` decorator.
 # Helps catch/handle schema errors more gracefully.
 # 0. Copy `schema_error_handler` from `bfb_delivery`.
@@ -39,6 +31,18 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
 # 2. Add feature to pass in custom error handler function,
 # with default that uses generally useful DataFrameModel error features.
 
+# NOTE: Including outfall_type in Site and Creek to use referential integrity to enforce that
+# all creek sites are creek sites in Site as well, in case we get a third outfall type in the
+# future. Could do that with dry outfalls too, but it's pretty solidly boolean.
+#
+# NOTE: We don't know whether bottle numbers are unique across extractions, so we assume it's
+# only unique by form, needing to use form_id:site_id in the QuantitativeObservations primary
+# key. Otherwise, we'd use bottle_no as the PK, and either keep form_id:site_id as FK or
+# include bottle_no in SiteVisit as a nullable FK to QuantitativeObservations.
+
+# NOTE: Validations should be lax for extraction, stricter after cleaning,
+# stricter after user verification, and strictest after final cleaning.
+
 _LAX_KWARGS: Final[dict] = {
     "coerce": False,
     "nullable": True,
@@ -47,6 +51,15 @@ _LAX_KWARGS: Final[dict] = {
 }
 _NULLABLE_KWARGS: Final[dict] = {"coerce": True, "nullable": True}
 
+
+# Site metadata.
+OUTFALL_TYPE_FIELD: Final[Callable] = partial(
+    pa.Field,
+    alias=Columns.OUTFALL_TYPE,
+    nullable=False,
+    coerce=True,
+    n_failure_cases=constants.N_FAILURE_CASES,
+)
 
 # Form metadata.
 # NOTE: `form_id` is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
@@ -101,7 +114,7 @@ _END_TIME_FIELD: Final[Callable] = partial(
     pa.Field, alias=Columns.END_TIME, n_failure_cases=constants.N_FAILURE_CASES
 )
 
-# Qunatitative observations.
+# Quantitative observations.
 _SITE_ID_FIELD: Final[Callable] = partial(
     pa.Field, alias=Columns.SITE_ID, n_failure_cases=constants.N_FAILURE_CASES
 )
@@ -158,6 +171,71 @@ _RANK_FIELD: Final[Callable] = partial(
 _DESCRIPTION_FIELD: Final[Callable] = partial(
     pa.Field, alias=Columns.DESCRIPTION, n_failure_cases=constants.N_FAILURE_CASES
 )
+
+
+class Site(pa.DataFrameModel):
+    """Site metadata.
+
+    All sites.
+
+    Constraints:
+        PK: `site_id`.
+    """
+
+    #: The site ID.
+    site_id: Index[str] = SITE_ID_FIELD()
+    #: The outfall type. `constants.OutfallType`.
+    outfall_type: Series[
+        Annotated[pd.CategoricalDtype, list(constants.OutfallType), False]
+    ] = OUTFALL_TYPE_FIELD()
+
+    class Config:
+        """The configuration for the schema.
+
+        Strict schema enforcement.
+        """
+
+        multiindex_strict = True
+        multiindex_unique = True
+        strict = True
+
+
+class Creek(pa.DataFrameModel):
+    """Creek metadata.
+
+    Creek type.
+
+    Constraints:
+        PK: `site_id`.
+        FK: `site_id`, `outfall_type`: `Site(site_id, outfall_type)` (unenforced).
+    """
+
+    #: The site ID.
+    site_id: Index[str] = SITE_ID_FIELD()
+    #: The outfall type. `constants.OutfallType.CREEK`.
+    outfall_type: Series[
+        Annotated[pd.CategoricalDtype, list(constants.OutfallType.CREEK), False]
+    ] = OUTFALL_TYPE_FIELD()
+    #: The creek type. `constants.CreekType`.
+    creek_type: Series[Annotated[pd.CategoricalDtype, list(constants.CreekType), False]] = (
+        partial(
+            pa.Field,
+            alias=Columns.CREEK_TYPE,
+            nullable=False,
+            coerce=True,
+            n_failure_cases=constants.N_FAILURE_CASES,
+        )
+    )
+
+    class Config:
+        """The configuration for the schema.
+
+        Strict schema enforcement.
+        """
+
+        multiindex_strict = True
+        multiindex_unique = True
+        strict = True
 
 
 class FormExtracted(pa.DataFrameModel):
@@ -228,35 +306,6 @@ class FormInvestigatorExtracted(pa.DataFrameModel):
         multiindex_strict = False
         multiindex_unique = False
         strict = False
-
-
-# TODO: Create a constant using this schema.
-# class Site(pa.DataFrameModel):
-#     """Site metadata.
-#
-#     Constraints:
-#         PK: `site_id`.
-#     """
-#
-#     #: The site ID, sole primary key.
-#     site_id: Index[str] = SITE_ID_FIELD()
-#     #: The outfall type. Nullable. Unenforced `constants.OutfallType`.
-#     outfall_type: Series[constants.OutfallType] = partial(
-#         pa.Field,
-#         alias=Columns.OUTFALL_TYPE,
-#         nullable=False,
-#         n_failure_cases=constants.N_FAILURE_CASES,
-#     )
-#
-#     class Config:
-#         """The configuration for the schema.
-#
-#         Strict schema enforcement.
-#         """
-#
-#         multiindex_strict = True
-#         multiindex_unique = True
-#         strict = True
 
 
 class SiteVisitExtracted(pa.DataFrameModel):
@@ -733,11 +782,6 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
         is_valid = cast("Series[bool]", is_valid)
 
         return is_valid
-
-    # TODO: Dataframe checks:
-    # - Check thresholds, but requires site-type map in field definition:
-    #       creek or outfall, and if creek:
-    #           habitat, spawn, rear, or migrate.
 
     class Config:
         """The configuration for the schema.

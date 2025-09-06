@@ -1,6 +1,7 @@
 """Pandera schemas and validations for the stormwater monitoring datasheet extraction."""
 
 from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (  # noqa: F403
+    Creek,
     FormCleaned,
     FormExtracted,
     FormInvestigatorCleaned,
@@ -17,6 +18,7 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.schema import (  # no
     QuantitativeObservationsExtracted,
     QuantitativeObservationsPrecleaned,
     QuantitativeObservationsVerified,
+    Site,
     SiteVisitCleaned,
     SiteVisitExtracted,
     SiteVisitPrecleaned,
