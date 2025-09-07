@@ -64,8 +64,7 @@ OUTFALL_TYPE_FIELD: Final[Callable] = pa.Field(
 # NOTE: `form_id` is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
 # If all files are from the same directory in a single extraction, then it will be unique.
 # But, that doesn't guarantee uniqueness across multiple extractions to the same DB.
-FORM_ID_FIELD: Final[Callable] = partial(
-    pa.Field,
+FORM_ID_FIELD: Final[Callable] = pa.Field(
     alias=Columns.FORM_ID,
     coerce=True,
     n_failure_cases=constants.N_FAILURE_CASES,
@@ -282,7 +281,7 @@ class FormInvestigatorExtracted(pa.DataFrameModel):
     """
 
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD
     #: The investigator, part of the primary key, but nullable at this stage.
     investigator: Index[str] = partial(_INVESTIGATOR_FIELD, **_LAX_KWARGS)()
     #: The start time of the investigation. Nullable.
@@ -314,7 +313,7 @@ class SiteVisitExtracted(pa.DataFrameModel):
 
     # TODO: May need to loosen the typehints.
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Index[str] = SITE_ID_FIELD_LAX()
     #: The arrival time of the investigation. Nullable.
@@ -344,7 +343,7 @@ class QuantitativeObservationsExtracted(pa.DataFrameModel):
 
     # TODO: May need to loosen the typehints.
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Index[str] = SITE_ID_FIELD_LAX()
     #: The bottle number.
@@ -391,7 +390,7 @@ class QualitativeObservationsExtracted(pa.DataFrameModel):
 
     # TODO: May need to loosen the typehints.
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Series[str] = SITE_ID_FIELD_LAX()
     #: The observation type. Nullable. Unenforced `constants.QualitativeSiteObservationTypes`.
@@ -624,7 +623,7 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
     """
 
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD
     #: The investigator.
     investigator: Index[str] = partial(_INVESTIGATOR_FIELD, coerce=True)()
     #: The start time of the investigation. Must be "HH:MM".
@@ -690,7 +689,7 @@ class SiteVisitVerified(SiteVisitPrecleaned):
     """
 
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD
     #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The arrival time of the investigation. Must be "HH:MM".
@@ -728,7 +727,7 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
     """
 
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD
     #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The bottle number.
@@ -801,7 +800,7 @@ class QualitativeObservationsVerified(QualitativeObservationsPrecleaned):
     """
 
     #: The form ID, part of the primary key, foreign key to `FormExtracted.form_id`.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD
     #: The site ID, part of the primary key.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The observation type.
