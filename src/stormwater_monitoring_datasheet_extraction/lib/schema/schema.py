@@ -752,7 +752,7 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
     #: The salinity.
     salinity_ppt: Series[float] = _SALINITY_PPT_FIELD(coerce=True, ge=0)
     #: The pH.
-    pH: Series[float] = _PH_FIELD(coerce=True, ge=0)
+    pH: Series[float] = _PH_FIELD(coerce=True, ge=0, le=14)
 
     @pa.check("arrival_time", name="arrival_time_is_valid_time")
     @typechecked
