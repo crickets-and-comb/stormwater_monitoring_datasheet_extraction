@@ -19,6 +19,8 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
+# TODO: Either remove redundant inherited field overwrites or overwrite all.
+
 # TODO: Are null descriptions allowed for non-zero, non-null ranks (1-3)?
 # Are non-null descriptions allowed for 0 ranks?
 
@@ -64,8 +66,7 @@ OUTFALL_TYPE_FIELD: Final[Callable] = pa.Field(
 # NOTE: `form_id` is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
 # If all files are from the same directory in a single extraction, then it will be unique.
 # But, that doesn't guarantee uniqueness across multiple extractions to the same DB.
-FORM_ID_FIELD: Final[Callable] = partial(
-    pa.Field,
+FORM_ID_FIELD: Final[Callable] = pa.Field(
     alias=Columns.FORM_ID,
     coerce=True,
     n_failure_cases=constants.N_FAILURE_CASES,
