@@ -53,7 +53,7 @@ _NULLABLE_KWARGS: Final[dict] = {"coerce": True, "nullable": True}
 
 
 # Site metadata.
-OUTFALL_TYPE_FIELD: Final = pa.Field(
+OUTFALL_TYPE_FIELD = pa.Field(
     alias=Columns.OUTFALL_TYPE,
     nullable=False,
     coerce=True,
