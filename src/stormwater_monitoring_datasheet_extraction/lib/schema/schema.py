@@ -246,7 +246,7 @@ class FormExtracted(pa.DataFrameModel):
 
     # TODO: May need to loosen the typehints.
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD(unique=True)
+    form_id: Index[str] = FORM_ID_FIELD()
     #: The form type. Nullable. Unenforced `constants.FormType`.
     form_type: Series[constants.FormType] = _FORM_TYPE_FIELD(**_LAX_KWARGS)
     #: The form version. Nullable.
