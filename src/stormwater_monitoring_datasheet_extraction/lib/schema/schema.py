@@ -622,8 +622,6 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
         FK: `form_id`: `Form.form_id` (unenforced).
     """
 
-    #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD
     #: The investigator.
     investigator: Index[str] = partial(_INVESTIGATOR_FIELD, coerce=True)()
     #: The start time of the investigation. Must be "HH:MM".
@@ -688,8 +686,6 @@ class SiteVisitVerified(SiteVisitPrecleaned):
         FK: `site_id`: `Site.site_id` (unenforced).
     """
 
-    #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD
     #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The arrival time of the investigation. Must be "HH:MM".
@@ -726,8 +722,6 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
         Unique: `form_id`, `bottle_no`.
     """
 
-    #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD
     #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The bottle number.
@@ -799,9 +793,7 @@ class QualitativeObservationsVerified(QualitativeObservationsPrecleaned):
         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
     """
 
-    #: The form ID, part of the primary key, foreign key to `FormExtracted.form_id`.
-    form_id: Index[str] = FORM_ID_FIELD
-    #: The site ID, part of the primary key.
+    #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The observation type.
     type: Index[
