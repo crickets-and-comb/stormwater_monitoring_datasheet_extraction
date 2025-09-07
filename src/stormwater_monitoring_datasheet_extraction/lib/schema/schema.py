@@ -116,9 +116,7 @@ _SITE_ID_FIELD: Final[Callable] = pa.Field(
     alias=Columns.SITE_ID, n_failure_cases=constants.N_FAILURE_CASES
 )
 SITE_ID_FIELD_LAX: Final[Callable] = partial(_SITE_ID_FIELD, **_LAX_KWARGS)
-SITE_ID_FIELD: Final[Callable] = partial(
-    _SITE_ID_FIELD, coerce=True, n_failure_cases=constants.N_FAILURE_CASES
-)
+SITE_ID_FIELD: Final[Callable] = partial(_SITE_ID_FIELD, coerce=True)
 _BOTTLE_NO_FIELD: Final[Callable] = pa.Field(
     alias=Columns.BACTERIA_BOTTLE_NO,
     n_failure_cases=constants.N_FAILURE_CASES,
