@@ -547,7 +547,7 @@ class FormVerified(FormPrecleaned):
         ge=FIELD_DATA_DEFINITION[Columns.METADATA][Columns.PAST_24HR_RAINFALL][Columns.LOWER][
             Columns.VALUE
         ],
-    )()
+    )
     #: The weather at the time of observations.
     # TODO: Are we going to make weather ordered?
     weather: Series[Annotated[pd.CategoricalDtype, list(constants.Weather), True]] = (
