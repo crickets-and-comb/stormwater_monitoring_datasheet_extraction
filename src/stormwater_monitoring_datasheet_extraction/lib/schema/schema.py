@@ -205,7 +205,7 @@ class Creek(pa.DataFrameModel):
     site_id: Index[str] = SITE_ID_FIELD()
     #: The outfall type. `constants.OutfallType.CREEK`.
     outfall_type: Series[
-        Annotated[pd.CategoricalDtype, list(constants.OutfallType.CREEK), False]
+        Annotated[pd.CategoricalDtype, [constants.OutfallType.CREEK], False]
     ] = OUTFALL_TYPE_FIELD()
     #: The creek type. `constants.CreekType`.
     creek_type: Series[Annotated[pd.CategoricalDtype, list(constants.CreekType), False]] = (
