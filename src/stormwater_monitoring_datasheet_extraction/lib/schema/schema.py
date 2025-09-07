@@ -70,8 +70,8 @@ FORM_ID_FIELD: Final[Callable] = partial(
     coerce=True,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_FORM_TYPE_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.FORM_TYPE, n_failure_cases=constants.N_FAILURE_CASES
+_FORM_TYPE_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.FORM_TYPE, n_failure_cases=constants.N_FAILURE_CASES
 )
 _FORM_VERSION_FIELD: Final[Callable] = partial(
     pa.Field, alias=Columns.FORM_VERSION, n_failure_cases=constants.N_FAILURE_CASES
