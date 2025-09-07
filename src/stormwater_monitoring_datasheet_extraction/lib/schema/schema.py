@@ -217,8 +217,7 @@ class Creek(pa.DataFrameModel):
     ] = OUTFALL_TYPE_FIELD()
     #: The creek type. `constants.CreekType`.
     creek_type: Series[Annotated[pd.CategoricalDtype, list(constants.CreekType), False]] = (
-        partial(
-            pa.Field,
+        pa.Field(
             alias=Columns.CREEK_TYPE,
             nullable=False,
             coerce=True,
