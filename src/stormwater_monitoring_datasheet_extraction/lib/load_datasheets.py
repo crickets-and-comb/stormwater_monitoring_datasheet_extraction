@@ -405,6 +405,8 @@ def restructure_extraction(
         cleaned_site_visits: The cleaned site observations.
         cleaned_quantitative_observations: The cleaned quantitative site observations.
         cleaned_qualitative_observations: The cleaned qualitative site observations.
+        cleaned_site_type_map: The cleaned site type map.
+        cleaned_creek_type_map: The cleaned creek type map.
 
     Returns:
         Cleaned relational tables restructured into JSON schema.
