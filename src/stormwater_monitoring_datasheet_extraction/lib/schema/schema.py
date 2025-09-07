@@ -59,7 +59,8 @@ OUTFALL_TYPE_FIELD = partial(
     coerce=True,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-CREEK_TYPE_FIELD = pa.Field(
+CREEK_TYPE_FIELD = partial(
+    pa.Field,
     alias=Columns.CREEK_TYPE,
     nullable=False,
     coerce=True,
