@@ -73,102 +73,97 @@ FORM_ID_FIELD: Final[Callable] = partial(
 _FORM_TYPE_FIELD: Final[Callable] = pa.Field(
     alias=Columns.FORM_TYPE, n_failure_cases=constants.N_FAILURE_CASES
 )
-_FORM_VERSION_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.FORM_VERSION, n_failure_cases=constants.N_FAILURE_CASES
+_FORM_VERSION_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.FORM_VERSION, n_failure_cases=constants.N_FAILURE_CASES
 )
-_CITY_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.CITY, n_failure_cases=constants.N_FAILURE_CASES
+_CITY_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.CITY, n_failure_cases=constants.N_FAILURE_CASES
 )
-_DATE_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.DATE, n_failure_cases=constants.N_FAILURE_CASES
+_DATE_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.DATE, n_failure_cases=constants.N_FAILURE_CASES
 )
-_NOTES_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.NOTES, n_failure_cases=constants.N_FAILURE_CASES
+_NOTES_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.NOTES, n_failure_cases=constants.N_FAILURE_CASES
 )
 
 # Form metadata: Field observations.
-_TIDE_HEIGHT_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.TIDE_HEIGHT, n_failure_cases=constants.N_FAILURE_CASES
+_TIDE_HEIGHT_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.TIDE_HEIGHT, n_failure_cases=constants.N_FAILURE_CASES
 )
-_TIDE_TIME_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.TIDE_TIME, n_failure_cases=constants.N_FAILURE_CASES
+_TIDE_TIME_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.TIDE_TIME, n_failure_cases=constants.N_FAILURE_CASES
 )
-_PAST_24HR_RAINFALL_FIELD: Final[Callable] = partial(
-    pa.Field,
+_PAST_24HR_RAINFALL_FIELD: Final[Callable] = pa.Field(
     alias=Columns.PAST_24HR_RAINFALL,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_WEATHER_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.WEATHER, n_failure_cases=constants.N_FAILURE_CASES
+_WEATHER_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.WEATHER, n_failure_cases=constants.N_FAILURE_CASES
 )
 
 # FormInvestigator.
-_INVESTIGATOR_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.INVESTIGATOR, n_failure_cases=constants.N_FAILURE_CASES
+_INVESTIGATOR_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.INVESTIGATOR, n_failure_cases=constants.N_FAILURE_CASES
 )
-_START_TIME_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.START_TIME, n_failure_cases=constants.N_FAILURE_CASES
+_START_TIME_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.START_TIME, n_failure_cases=constants.N_FAILURE_CASES
 )
-_END_TIME_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.END_TIME, n_failure_cases=constants.N_FAILURE_CASES
+_END_TIME_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.END_TIME, n_failure_cases=constants.N_FAILURE_CASES
 )
 
 # Quantitative observations.
-_SITE_ID_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.SITE_ID, n_failure_cases=constants.N_FAILURE_CASES
+_SITE_ID_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.SITE_ID, n_failure_cases=constants.N_FAILURE_CASES
 )
 SITE_ID_FIELD_LAX: Final[Callable] = partial(_SITE_ID_FIELD, **_LAX_KWARGS)
 SITE_ID_FIELD: Final[Callable] = partial(
     _SITE_ID_FIELD, coerce=True, n_failure_cases=constants.N_FAILURE_CASES
 )
-_BOTTLE_NO_FIELD: Final[Callable] = partial(
-    pa.Field,
+_BOTTLE_NO_FIELD: Final[Callable] = pa.Field(
     alias=Columns.BACTERIA_BOTTLE_NO,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_ARRIVAL_TIME_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.ARRIVAL_TIME, n_failure_cases=constants.N_FAILURE_CASES
+_ARRIVAL_TIME_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.ARRIVAL_TIME, n_failure_cases=constants.N_FAILURE_CASES
 )
-_FLOW_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.FLOW, n_failure_cases=constants.N_FAILURE_CASES
+_FLOW_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.FLOW, n_failure_cases=constants.N_FAILURE_CASES
 )
-_FLOW_COMPARED_TO_EXPECTED_FIELD: Final[Callable] = partial(
-    pa.Field,
+_FLOW_COMPARED_TO_EXPECTED_FIELD: Final[Callable] = pa.Field(
     alias=Columns.FLOW_COMPARED_TO_EXPECTED,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_AIR_TEMP_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.AIR_TEMP, n_failure_cases=constants.N_FAILURE_CASES
+_AIR_TEMP_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.AIR_TEMP, n_failure_cases=constants.N_FAILURE_CASES
 )
-_WATER_TEMP_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.WATER_TEMP, n_failure_cases=constants.N_FAILURE_CASES
+_WATER_TEMP_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.WATER_TEMP, n_failure_cases=constants.N_FAILURE_CASES
 )
-_DO_MG_PER_L_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.DO_MG_PER_L, n_failure_cases=constants.N_FAILURE_CASES
+_DO_MG_PER_L_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.DO_MG_PER_L, n_failure_cases=constants.N_FAILURE_CASES
 )
-_SPS_MICRO_S_PER_CM_FIELD: Final[Callable] = partial(
-    pa.Field,
+_SPS_MICRO_S_PER_CM_FIELD: Final[Callable] = pa.Field(
     alias=Columns.SPS_MICRO_S_PER_CM,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_SALINITY_PPT_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.SALINITY_PPT, n_failure_cases=constants.N_FAILURE_CASES
+_SALINITY_PPT_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.SALINITY_PPT, n_failure_cases=constants.N_FAILURE_CASES
 )
-_PH_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.PH, n_failure_cases=constants.N_FAILURE_CASES
+_PH_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.PH, n_failure_cases=constants.N_FAILURE_CASES
 )
 
 # Qualitative observations: color, odor, visual.
-_OBSERVATION_TYPE_FIELD: Final[Callable] = partial(
-    pa.Field,
+_OBSERVATION_TYPE_FIELD: Final[Callable] = pa.Field(
     alias=Columns.OBSERVATION_TYPE,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_RANK_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.RANK, n_failure_cases=constants.N_FAILURE_CASES
+_RANK_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.RANK, n_failure_cases=constants.N_FAILURE_CASES
 )
-_DESCRIPTION_FIELD: Final[Callable] = partial(
-    pa.Field, alias=Columns.DESCRIPTION, n_failure_cases=constants.N_FAILURE_CASES
+_DESCRIPTION_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.DESCRIPTION, n_failure_cases=constants.N_FAILURE_CASES
 )
 
 
