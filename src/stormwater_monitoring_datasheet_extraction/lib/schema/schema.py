@@ -53,7 +53,8 @@ _NULLABLE_KWARGS: Final[dict] = {"coerce": True, "nullable": True}
 
 
 # Site metadata.
-OUTFALL_TYPE_FIELD = pa.Field(
+OUTFALL_TYPE_FIELD: Final[Callable] = partial(
+    pa.Field,
     alias=Columns.OUTFALL_TYPE,
     nullable=False,
     coerce=True,
@@ -178,7 +179,7 @@ class Site(pa.DataFrameModel):
     #: The outfall type. `constants.OutfallType`.
     outfall_type: Series[
         Annotated[pd.CategoricalDtype, list(constants.OutfallType), False]
-    ] = OUTFALL_TYPE_FIELD
+    ] = OUTFALL_TYPE_FIELD()
 
     class Config:
         """The configuration for the schema.
@@ -206,7 +207,7 @@ class Creek(pa.DataFrameModel):
     #: The outfall type. `constants.OutfallType.CREEK`.
     outfall_type: Series[
         Annotated[pd.CategoricalDtype, [constants.OutfallType.CREEK], False]
-    ] = OUTFALL_TYPE_FIELD
+    ] = OUTFALL_TYPE_FIELD()
     #: The creek type. `constants.CreekType`.
     creek_type: Series[Annotated[pd.CategoricalDtype, list(constants.CreekType), False]] = (
         pa.Field(
