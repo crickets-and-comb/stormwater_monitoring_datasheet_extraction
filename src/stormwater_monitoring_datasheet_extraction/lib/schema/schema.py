@@ -60,6 +60,12 @@ OUTFALL_TYPE_FIELD: Final[Callable] = partial(
     coerce=True,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
+CREEK_TYPE_FIELD: Final[Callable] = pa.Field(
+    alias=Columns.CREEK_TYPE,
+    nullable=False,
+    coerce=True,
+    n_failure_cases=constants.N_FAILURE_CASES,
+)
 
 # Form metadata.
 # NOTE: `form_id` is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
@@ -216,12 +222,7 @@ class Creek(pa.DataFrameModel):
     ] = OUTFALL_TYPE_FIELD()
     #: The creek type. `constants.CreekType`.
     creek_type: Series[Annotated[pd.CategoricalDtype, list(constants.CreekType), False]] = (
-        pa.Field(
-            alias=Columns.CREEK_TYPE,
-            nullable=False,
-            coerce=True,
-            n_failure_cases=constants.N_FAILURE_CASES,
-        )
+        CREEK_TYPE_FIELD()
     )
 
     class Config:
