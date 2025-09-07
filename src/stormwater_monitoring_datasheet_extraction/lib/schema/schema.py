@@ -380,7 +380,7 @@ class QualitativeObservationsExtracted(pa.DataFrameModel):
     Only wet outfalls, but not necessarily all visits.
 
     Constraints:
-        PK: `form_id`, `site_id`, `type` (unenforced).
+        PK: `form_id`, `site_id`, `observation_type` (unenforced).
         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
     """
 
@@ -390,8 +390,8 @@ class QualitativeObservationsExtracted(pa.DataFrameModel):
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Series[str] = SITE_ID_FIELD_LAX()
     #: The observation type. Nullable. Unenforced `constants.QualitativeSiteObservationTypes`.
-    type: Series[constants.QualitativeSiteObservationTypes] = _OBSERVATION_TYPE_FIELD(
-        **_LAX_KWARGS
+    observation_type: Series[constants.QualitativeSiteObservationTypes] = (
+        _OBSERVATION_TYPE_FIELD(**_LAX_KWARGS)
     )
     #: The rank of the observation. Nullable. Unenforced `constants.Rank`.
     rank: Series[constants.Rank] = _RANK_FIELD(**_LAX_KWARGS)
@@ -496,7 +496,7 @@ class QualitativeObservationsPrecleaned(QualitativeObservationsExtracted):
     Only wet outfalls, but not necessarily all visits.
 
     Constraints:
-        PK: `form_id`, `site_id`, `type` (unenforced).
+        PK: `form_id`, `site_id`, `observation_type` (unenforced).
         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
     """
 
@@ -782,14 +782,14 @@ class QualitativeObservationsVerified(QualitativeObservationsPrecleaned):
     Only wet outfalls, but not necessarily all visits.
 
     Constraints:
-        PK: `form_id`, `site_id`, `type`.
+        PK: `form_id`, `site_id`, `observation_type`.
         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
     """
 
     #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The observation type.
-    type: Index[
+    observation_type: Index[
         Annotated[pd.CategoricalDtype, list(constants.QualitativeSiteObservationTypes), False]
     ] = _OBSERVATION_TYPE_FIELD(coerce=True)
     #: The rank of the observation.
@@ -861,6 +861,6 @@ class QualitativeObservationsCleaned(QualitativeObservationsVerified):
     Only wet outfalls, but not necessarily all visits.
 
     Constraints:
-        PK: `form_id`, `site_id`, `type`.
+        PK: `form_id`, `site_id`, `observation_type`.
         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
     """
