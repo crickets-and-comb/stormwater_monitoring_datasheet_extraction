@@ -52,14 +52,14 @@ _NULLABLE_KWARGS: Final[dict] = {"coerce": True, "nullable": True}
 
 
 # Site metadata.
-OUTFALL_TYPE_FIELD = partial(
+OUTFALL_TYPE_FIELD: Final = partial(
     pa.Field,
     alias=Columns.OUTFALL_TYPE,
     nullable=False,
     coerce=True,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-CREEK_TYPE_FIELD = partial(
+CREEK_TYPE_FIELD: Final = partial(
     pa.Field,
     alias=Columns.CREEK_TYPE,
     nullable=False,
@@ -71,98 +71,108 @@ CREEK_TYPE_FIELD = partial(
 # NOTE: `form_id` is typically going to be image file name, e.g. "2025-07-22_14-41-00.jpg".
 # If all files are from the same directory in a single extraction, then it will be unique.
 # But, that doesn't guarantee uniqueness across multiple extractions to the same DB.
-FORM_ID_FIELD = partial(
+FORM_ID_FIELD: Final = partial(
     pa.Field,
     alias=Columns.FORM_ID,
     coerce=True,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_FORM_TYPE_FIELD = partial(
+_FORM_TYPE_FIELD: Final = partial(
     pa.Field, alias=Columns.FORM_TYPE, n_failure_cases=constants.N_FAILURE_CASES
 )
-_FORM_VERSION_FIELD = partial(
+_FORM_VERSION_FIELD: Final = partial(
     pa.Field, alias=Columns.FORM_VERSION, n_failure_cases=constants.N_FAILURE_CASES
 )
-_CITY_FIELD = partial(pa.Field, alias=Columns.CITY, n_failure_cases=constants.N_FAILURE_CASES)
-_DATE_FIELD = partial(pa.Field, alias=Columns.DATE, n_failure_cases=constants.N_FAILURE_CASES)
-_NOTES_FIELD = partial(
+_CITY_FIELD: Final = partial(
+    pa.Field, alias=Columns.CITY, n_failure_cases=constants.N_FAILURE_CASES
+)
+_DATE_FIELD: Final = partial(
+    pa.Field, alias=Columns.DATE, n_failure_cases=constants.N_FAILURE_CASES
+)
+_NOTES_FIELD: Final = partial(
     pa.Field, alias=Columns.NOTES, n_failure_cases=constants.N_FAILURE_CASES
 )
 
 # Form metadata: Field observations.
-_TIDE_HEIGHT_FIELD = partial(
+_TIDE_HEIGHT_FIELD: Final = partial(
     pa.Field, alias=Columns.TIDE_HEIGHT, n_failure_cases=constants.N_FAILURE_CASES
 )
-_TIDE_TIME_FIELD = partial(
+_TIDE_TIME_FIELD: Final = partial(
     pa.Field, alias=Columns.TIDE_TIME, n_failure_cases=constants.N_FAILURE_CASES
 )
-_PAST_24HR_RAINFALL_FIELD = partial(
+_PAST_24HR_RAINFALL_FIELD: Final = partial(
     pa.Field,
     alias=Columns.PAST_24HR_RAINFALL,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_WEATHER_FIELD = partial(
+_WEATHER_FIELD: Final = partial(
     pa.Field, alias=Columns.WEATHER, n_failure_cases=constants.N_FAILURE_CASES
 )
 
 # FormInvestigator.
-_INVESTIGATOR_FIELD = partial(
+_INVESTIGATOR_FIELD: Final = partial(
     pa.Field, alias=Columns.INVESTIGATOR, n_failure_cases=constants.N_FAILURE_CASES
 )
-_START_TIME_FIELD = partial(
+_START_TIME_FIELD: Final = partial(
     pa.Field, alias=Columns.START_TIME, n_failure_cases=constants.N_FAILURE_CASES
 )
-_END_TIME_FIELD = partial(
+_END_TIME_FIELD: Final = partial(
     pa.Field, alias=Columns.END_TIME, n_failure_cases=constants.N_FAILURE_CASES
 )
 
 # Quantitative observations.
-_SITE_ID_FIELD = partial(
+_SITE_ID_FIELD: Final = partial(
     pa.Field, alias=Columns.SITE_ID, n_failure_cases=constants.N_FAILURE_CASES
 )
-SITE_ID_FIELD_LAX = partial(_SITE_ID_FIELD, **_LAX_KWARGS)
-SITE_ID_FIELD = partial(_SITE_ID_FIELD, coerce=True)
-_BOTTLE_NO_FIELD = partial(
+SITE_ID_FIELD_LAX: Final = partial(_SITE_ID_FIELD, **_LAX_KWARGS)
+SITE_ID_FIELD: Final = partial(_SITE_ID_FIELD, coerce=True)
+_BOTTLE_NO_FIELD: Final = partial(
     pa.Field,
     alias=Columns.BACTERIA_BOTTLE_NO,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_ARRIVAL_TIME_FIELD = partial(
+_ARRIVAL_TIME_FIELD: Final = partial(
     pa.Field, alias=Columns.ARRIVAL_TIME, n_failure_cases=constants.N_FAILURE_CASES
 )
-_FLOW_FIELD = partial(pa.Field, alias=Columns.FLOW, n_failure_cases=constants.N_FAILURE_CASES)
-_FLOW_COMPARED_TO_EXPECTED_FIELD = partial(
+_FLOW_FIELD: Final = partial(
+    pa.Field, alias=Columns.FLOW, n_failure_cases=constants.N_FAILURE_CASES
+)
+_FLOW_COMPARED_TO_EXPECTED_FIELD: Final = partial(
     pa.Field,
     alias=Columns.FLOW_COMPARED_TO_EXPECTED,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_AIR_TEMP_FIELD = partial(
+_AIR_TEMP_FIELD: Final = partial(
     pa.Field, alias=Columns.AIR_TEMP, n_failure_cases=constants.N_FAILURE_CASES
 )
-_WATER_TEMP_FIELD = partial(
+_WATER_TEMP_FIELD: Final = partial(
     pa.Field, alias=Columns.WATER_TEMP, n_failure_cases=constants.N_FAILURE_CASES
 )
-_DO_MG_PER_L_FIELD = partial(
+_DO_MG_PER_L_FIELD: Final = partial(
     pa.Field, alias=Columns.DO_MG_PER_L, n_failure_cases=constants.N_FAILURE_CASES
 )
-_SPS_MICRO_S_PER_CM_FIELD = partial(
+_SPS_MICRO_S_PER_CM_FIELD: Final = partial(
     pa.Field,
     alias=Columns.SPS_MICRO_S_PER_CM,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_SALINITY_PPT_FIELD = partial(
+_SALINITY_PPT_FIELD: Final = partial(
     pa.Field, alias=Columns.SALINITY_PPT, n_failure_cases=constants.N_FAILURE_CASES
 )
-_PH_FIELD = partial(pa.Field, alias=Columns.PH, n_failure_cases=constants.N_FAILURE_CASES)
+_PH_FIELD: Final = partial(
+    pa.Field, alias=Columns.PH, n_failure_cases=constants.N_FAILURE_CASES
+)
 
 # Qualitative observations: color, odor, visual.
-_OBSERVATION_TYPE_FIELD = partial(
+_OBSERVATION_TYPE_FIELD: Final = partial(
     pa.Field,
     alias=Columns.OBSERVATION_TYPE,
     n_failure_cases=constants.N_FAILURE_CASES,
 )
-_RANK_FIELD = partial(pa.Field, alias=Columns.RANK, n_failure_cases=constants.N_FAILURE_CASES)
-_DESCRIPTION_FIELD = partial(
+_RANK_FIELD: Final = partial(
+    pa.Field, alias=Columns.RANK, n_failure_cases=constants.N_FAILURE_CASES
+)
+_DESCRIPTION_FIELD: Final = partial(
     pa.Field, alias=Columns.DESCRIPTION, n_failure_cases=constants.N_FAILURE_CASES
 )
 
