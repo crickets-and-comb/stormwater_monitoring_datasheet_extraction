@@ -42,7 +42,6 @@ class Columns:
     # Site observations.
     SITE_ID: Final[str] = "site_id"
     BACTERIA_BOTTLE_NO: Final[str] = "bacteria_bottle_no"
-    DRY_OUTFALL: Final[str] = "dry_outfall"
     ARRIVAL_TIME: Final[str] = "arrival_time"
     FLOW: Final[str] = "flow"
     FLOW_COMPARED_TO_EXPECTED: Final[str] = "flow_compared_to_expected"
@@ -60,7 +59,7 @@ class Columns:
 
     # Other
     COLOR: Final[str] = "color"
-    CREEK: Final[str] = "creek"
+    CREEK_TYPE: Final[str] = "creek_type"
     DATA_TYPE: Final[str] = "data_type"
     FORM_TYPE: Final[str] = "form_type"
     FORM_VERSION: Final[str] = "form_version"
@@ -75,7 +74,7 @@ class Columns:
     OBSERVATIONS: Final[str] = "observations"
     ODOR: Final[str] = "odor"
     OPTIONS: Final[str] = "options"
-    OUTFALL: Final[str] = "outfall"
+    OUTFALL_TYPE: Final[str] = "outfall_type"
     REAR: Final[str] = "rear"
     REFERENCE_VALUE: Final[str] = "reference_value"
     SITE: Final[str] = "site"
@@ -85,6 +84,15 @@ class Columns:
     UPPER: Final[str] = "upper"
     VALUE: Final[str] = "value"
     VISUAL: Final[str] = "visual"
+
+
+class CreekType(StrEnum):
+    """Options for the creek type field."""
+
+    HABITAT = "habitat"
+    SPAWN = "spawn"
+    REAR = "rear"
+    MIGRATE = "migrate"
 
 
 class DocStrings:
@@ -130,6 +138,13 @@ class FormType(StrEnum):
     """Options for the form type field."""
 
     FIELD_DATASHEET_FOSS = "field_datasheet_FOSS"
+
+
+class OutfallType(StrEnum):
+    """Options for the outfall type field."""
+
+    CREEK = "creek"
+    OUTFALL = "outfall"
 
 
 class QualitativeSiteObservationTypes(StrEnum):
@@ -238,8 +253,9 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
             Columns.OBSERVATIONS: [
                 {
                     Columns.SITE_ID: str,
+                    Columns.OUTFALL_TYPE: OutfallType,
+                    Columns.CREEK_TYPE: CreekType,
                     Columns.ARRIVAL_TIME: str,
-                    Columns.DRY_OUTFALL: bool,
                     Columns.BACTERIA_BOTTLE_NO: str,
                     Columns.FLOW: Flow,
                     Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected,
@@ -314,10 +330,10 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
             Columns.DO_MG_PER_L: {
                 Columns.UNITS: Units.MG_PER_L,
                 Columns.THRESHOLDS: {
-                    Columns.OUTFALL: {
+                    OutfallType.OUTFALL: {
                         Columns.LOWER: {Columns.VALUE: 6, Columns.INCLUSIVE: True}
                     },
-                    Columns.CREEK: {
+                    OutfallType.CREEK: {
                         Columns.LOWER: {Columns.VALUE: 10, Columns.INCLUSIVE: True}
                     },
                 },
@@ -329,11 +345,11 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
             Columns.PH: {
                 Columns.UNITS: Units.PH,
                 Columns.THRESHOLDS: {
-                    Columns.OUTFALL: {
+                    OutfallType.OUTFALL: {
                         Columns.LOWER: {Columns.VALUE: 5, Columns.INCLUSIVE: True},
                         Columns.UPPER: {Columns.VALUE: 9, Columns.INCLUSIVE: True},
                     },
-                    Columns.CREEK: {
+                    OutfallType.CREEK: {
                         Columns.LOWER: {Columns.VALUE: 6.5, Columns.INCLUSIVE: True},
                         Columns.UPPER: {Columns.VALUE: 8.5, Columns.INCLUSIVE: True},
                     },
@@ -343,10 +359,10 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
             Columns.SPS_MICRO_S_PER_CM: {
                 Columns.UNITS: Units.MICRO_S_PER_CM,
                 Columns.THRESHOLDS: {
-                    Columns.OUTFALL: {
+                    OutfallType.OUTFALL: {
                         Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
                     },
-                    Columns.CREEK: {
+                    OutfallType.CREEK: {
                         Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
                     },
                 },
@@ -354,13 +370,13 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
             Columns.WATER_TEMP: {
                 Columns.UNITS: Units.CELSIUS,
                 Columns.THRESHOLDS: {
-                    Columns.OUTFALL: {
+                    OutfallType.OUTFALL: {
                         Columns.UPPER: {
                             Columns.REFERENCE_VALUE: Columns.AIR_TEMP,
                             Columns.INCLUSIVE: True,
                         }
                     },
-                    Columns.CREEK: {
+                    OutfallType.CREEK: {
                         Columns.HABITAT: {
                             Columns.UPPER: {Columns.VALUE: 16, Columns.INCLUSIVE: True}
                         },
@@ -379,22 +395,22 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
             QualitativeSiteObservationTypes.COLOR: {
                 Columns.RANK: {Columns.OPTIONS: list(Rank)},
                 Columns.THRESHOLDS: {
-                    Columns.OUTFALL: "Any non-natural phenomena.",
-                    Columns.CREEK: "Any non-natural phenomena.",
+                    OutfallType.OUTFALL: "Any non-natural phenomena.",
+                    OutfallType.CREEK: "Any non-natural phenomena.",
                 },
             },
             QualitativeSiteObservationTypes.ODOR: {
                 Columns.RANK: {Columns.OPTIONS: list(Rank)},
                 Columns.THRESHOLDS: {
-                    Columns.OUTFALL: "Any non-natural phenomena.",
-                    Columns.CREEK: "Any non-natural phenomena.",
+                    OutfallType.OUTFALL: "Any non-natural phenomena.",
+                    OutfallType.CREEK: "Any non-natural phenomena.",
                 },
             },
             QualitativeSiteObservationTypes.VISUAL: {
                 Columns.RANK: {Columns.OPTIONS: list(Rank)},
                 Columns.THRESHOLDS: {
-                    Columns.OUTFALL: "Any non-natural phenomena.",
-                    Columns.CREEK: "Any non-natural phenomena.",
+                    OutfallType.OUTFALL: "Any non-natural phenomena.",
+                    OutfallType.CREEK: "Any non-natural phenomena.",
                 },
             },
         },
@@ -422,17 +438,17 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                 QualitativeSiteObservationTypes.COLOR: {
                     Columns.RANK: {Columns.OPTIONS: list(Rank)},
                     Columns.THRESHOLDS: {
-                        Columns.OUTFALL: "Any non-natural phenomena.",
-                        Columns.CREEK: "Any non-natural phenomena.",
+                        OutfallType.OUTFALL: "Any non-natural phenomena.",
+                        OutfallType.CREEK: "Any non-natural phenomena.",
                     },
                 },
                 Columns.DO_MG_PER_L: {
                     Columns.UNITS: Units.MG_PER_L,
                     Columns.THRESHOLDS: {
-                        Columns.OUTFALL: {
+                        OutfallType.OUTFALL: {
                             Columns.LOWER: {Columns.VALUE: 6, Columns.INCLUSIVE: True}
                         },
-                        Columns.CREEK: {
+                        OutfallType.CREEK: {
                             Columns.LOWER: {Columns.VALUE: 10.0, Columns.INCLUSIVE: True}
                         },
                     },
@@ -444,18 +460,18 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                 QualitativeSiteObservationTypes.ODOR: {
                     Columns.RANK: {Columns.OPTIONS: list(Rank)},
                     Columns.THRESHOLDS: {
-                        Columns.OUTFALL: "Any non-natural phenomena.",
-                        Columns.CREEK: "Any non-natural phenomena.",
+                        OutfallType.OUTFALL: "Any non-natural phenomena.",
+                        OutfallType.CREEK: "Any non-natural phenomena.",
                     },
                 },
                 Columns.PH: {
                     Columns.UNITS: Units.PH,
                     Columns.THRESHOLDS: {
-                        Columns.OUTFALL: {
+                        OutfallType.OUTFALL: {
                             Columns.LOWER: {Columns.VALUE: 5, Columns.INCLUSIVE: True},
                             Columns.UPPER: {Columns.VALUE: 9, Columns.INCLUSIVE: True},
                         },
-                        Columns.CREEK: {
+                        OutfallType.CREEK: {
                             Columns.LOWER: {Columns.VALUE: 6.5, Columns.INCLUSIVE: True},
                             Columns.UPPER: {Columns.VALUE: 8.5, Columns.INCLUSIVE: True},
                         },
@@ -465,10 +481,10 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                 Columns.SPS_MICRO_S_PER_CM: {
                     Columns.UNITS: Units.MICRO_S_PER_CM,
                     Columns.THRESHOLDS: {
-                        Columns.OUTFALL: {
+                        OutfallType.OUTFALL: {
                             Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
                         },
-                        Columns.CREEK: {
+                        OutfallType.CREEK: {
                             Columns.UPPER: {Columns.VALUE: 500, Columns.INCLUSIVE: True}
                         },
                     },
@@ -476,20 +492,20 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                 QualitativeSiteObservationTypes.VISUAL: {
                     Columns.RANK: {Columns.OPTIONS: list(Rank)},
                     Columns.THRESHOLDS: {
-                        Columns.OUTFALL: "Any non-natural phenomena.",
-                        Columns.CREEK: "Any non-natural phenomena.",
+                        OutfallType.OUTFALL: "Any non-natural phenomena.",
+                        OutfallType.CREEK: "Any non-natural phenomena.",
                     },
                 },
                 Columns.WATER_TEMP: {
                     Columns.UNITS: Units.CELSIUS,
                     Columns.THRESHOLDS: {
-                        Columns.OUTFALL: {
+                        OutfallType.OUTFALL: {
                             Columns.UPPER: {
                                 Columns.REFERENCE_VALUE: Columns.AIR_TEMP,
                                 Columns.INCLUSIVE: True,
                             }
                         },
-                        Columns.CREEK: {
+                        OutfallType.CREEK: {
                             Columns.HABITAT: {
                                 Columns.UPPER: {
                                     Columns.VALUE: 16,
@@ -538,8 +554,9 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                 Columns.OBSERVATIONS: [
                     {
                         Columns.SITE_ID: "C ST",
+                        Columns.OUTFALL_TYPE: OutfallType.CREEK,
+                        Columns.CREEK_TYPE: CreekType.HABITAT,
                         Columns.ARRIVAL_TIME: "14:41",
-                        Columns.DRY_OUTFALL: False,
                         Columns.BACTERIA_BOTTLE_NO: "B1",
                         Columns.FLOW: Flow.M,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
@@ -557,15 +574,11 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                             Columns.RANK: Rank.ONE,
                             Columns.DESCRIPTION: "SULPHUR",
                         },
-                        QualitativeSiteObservationTypes.VISUAL: {
-                            Columns.RANK: None,
-                            Columns.DESCRIPTION: None,
-                        },
                     },
                     {
                         Columns.SITE_ID: "C ST",
+                        Columns.OUTFALL_TYPE: OutfallType.OUTFALL,
                         Columns.ARRIVAL_TIME: "14:41",
-                        Columns.DRY_OUTFALL: False,
                         Columns.BACTERIA_BOTTLE_NO: "B2",
                         Columns.FLOW: Flow.M,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
@@ -583,15 +596,12 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                             Columns.RANK: Rank.ONE,
                             Columns.DESCRIPTION: "SULPHUR",
                         },
-                        QualitativeSiteObservationTypes.VISUAL: {
-                            Columns.RANK: None,
-                            Columns.DESCRIPTION: None,
-                        },
                     },
                     {
                         Columns.SITE_ID: "BROADWAY",
+                        Columns.OUTFALL_TYPE: OutfallType.CREEK,
+                        Columns.CREEK_TYPE: CreekType.SPAWN,
                         Columns.ARRIVAL_TIME: "15:09",
-                        Columns.DRY_OUTFALL: False,
                         Columns.BACTERIA_BOTTLE_NO: "B3",
                         Columns.FLOW: Flow.M,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
@@ -609,10 +619,6 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                             Columns.RANK: Rank.ONE,
                             Columns.DESCRIPTION: "SULPHUR",
                         },
-                        QualitativeSiteObservationTypes.VISUAL: {
-                            Columns.RANK: None,
-                            Columns.DESCRIPTION: None,
-                        },
                     },
                 ],
             },
@@ -629,13 +635,14 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                 },
                 Columns.TIDE_HEIGHT: 0.22,
                 Columns.TIDE_TIME: "17:10",
-                Columns.PAST_24HR_RAINFALL: None,
+                Columns.PAST_24HR_RAINFALL: 0.0,
                 Columns.WEATHER: Weather.CLOUD_CLEAR,
                 Columns.OBSERVATIONS: [
                     {
                         Columns.SITE_ID: "PADDEN",
+                        Columns.OUTFALL_TYPE: OutfallType.CREEK,
+                        Columns.CREEK_TYPE: CreekType.REAR,
                         Columns.ARRIVAL_TIME: "17:10",
-                        Columns.DRY_OUTFALL: False,
                         Columns.BACTERIA_BOTTLE_NO: "B5",
                         Columns.FLOW: Flow.H,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
@@ -651,17 +658,15 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                         },
                         QualitativeSiteObservationTypes.ODOR: {
                             Columns.RANK: Rank.ZERO,
-                            Columns.DESCRIPTION: None,
                         },
                         QualitativeSiteObservationTypes.VISUAL: {
                             Columns.RANK: Rank.ZERO,
-                            Columns.DESCRIPTION: None,
                         },
                     },
                     {
                         Columns.SITE_ID: "BENASFASDF",
+                        Columns.OUTFALL_TYPE: OutfallType.OUTFALL,
                         Columns.ARRIVAL_TIME: "17:33",
-                        Columns.DRY_OUTFALL: False,
                         Columns.BACTERIA_BOTTLE_NO: "B6",
                         Columns.FLOW: Flow.H,
                         Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
@@ -675,40 +680,12 @@ FIELD_DATA_DEFINITION: Final[dict[str, Any]] = {
                             Columns.RANK: Rank.ONE,
                             Columns.DESCRIPTION: "Tan/brown",
                         },
-                        QualitativeSiteObservationTypes.ODOR: {
-                            Columns.RANK: None,
-                            Columns.DESCRIPTION: None,
-                        },
-                        QualitativeSiteObservationTypes.VISUAL: {
-                            Columns.RANK: None,
-                            Columns.DESCRIPTION: None,
-                        },
                     },
                     {
-                        Columns.SITE_ID: "BEPSODF72",
-                        Columns.ARRIVAL_TIME: "17:40",
-                        Columns.DRY_OUTFALL: False,
-                        Columns.BACTERIA_BOTTLE_NO: "B7",
-                        Columns.FLOW: Flow.H,
-                        Columns.FLOW_COMPARED_TO_EXPECTED: FlowComparedToExpected.NORMAL,
-                        Columns.AIR_TEMP: None,
-                        Columns.WATER_TEMP: 11.4,
-                        Columns.DO_MG_PER_L: 11.17,
-                        Columns.SPS_MICRO_S_PER_CM: 235.1,
-                        Columns.SALINITY_PPT: 0.11,
-                        Columns.PH: 7.82,
-                        QualitativeSiteObservationTypes.COLOR: {
-                            Columns.RANK: Rank.ONE,
-                            Columns.DESCRIPTION: "Brown",
-                        },
-                        QualitativeSiteObservationTypes.ODOR: {
-                            Columns.RANK: None,
-                            Columns.DESCRIPTION: None,
-                        },
-                        QualitativeSiteObservationTypes.VISUAL: {
-                            Columns.RANK: None,
-                            Columns.DESCRIPTION: None,
-                        },
+                        Columns.SITE_ID: "Some dry outfall somewhere",
+                        # Columns.OUTFALL_TYPE: OutfallType.CREEK,
+                        # Columns.CREEK_TYPE: CreekType.HABITAT,
+                        Columns.ARRIVAL_TIME: "17:55",
                     },
                 ],
             },
