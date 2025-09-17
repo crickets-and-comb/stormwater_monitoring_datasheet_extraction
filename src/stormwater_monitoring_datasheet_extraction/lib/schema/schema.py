@@ -7,7 +7,6 @@ from typing import Annotated, Final, cast
 import pandas as pd
 import pandera as pa
 from pandera.typing import Index, Series
-from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib import constants
 from stormwater_monitoring_datasheet_extraction.lib.constants import (
@@ -206,9 +205,11 @@ class Site(pa.DataFrameModel):
     ) -> Series[bool]:
         """Check that creek_site_id is valid."""
         is_creek = df[Columns.OUTFALL_TYPE] == constants.OutfallType.CREEK
-        return (~is_creek & df[Columns.CREEK_SITE_ID].isna()) | (
+        is_valid = (~is_creek & df[Columns.CREEK_SITE_ID].isna()) | (
             is_creek & df[Columns.CREEK_SITE_ID].eq(df.index)
         )
+        is_valid = cast("Series[bool]", is_valid)
+        return is_valid
 
     class Config:
         """The configuration for the schema.
@@ -569,7 +570,6 @@ class FormVerified(FormPrecleaned):
     )
 
     @pa.check("date", name="date_le_today")
-    @typechecked
     def date_le_today(
         cls, date: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -577,7 +577,6 @@ class FormVerified(FormPrecleaned):
         return field_checks.date_le_today(series=date)
 
     @pa.check("date", name="is_valid_date")
-    @typechecked
     def is_valid_date(
         cls, date: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -585,7 +584,6 @@ class FormVerified(FormPrecleaned):
         return field_checks.is_valid_date(series=date, date_format=constants.DATE_FORMAT)
 
     @pa.check("tide_time", name="is_valid_time")
-    @typechecked
     def is_valid_time(
         cls, tide_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -595,7 +593,6 @@ class FormVerified(FormPrecleaned):
     @pa.dataframe_check(
         name="tide_datetime_le_now", ignore_na=False  # Since irrelevant fields are nullable.
     )
-    @typechecked
     def tide_datetime_le_now(
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -638,7 +635,6 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
     end_time: Series[str] = _END_TIME_FIELD(coerce=True)
 
     @pa.check("start_time", name="start_time_is_valid_time")
-    @typechecked
     def start_time_is_valid_time(
         cls, start_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -646,7 +642,6 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
         return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
 
     @pa.check("end_time", name="end_time_is_valid_time")
-    @typechecked
     def end_time_is_valid_time(
         cls, end_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -654,7 +649,6 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
         return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check(name="start_time_before_end_time")
-    @typechecked
     def start_time_before_end_time(
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -698,7 +692,6 @@ class SiteVisitVerified(SiteVisitPrecleaned):
     arrival_time: Series[str] = _ARRIVAL_TIME_FIELD(coerce=True)
 
     @pa.check("arrival_time", name="arrival_time_is_valid_time")
-    @typechecked
     def arrival_time_is_valid_time(
         cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -755,7 +748,6 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
     pH: Series[float] = _PH_FIELD(coerce=True, ge=0, le=14)
 
     @pa.check("arrival_time", name="arrival_time_is_valid_time")
-    @typechecked
     def arrival_time_is_valid_time(
         cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -763,7 +755,6 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
         return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check(name="bottle_no_unique_by_form_id")
-    @typechecked
     def bottle_no_unique_by_form_id(
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:

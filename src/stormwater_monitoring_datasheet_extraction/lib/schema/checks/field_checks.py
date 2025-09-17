@@ -4,7 +4,6 @@ from typing import cast
 
 import pandas as pd
 from pandera.typing import Series
-from typeguard import typechecked
 
 # TODO: An alternative approach would be to create custom classes for the field types,
 # handle validation in the class constructor, and then coerce the field to the class.
@@ -20,7 +19,6 @@ from typeguard import typechecked
 # or the other.
 
 
-@typechecked
 def is_valid_date(series: Series, date_format: str) -> Series[bool]:
     """Every date parses with the given format."""
     parsed = pd.to_datetime(series, format=date_format, errors="coerce")
@@ -29,7 +27,6 @@ def is_valid_date(series: Series, date_format: str) -> Series[bool]:
     return is_valid
 
 
-@typechecked
 def date_le_today(series: Series) -> Series[bool]:
     """Every date is on or before today."""
     parsed = pd.to_datetime(series, errors="coerce")
@@ -38,7 +35,6 @@ def date_le_today(series: Series) -> Series[bool]:
     return is_valid
 
 
-@typechecked
 def is_valid_time(series: Series, format: str) -> Series[bool]:
     """Every time parses with the given format."""
     parsed = pd.to_datetime(series, format=format, errors="coerce").dt.time
