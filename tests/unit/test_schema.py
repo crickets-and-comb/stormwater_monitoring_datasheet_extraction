@@ -6,6 +6,7 @@ from contextlib import AbstractContextManager, nullcontext
 import pandas as pd
 import pytest
 from pydantic_core._pydantic_core import ValidationError
+from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib.constants import (
     Columns,
@@ -155,6 +156,7 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import relatio
         ),
     ],
 )
+@typechecked
 def test_validate_site_creek_map(
     site_type_map: pd.DataFrame,
     creek_type_map: pd.DataFrame,
