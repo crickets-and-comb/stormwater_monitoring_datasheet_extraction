@@ -217,7 +217,7 @@ class Site(pa.DataFrameModel):
         """
 
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.SITE_ID]
         strict = True
 
 
@@ -245,7 +245,7 @@ class Creek(pa.DataFrameModel):
         """
 
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.SITE_ID]
         strict = True
 
 
@@ -257,7 +257,7 @@ class FormExtracted(pa.DataFrameModel):
     """
 
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD(unique=True)
     #: The form type. Nullable. Unenforced `constants.FormType`.
     form_type: Series[str] = _FORM_TYPE_FIELD(**_LAX_KWARGS)
     #: The form version. Nullable.
@@ -286,7 +286,6 @@ class FormExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
@@ -314,7 +313,6 @@ class FormInvestigatorExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
@@ -343,7 +341,6 @@ class SiteVisitExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
@@ -388,7 +385,6 @@ class QuantitativeObservationsExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
@@ -420,7 +416,6 @@ class QualitativeObservationsExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
@@ -439,7 +434,7 @@ class FormPrecleaned(FormExtracted):
 
         add_missing_columns = True
         multiindex_strict = "filter"
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID]
         strict = "filter"
 
 
@@ -621,6 +616,7 @@ class FormVerified(FormPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
+        multiindex_unique = [Columns.FORM_ID]
         strict = True
 
 
@@ -681,7 +677,7 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID, Columns.INVESTIGATOR]
         strict = True
 
 
@@ -717,7 +713,7 @@ class SiteVisitVerified(SiteVisitPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID, Columns.SITE_ID]
         strict = True
 
 
@@ -788,7 +784,7 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID, Columns.SITE_ID]
         strict = True
 
 
@@ -828,7 +824,7 @@ class QualitativeObservationsVerified(QualitativeObservationsPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]
         strict = True
 
 
