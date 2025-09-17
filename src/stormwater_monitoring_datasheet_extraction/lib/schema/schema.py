@@ -197,7 +197,7 @@ class Site(pa.DataFrameModel):
     outfall_type: Series[
         Annotated[pd.CategoricalDtype, list(constants.OutfallType), False]
     ] = OUTFALL_TYPE_FIELD()
-    #: If a creek, the site ID, else null.
+    #: If a creek, `site_id`, else null.
     creek_site_id: Series[str] = CREEK_SITE_ID_FIELD()
 
     @pa.dataframe_check(name="creek_site_id_valid", ignore_na=False)
