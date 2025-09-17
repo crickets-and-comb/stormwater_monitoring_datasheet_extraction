@@ -195,7 +195,7 @@ class Site(pa.DataFrameModel):
     site_id: Index[str] = SITE_ID_FIELD()
     #: The outfall type. `constants.OutfallType`.
     outfall_type: Series[
-        Annotated[pd.CategoricalDtype, list(constants.OutfallType), False]
+        Annotated[pd.CategoricalDtype, tuple(constants.OutfallType), False]
     ] = OUTFALL_TYPE_FIELD()
     #: If a creek, `site_id`, else null.
     creek_site_id: Series[str] = CREEK_SITE_ID_FIELD()
@@ -234,7 +234,7 @@ class Creek(pa.DataFrameModel):
     #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The creek type. `constants.CreekType`.
-    creek_type: Series[Annotated[pd.CategoricalDtype, list(constants.CreekType), False]] = (
+    creek_type: Series[Annotated[pd.CategoricalDtype, tuple(constants.CreekType), False]] = (
         CREEK_TYPE_FIELD()
     )
 
@@ -534,7 +534,7 @@ class FormVerified(FormPrecleaned):
     """
 
     #: The form type.
-    form_type: Series[Annotated[pd.CategoricalDtype, list(constants.FormType), False]] = (
+    form_type: Series[Annotated[pd.CategoricalDtype, tuple(constants.FormType), False]] = (
         _FORM_TYPE_FIELD(coerce=True)
     )
     #: The form version.
@@ -546,7 +546,7 @@ class FormVerified(FormPrecleaned):
     #: `date` and `tide_time` must be on or before now.
     date: Series[str] = _DATE_FIELD(coerce=True)
     #: The city of observations.
-    city: Series[Annotated[pd.CategoricalDtype, list(constants.City), False]] = _CITY_FIELD(
+    city: Series[Annotated[pd.CategoricalDtype, tuple(constants.City), False]] = _CITY_FIELD(
         coerce=True
     )
     #: The tide height at the time of observations.
@@ -565,7 +565,7 @@ class FormVerified(FormPrecleaned):
     )
     #: The weather at the time of observations.
     # TODO: Are we going to make weather ordered?
-    weather: Series[Annotated[pd.CategoricalDtype, list(constants.Weather), True]] = (
+    weather: Series[Annotated[pd.CategoricalDtype, tuple(constants.Weather), True]] = (
         _WEATHER_FIELD(coerce=True)
     )
     #: Investigator notes.
@@ -738,12 +738,12 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
     #: Must be unique within each `form_id`.
     bottle_no: Series[str] = _BOTTLE_NO_FIELD(coerce=True)
     #: The flow.
-    flow: Series[Annotated[pd.CategoricalDtype, list(constants.Flow), True]] = _FLOW_FIELD(
+    flow: Series[Annotated[pd.CategoricalDtype, tuple(constants.Flow), True]] = _FLOW_FIELD(
         coerce=True
     )
     #: The flow compared to expected.
     flow_compared_to_expected: Series[
-        Annotated[pd.CategoricalDtype, list(constants.FlowComparedToExpected), True]
+        Annotated[pd.CategoricalDtype, tuple(constants.FlowComparedToExpected), True]
     ] = _FLOW_COMPARED_TO_EXPECTED_FIELD(coerce=True)
     #: The air temperature.
     air_temp: Series[float] = _AIR_TEMP_FIELD(coerce=True)
@@ -806,10 +806,12 @@ class QualitativeObservationsVerified(QualitativeObservationsPrecleaned):
     site_id: Index[str] = SITE_ID_FIELD()
     #: The observation type.
     observation_type: Index[
-        Annotated[pd.CategoricalDtype, list(constants.QualitativeSiteObservationTypes), False]
+        Annotated[
+            pd.CategoricalDtype, tuple(constants.QualitativeSiteObservationTypes), False
+        ]
     ] = _OBSERVATION_TYPE_FIELD(coerce=True)
     #: The rank of the observation.
-    rank: Series[Annotated[pd.CategoricalDtype, list(constants.Rank), True]] = _RANK_FIELD(
+    rank: Series[Annotated[pd.CategoricalDtype, tuple(constants.Rank), True]] = _RANK_FIELD(
         coerce=True
     )
     #: The description of the observation.
