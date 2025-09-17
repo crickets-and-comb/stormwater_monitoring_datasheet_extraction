@@ -203,7 +203,7 @@ class Site(pa.DataFrameModel):
     @pa.dataframe_check(name="creek_site_id_valid", ignore_na=False)
     def check_creek_site_id_valid(
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
-    ) -> pd.Series[bool]:
+    ) -> Series[bool]:
         """Check that creek_site_id is valid."""
         is_creek = df[Columns.OUTFALL_TYPE] == constants.OutfallType.CREEK
         return (~is_creek & df[Columns.CREEK_SITE_ID].isna()) | (
