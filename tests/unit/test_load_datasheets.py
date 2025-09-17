@@ -157,12 +157,12 @@ from stormwater_monitoring_datasheet_extraction.lib.db.tables import CREEKS, SIT
         ),
     ],
 )
-def test_validate_site_creek_map(
+def test_get_site_creek_maps(
     site_type_map: pd.DataFrame,
     creek_type_map: pd.DataFrame,
     error_context: AbstractContextManager,
 ) -> None:
-    """Tests that the site/creek map validation works."""
+    """Tests that _get_site_creek_maps returns valid tables."""
     with error_context, patch(
         "stormwater_monitoring_datasheet_extraction.lib.db.read.get_site_type_map",
         return_value=site_type_map,
@@ -170,4 +170,5 @@ def test_validate_site_creek_map(
         "stormwater_monitoring_datasheet_extraction.lib.db.read.get_creek_type_map",
         return_value=creek_type_map,
     ):
-        load_datasheets._get_site_creek_maps()
+        maps = load_datasheets._get_site_creek_maps()
+        assert maps == (site_type_map, creek_type_map)
