@@ -2,14 +2,18 @@
 
 # TODO: Test that returns correct path, using pytest.mark.parametrize.
 import re
+from collections.abc import Callable
 from contextlib import AbstractContextManager, nullcontext
+from typing import cast
 from unittest.mock import patch
 
 import pandas as pd
+import pandera.typing as pt
 import pytest
 from pydantic_core._pydantic_core import ValidationError
+from typeguard import typechecked
 
-from stormwater_monitoring_datasheet_extraction.lib import load_datasheets
+from stormwater_monitoring_datasheet_extraction.lib import load_datasheets, schema
 from stormwater_monitoring_datasheet_extraction.lib.constants import (
     Columns,
     CreekType,
@@ -157,10 +161,52 @@ from stormwater_monitoring_datasheet_extraction.lib.db.tables import CREEKS, SIT
         ),
     ],
 )
+@pytest.mark.parametrize(
+    "fx, kwargs",
+    [
+        (load_datasheets._get_site_creek_maps, {}),
+        (
+            load_datasheets.verify,
+            {
+                "precleaned_form_metadata": cast(
+                    "pt.DataFrame[schema.FormPrecleaned]",
+                    pd.DataFrame(columns=[Columns.FORM_ID]).set_index(Columns.FORM_ID),
+                ),
+                "precleaned_investigators": cast(
+                    "pt.DataFrame[schema.FormInvestigatorPrecleaned]",
+                    pd.DataFrame(columns=[Columns.FORM_ID, Columns.INVESTIGATOR]).set_index(
+                        [Columns.FORM_ID, Columns.INVESTIGATOR]
+                    ),
+                ),
+                "precleaned_site_visits": cast(
+                    "pt.DataFrame[schema.SiteVisitPrecleaned]",
+                    pd.DataFrame(columns=[Columns.FORM_ID, Columns.SITE_ID]).set_index(
+                        [Columns.FORM_ID, Columns.SITE_ID]
+                    ),
+                ),
+                "precleaned_quantitative_observations": cast(
+                    "pt.DataFrame[schema.QuantitativeObservationsPrecleaned]",
+                    pd.DataFrame(columns=[Columns.FORM_ID, Columns.SITE_ID]).set_index(
+                        [Columns.FORM_ID, Columns.SITE_ID]
+                    ),
+                ),
+                "precleaned_qualitative_observations": cast(
+                    "pt.DataFrame[schema.QualitativeObservationsPrecleaned]",
+                    pd.DataFrame(columns=[Columns.FORM_ID, Columns.SITE_ID]).set_index(
+                        [Columns.FORM_ID, Columns.SITE_ID]
+                    ),
+                ),
+            },
+        ),
+    ],
+)
+@typechecked
 def test_get_site_creek_maps(
     site_type_map: pd.DataFrame,
     creek_type_map: pd.DataFrame,
     error_context: AbstractContextManager,
+    fx: Callable,
+    kwargs: dict,
 ) -> None:
     """Tests that _get_site_creek_maps returns valid tables."""
     with error_context, patch(
@@ -170,5 +216,5 @@ def test_get_site_creek_maps(
         "stormwater_monitoring_datasheet_extraction.lib.db.read.get_creek_type_map",
         return_value=creek_type_map,
     ):
-        maps = load_datasheets._get_site_creek_maps()
-        assert maps == (site_type_map, creek_type_map)
+        maps = fx(**kwargs)
+        assert maps[-2:] == (site_type_map, creek_type_map)
