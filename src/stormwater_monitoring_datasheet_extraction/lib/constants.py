@@ -3,12 +3,7 @@
 from enum import IntEnum, StrEnum
 from typing import Any, Final
 
-import pandas as pd
-import pandera.typing as pt
-
 from comb_utils import DocString
-
-from stormwater_monitoring_datasheet_extraction.lib import schema
 
 
 class CharLimits:
@@ -64,6 +59,7 @@ class Columns:
 
     # Other
     COLOR: Final[str] = "color"
+    CREEK_SITE_ID: Final[str] = "creek_site_id"
     CREEK_TYPE: Final[str] = "creek_type"
     DATA_TYPE: Final[str] = "data_type"
     FORM_TYPE: Final[str] = "form_type"
@@ -193,37 +189,6 @@ class Weather(StrEnum):
     PRECIP_RAIN_MOD = "precip_rain_mod"
     PRECIP_RAIN_HEAVY = "precip_rain_heavy"
     PRECIP_SNOW = "precip_snow"
-
-
-SITES: Final[pt.DataFrame[schema.Site]] = pt.DataFrame[schema.Site](
-    pd.DataFrame(
-        columns=[Columns.SITE_ID, Columns.OUTFALL_TYPE],
-        data=[
-            ("Little Squalicum Creek", OutfallType.CREEK),
-            ("Squalicum Creek", OutfallType.CREEK),
-            ("Whatcom Creek", OutfallType.CREEK),
-            ("Broadway", OutfallType.OUTFALL),
-            ("C Street", OutfallType.OUTFALL),
-            ("Cornwall", OutfallType.OUTFALL),
-            ("Cedar", OutfallType.OUTFALL),
-            ("Oliver", OutfallType.OUTFALL),
-            ("Bennett", OutfallType.OUTFALL),
-            ("Padden", OutfallType.CREEK),
-        ],
-    )
-)
-
-CREEKS: Final[pt.DataFrame[schema.Creek]] = pt.DataFrame[schema.Creek](
-    pd.DataFrame(
-        columns=[Columns.SITE_ID, Columns.OUTFALL_TYPE, Columns.CREEK_TYPE],
-        data=[
-            ("Little Squalicum Creek", OutfallType.CREEK, CreekType.SPAWN),
-            ("Squalicum Creek", OutfallType.CREEK, CreekType.SPAWN),
-            ("Whatcom Creek", OutfallType.CREEK, CreekType.SPAWN),
-            ("Padden", OutfallType.CREEK, CreekType.SPAWN),
-        ],
-    )
-)
 
 
 # TODO: Make custom date and time classes with __str__ and __repr__
