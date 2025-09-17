@@ -19,6 +19,7 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
+# TODO: Correct references to index columns.
 # TODO: Are null descriptions allowed for non-zero, non-null ranks (1-3)?
 # Are non-null descriptions allowed for 0 ranks?
 
@@ -207,7 +208,7 @@ class Site(pa.DataFrameModel):
         """Check that creek_site_id is valid."""
         is_creek = df[Columns.OUTFALL_TYPE] == constants.OutfallType.CREEK
         return (~is_creek & df[Columns.CREEK_SITE_ID].isna()) | (
-            is_creek & df[Columns.CREEK_SITE_ID].eq(df[Columns.SITE_ID])
+            is_creek & df[Columns.CREEK_SITE_ID].eq(df.index)
         )
 
     class Config:
