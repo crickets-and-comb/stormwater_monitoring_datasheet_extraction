@@ -261,13 +261,13 @@ class FormExtracted(pa.DataFrameModel):
     #: The form ID.
     form_id: Index[str] = FORM_ID_FIELD()
     #: The form type. Nullable. Unenforced `constants.FormType`.
-    form_type: Series[constants.FormType] = _FORM_TYPE_FIELD(**_LAX_KWARGS)
+    form_type: Series[str] = _FORM_TYPE_FIELD(**_LAX_KWARGS)
     #: The form version. Nullable.
     form_version: Series[str] = _FORM_VERSION_FIELD(**_LAX_KWARGS)
     #: The date of observations. Nullable.
     date: Series[str] = _DATE_FIELD(**_LAX_KWARGS)
     #: The city of observations. Nullable. Unenforced `constants.City`.
-    city: Series[constants.City] = _CITY_FIELD(**_LAX_KWARGS)
+    city: Series[str] = _CITY_FIELD(**_LAX_KWARGS)
     #: The tide height at the time of observations. Nullable.
     tide_height: Series[float] = _TIDE_HEIGHT_FIELD(**_LAX_KWARGS)
     #: The tide time at the time of observations. Nullable.
@@ -275,7 +275,7 @@ class FormExtracted(pa.DataFrameModel):
     #: The past 24-hour rainfall. Nullable.
     past_24hr_rainfall: Series[float] = _PAST_24HR_RAINFALL_FIELD(**_LAX_KWARGS)
     #: The weather at the time of observations. Nullable. Unenforced `constants.Weather`.
-    weather: Series[constants.Weather] = _WEATHER_FIELD(**_LAX_KWARGS)
+    weather: Series[str] = _WEATHER_FIELD(**_LAX_KWARGS)
     #: Investigator notes. Nullable.
     notes: Series[str] = _NOTES_FIELD(**_LAX_KWARGS)
 
@@ -369,11 +369,9 @@ class QuantitativeObservationsExtracted(pa.DataFrameModel):
     #: The bottle number.
     bottle_no: Series[str] = _BOTTLE_NO_FIELD(**_LAX_KWARGS)
     #: The flow. Unenforced `constants.Flow`.
-    flow: Series[constants.Flow] = _FLOW_FIELD(**_LAX_KWARGS)
+    flow: Series[str] = _FLOW_FIELD(**_LAX_KWARGS)
     #: The flow compared to expected. Unenforced `constants.FlowComparedToExpected`.
-    flow_compared_to_expected: Series[constants.FlowComparedToExpected] = (
-        _FLOW_COMPARED_TO_EXPECTED_FIELD(**_LAX_KWARGS)
-    )
+    flow_compared_to_expected: Series[str] = _FLOW_COMPARED_TO_EXPECTED_FIELD(**_LAX_KWARGS)
     #: The air temperature.
     air_temp: Series[float] = _AIR_TEMP_FIELD(**_LAX_KWARGS)
     #: The water temperature.
@@ -414,11 +412,9 @@ class QualitativeObservationsExtracted(pa.DataFrameModel):
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Series[str] = SITE_ID_FIELD_LAX()
     #: The observation type. Nullable. Unenforced `constants.QualitativeSiteObservationTypes`.
-    observation_type: Series[constants.QualitativeSiteObservationTypes] = (
-        _OBSERVATION_TYPE_FIELD(**_LAX_KWARGS)
-    )
+    observation_type: Series[str] = _OBSERVATION_TYPE_FIELD(**_LAX_KWARGS)
     #: The rank of the observation. Nullable. Unenforced `constants.Rank`.
-    rank: Series[constants.Rank] = _RANK_FIELD(**_LAX_KWARGS)
+    rank: Series[int] = _RANK_FIELD(**_LAX_KWARGS)
     #: The description of the observation. Nullable.
     description: Series[str] = _DESCRIPTION_FIELD(**_LAX_KWARGS)
 
