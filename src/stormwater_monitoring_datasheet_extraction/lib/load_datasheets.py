@@ -10,10 +10,7 @@ import pandera.typing as pt
 from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib import constants, schema
-from stormwater_monitoring_datasheet_extraction.lib.db.read import (
-    get_creek_type_map,
-    get_site_type_map,
-)
+from stormwater_monitoring_datasheet_extraction.lib.db import read
 from stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational import (
     validate_site_creek_map,
 )
@@ -458,8 +455,8 @@ def _get_site_creek_maps() -> tuple[pt.DataFrame[schema.Site], pt.DataFrame[sche
     """
     # NOTE: At some point, these will return tables from a database that we don't manage.
     # So, we will continue to need to validate at runtime.
-    site_type_map = get_site_type_map()
-    creek_type_map = get_creek_type_map()
+    site_type_map = read.get_site_type_map()
+    creek_type_map = read.get_creek_type_map()
     validate_site_creek_map(site_type_map=site_type_map, creek_type_map=creek_type_map)
 
     return site_type_map, creek_type_map
