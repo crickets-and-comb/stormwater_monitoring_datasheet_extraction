@@ -256,7 +256,6 @@ class FormExtracted(pa.DataFrameModel):
         PK: `form_id`.
     """
 
-    # TODO: May need to loosen the typehints.
     #: The form ID.
     form_id: Index[str] = FORM_ID_FIELD()
     #: The form type. Nullable. Unenforced `constants.FormType`.
@@ -330,7 +329,6 @@ class SiteVisitExtracted(pa.DataFrameModel):
         FK: `site_id`: `Site.site_id` (unenforced).
     """
 
-    # TODO: May need to loosen the typehints.
     #: The form ID.
     form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
@@ -360,7 +358,6 @@ class QuantitativeObservationsExtracted(pa.DataFrameModel):
         Unique: `form_id`, `bottle_no` (unenforced).
     """
 
-    # TODO: May need to loosen the typehints.
     #: The form ID.
     form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
@@ -405,7 +402,6 @@ class QualitativeObservationsExtracted(pa.DataFrameModel):
         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
     """
 
-    # TODO: May need to loosen the typehints.
     #: The form ID.
     form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
