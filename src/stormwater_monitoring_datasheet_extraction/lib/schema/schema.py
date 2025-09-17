@@ -19,7 +19,6 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import (
     field_checks,
 )
 
-# TODO: Correct references to index columns.
 # TODO: Are null descriptions allowed for non-zero, non-null ranks (1-3)?
 # Are non-null descriptions allowed for 0 ranks?
 
@@ -777,7 +776,8 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Every `bottle_no` is unique within each `form_id`."""
-        is_valid = ~df.duplicated(
+        unindexed_df = df.reset_index()
+        is_valid = ~unindexed_df.duplicated(
             subset=[Columns.FORM_ID, Columns.BACTERIA_BOTTLE_NO], keep="first"
         )
         is_valid = cast("Series[bool]", is_valid)
