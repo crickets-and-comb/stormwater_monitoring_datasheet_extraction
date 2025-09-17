@@ -127,6 +127,9 @@ _SITE_ID_FIELD: Final[Callable] = partial(
 )
 SITE_ID_FIELD_LAX: Final[Callable] = partial(_SITE_ID_FIELD, **_LAX_KWARGS)
 SITE_ID_FIELD: Final[Callable] = partial(_SITE_ID_FIELD, coerce=True)
+CREEK_SITE_ID_FIELD: Final[Callable] = partial(
+    _SITE_ID_FIELD, alias=Columns.CREEK_SITE_ID, **_NULLABLE_KWARGS
+)
 _BOTTLE_NO_FIELD: Final[Callable] = partial(
     pa.Field,
     alias=Columns.BACTERIA_BOTTLE_NO,
@@ -185,6 +188,7 @@ class Site(pa.DataFrameModel):
 
     Constraints:
         PK: `site_id`.
+        FK: `creek_site_id`: `Creek(site_id)` (unenforced). DEFERRABLE INITIALLY DEFERRED
     """
 
     #: The site ID.
@@ -193,6 +197,18 @@ class Site(pa.DataFrameModel):
     outfall_type: Series[
         Annotated[pd.CategoricalDtype, list(constants.OutfallType), False]
     ] = OUTFALL_TYPE_FIELD()
+    #: If a creek, the site ID, else null.
+    creek_site_id: Series[str] = CREEK_SITE_ID_FIELD()
+
+    @pa.dataframe_check(name="creek_site_id_valid", ignore_na=False)
+    def check_creek_site_id_valid(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> pd.Series[bool]:
+        """Check that creek_site_id is valid."""
+        is_creek = df[Columns.OUTFALL_TYPE] == constants.OutfallType.CREEK
+        return (df[Columns.CREEK_SITE_ID].isna()) | (
+            is_creek & df[Columns.CREEK_SITE_ID].eq(df[Columns.SITE_ID])
+        )
 
     class Config:
         """The configuration for the schema.
@@ -212,15 +228,11 @@ class Creek(pa.DataFrameModel):
 
     Constraints:
         PK: `site_id`.
-        FK: `site_id`, `outfall_type`: `Site(site_id, outfall_type)` (unenforced).
+        FK: `site_id`,: `Site.creek_site_id` (unenforced). DEFERRABLE INITIALLY DEFERRED
     """
 
     #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
-    #: The outfall type. `constants.OutfallType.CREEK`.
-    outfall_type: Series[
-        Annotated[pd.CategoricalDtype, [constants.OutfallType.CREEK], False]
-    ] = OUTFALL_TYPE_FIELD()
     #: The creek type. `constants.CreekType`.
     creek_type: Series[Annotated[pd.CategoricalDtype, list(constants.CreekType), False]] = (
         CREEK_TYPE_FIELD()
@@ -594,7 +606,7 @@ class FormVerified(FormPrecleaned):
         return field_checks.is_valid_time(series=tide_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check(
-        ignore_na=False, name="tide_datetime_le_now"  # Since irrelevant fields are nullable.
+        name="tide_datetime_le_now", ignore_na=False  # Since irrelevant fields are nullable.
     )
     @typechecked
     def tide_datetime_le_now(
