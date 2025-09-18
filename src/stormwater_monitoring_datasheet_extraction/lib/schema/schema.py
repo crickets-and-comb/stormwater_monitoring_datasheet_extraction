@@ -569,21 +569,21 @@ class FormVerified(FormPrecleaned):
         **_NULLABLE_KWARGS, str_length={"max_value": constants.CharLimits.NOTES}
     )
 
-    @pa.check("date", name="date_le_today")
+    @pa.check(Columns.DATE, name="date_le_today")
     def date_le_today(
         cls, date: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Every date is on or before today."""
         return field_checks.date_le_today(series=date)
 
-    @pa.check("date", name="is_valid_date")
+    @pa.check(Columns.DATE, name="is_valid_date")
     def is_valid_date(
         cls, date: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Every date parses with the given format."""
         return field_checks.is_valid_date(series=date, date_format=constants.DATE_FORMAT)
 
-    @pa.check("tide_time", name="is_valid_time")
+    @pa.check(Columns.TIDE_TIME, name="is_valid_time")
     def is_valid_time(
         cls, tide_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -634,14 +634,14 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
     #: `start_time` must be before `end_time`.
     end_time: Series[str] = _END_TIME_FIELD(coerce=True)
 
-    @pa.check("start_time", name="start_time_is_valid_time")
+    @pa.check(Columns.START_TIME, name="start_time_is_valid_time")
     def start_time_is_valid_time(
         cls, start_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Every `start_time` parses with the given format."""
         return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
 
-    @pa.check("end_time", name="end_time_is_valid_time")
+    @pa.check(Columns.END_TIME, name="end_time_is_valid_time")
     def end_time_is_valid_time(
         cls, end_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -691,12 +691,12 @@ class SiteVisitVerified(SiteVisitPrecleaned):
     #: The arrival time of the investigation. Must be "HH:MM".
     arrival_time: Series[str] = _ARRIVAL_TIME_FIELD(coerce=True)
 
-    @pa.check("arrival_time", name="arrival_time_is_valid_time")
-    def arrival_time_is_valid_time(
-        cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
+    @pa.check(Columns.START_TIME, name="arrival_time_is_valid_time")
+    def start_time_is_valid_time(
+        cls, start_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
-        """Every `arrival_time` parses with the given format."""
-        return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
+        """Every `start_time` parses with the given format."""
+        return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
 
     class Config:
         """The configuration for the schema.
@@ -746,13 +746,6 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
     salinity_ppt: Series[float] = _SALINITY_PPT_FIELD(coerce=True, ge=0)
     #: The pH.
     pH: Series[float] = _PH_FIELD(coerce=True, ge=0, le=14)
-
-    @pa.check("arrival_time", name="arrival_time_is_valid_time")
-    def arrival_time_is_valid_time(
-        cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
-    ) -> Series[bool]:
-        """Every `arrival_time` parses with the given format."""
-        return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check(name="bottle_no_unique_by_form_id")
     def bottle_no_unique_by_form_id(
