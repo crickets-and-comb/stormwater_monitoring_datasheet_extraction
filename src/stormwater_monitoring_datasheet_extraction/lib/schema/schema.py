@@ -404,7 +404,7 @@ class QualitativeObservationsExtracted(pa.DataFrameModel):
     #: The site ID, part of the primary key, but nullable at this stage.
     site_id: Index[str] = SITE_ID_FIELD_LAX()
     #: The observation type. Nullable. Unenforced `constants.QualitativeSiteObservationTypes`.
-    observation_type: Series[str] = _OBSERVATION_TYPE_FIELD(**_LAX_KWARGS)
+    observation_type: Index[str] = _OBSERVATION_TYPE_FIELD(**_LAX_KWARGS)
     #: The rank of the observation. Nullable. Unenforced `constants.Rank`.
     rank: Series[int] = _RANK_FIELD(**_LAX_KWARGS)
     #: The description of the observation. Nullable.
