@@ -3,6 +3,7 @@
 # TODO: Test that returns correct path, using pytest.mark.parametrize.
 from collections.abc import Callable
 from contextlib import AbstractContextManager
+from typing import Final
 from unittest.mock import patch
 
 import pandas as pd
@@ -10,10 +11,74 @@ import pytest
 from tests.unit.conftest import site_creek_type_parametrize
 from typeguard import typechecked
 
-from stormwater_monitoring_datasheet_extraction.lib import load_datasheets
+from stormwater_monitoring_datasheet_extraction.lib import constants, load_datasheets
 from stormwater_monitoring_datasheet_extraction.lib.constants import Columns
 
 # TODO: Test that returns correct path, using pytest.mark.parametrize.
+
+_EMPTY_FORM_METADATA: Final[pd.DataFrame] = pd.DataFrame(
+    {
+        Columns.FORM_ID: pd.Series(dtype=str),
+        Columns.FORM_TYPE: pd.Series(
+            dtype=pd.CategoricalDtype(categories=list(constants.FormType))
+        ),
+        Columns.FORM_VERSION: pd.Series(dtype=str),
+        Columns.DATE: pd.Series(dtype=str),
+        Columns.CITY: pd.Series(dtype=pd.CategoricalDtype(categories=list(constants.City))),
+        Columns.TIDE_HEIGHT: pd.Series(dtype=float),
+        Columns.TIDE_TIME: pd.Series(dtype=str),
+        Columns.PAST_24HR_RAINFALL: pd.Series(dtype=float),
+        Columns.WEATHER: pd.Series(
+            dtype=pd.CategoricalDtype(categories=list(constants.Weather))
+        ),
+        Columns.NOTES: pd.Series(dtype=str),
+    },
+).set_index(Columns.FORM_ID)
+_EMPTY_INVESTIGATORS: Final[pd.DataFrame] = pd.DataFrame(
+    {
+        Columns.FORM_ID: pd.Series(dtype=str),
+        Columns.INVESTIGATOR: pd.Series(dtype=str),
+        Columns.START_TIME: pd.Series(dtype=str),
+        Columns.END_TIME: pd.Series(dtype=str),
+    }
+).set_index([Columns.FORM_ID, Columns.INVESTIGATOR])
+_EMPTY_SITE_VISITS: Final[pd.DataFrame] = pd.DataFrame(
+    {
+        Columns.FORM_ID: pd.Series(dtype=str),
+        Columns.SITE_ID: pd.Series(dtype=str),
+        Columns.ARRIVAL_TIME: pd.Series(dtype=str),
+    }
+).set_index([Columns.FORM_ID, Columns.SITE_ID])
+_EMPTY_QUAN_OBS: Final[pd.DataFrame] = pd.DataFrame(
+    {
+        Columns.FORM_ID: pd.Series(dtype=str),
+        Columns.SITE_ID: pd.Series(dtype=str),
+        Columns.BACTERIA_BOTTLE_NO: pd.Series(dtype=str),
+        Columns.FLOW: pd.Series(dtype=pd.CategoricalDtype(categories=list(constants.Flow))),
+        Columns.FLOW_COMPARED_TO_EXPECTED: pd.Series(
+            dtype=pd.CategoricalDtype(categories=list(constants.FlowComparedToExpected))
+        ),
+        Columns.AIR_TEMP: pd.Series(dtype=float),
+        Columns.WATER_TEMP: pd.Series(dtype=float),
+        Columns.DO_MG_PER_L: pd.Series(dtype=float),
+        Columns.SPS_MICRO_S_PER_CM: pd.Series(dtype=float),
+        Columns.SALINITY_PPT: pd.Series(dtype=float),
+        Columns.PH: pd.Series(dtype=float),
+    }
+).set_index([Columns.FORM_ID, Columns.SITE_ID])
+_EMPTY_QUAL_OBS: Final[pd.DataFrame] = pd.DataFrame(
+    {
+        Columns.FORM_ID: pd.Series(dtype=str),
+        Columns.SITE_ID: pd.Series(dtype=str),
+        Columns.OBSERVATION_TYPE: pd.Series(
+            dtype=pd.CategoricalDtype(
+                categories=list(constants.QualitativeSiteObservationTypes)
+            )
+        ),
+        Columns.RANK: pd.Series(dtype="int64"),
+        Columns.DESCRIPTION: pd.Series(dtype=str),
+    }
+).set_index([Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE])
 
 
 @site_creek_type_parametrize
@@ -24,21 +89,11 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import Columns
         (
             load_datasheets.verify,
             {
-                "precleaned_form_metadata": pd.DataFrame(columns=[Columns.FORM_ID]).set_index(
-                    Columns.FORM_ID
-                ),
-                "precleaned_investigators": pd.DataFrame(
-                    columns=[Columns.FORM_ID, Columns.INVESTIGATOR]
-                ).set_index([Columns.FORM_ID, Columns.INVESTIGATOR]),
-                "precleaned_site_visits": pd.DataFrame(
-                    columns=[Columns.FORM_ID, Columns.SITE_ID]
-                ).set_index([Columns.FORM_ID, Columns.SITE_ID]),
-                "precleaned_quantitative_observations": pd.DataFrame(
-                    columns=[Columns.FORM_ID, Columns.SITE_ID]
-                ).set_index([Columns.FORM_ID, Columns.SITE_ID]),
-                "precleaned_qualitative_observations": pd.DataFrame(
-                    columns=[Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]
-                ).set_index([Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]),
+                "precleaned_form_metadata": _EMPTY_FORM_METADATA,
+                "precleaned_investigators": _EMPTY_INVESTIGATORS,
+                "precleaned_site_visits": _EMPTY_SITE_VISITS,
+                "precleaned_quantitative_observations": _EMPTY_QUAN_OBS,
+                "precleaned_qualitative_observations": _EMPTY_QUAL_OBS,
             },
         ),
     ],
@@ -88,79 +143,17 @@ def test_validate_site_creek_maps_in_verify(
         (
             load_datasheets._validate_thresholds,
             {
-                "observations": pd.DataFrame(
-                    columns=[
-                        Columns.FORM_ID,
-                        Columns.SITE_ID,
-                        Columns.BACTERIA_BOTTLE_NO,
-                        Columns.FLOW,
-                        Columns.FLOW_COMPARED_TO_EXPECTED,
-                        Columns.AIR_TEMP,
-                        Columns.WATER_TEMP,
-                        Columns.DO_MG_PER_L,
-                        Columns.SPS_MICRO_S_PER_CM,
-                        Columns.SALINITY_PPT,
-                        Columns.PH,
-                    ]
-                ).set_index([Columns.FORM_ID, Columns.SITE_ID]),
+                "observations": _EMPTY_QUAN_OBS,
             },
         ),
         (
             load_datasheets.clean,
             {
-                "verified_form_metadata": pd.DataFrame(
-                    columns=[
-                        Columns.FORM_ID,
-                        Columns.FORM_TYPE,
-                        Columns.FORM_VERSION,
-                        Columns.DATE,
-                        Columns.CITY,
-                        Columns.TIDE_HEIGHT,
-                        Columns.TIDE_TIME,
-                        Columns.PAST_24HR_RAINFALL,
-                        Columns.WEATHER,
-                        Columns.NOTES,
-                    ],
-                ).set_index(Columns.FORM_ID),
-                "verified_investigators": pd.DataFrame(
-                    columns=[
-                        Columns.FORM_ID,
-                        Columns.INVESTIGATOR,
-                        Columns.START_TIME,
-                        Columns.END_TIME,
-                    ]
-                ).set_index([Columns.FORM_ID, Columns.INVESTIGATOR]),
-                "verified_site_visits": pd.DataFrame(
-                    columns=[
-                        Columns.FORM_ID,
-                        Columns.SITE_ID,
-                        Columns.ARRIVAL_TIME,
-                    ]
-                ).set_index([Columns.FORM_ID, Columns.SITE_ID]),
-                "verified_quantitative_observations": pd.DataFrame(
-                    columns=[
-                        Columns.FORM_ID,
-                        Columns.SITE_ID,
-                        Columns.BACTERIA_BOTTLE_NO,
-                        Columns.FLOW,
-                        Columns.FLOW_COMPARED_TO_EXPECTED,
-                        Columns.AIR_TEMP,
-                        Columns.WATER_TEMP,
-                        Columns.DO_MG_PER_L,
-                        Columns.SPS_MICRO_S_PER_CM,
-                        Columns.SALINITY_PPT,
-                        Columns.PH,
-                    ]
-                ).set_index([Columns.FORM_ID, Columns.SITE_ID]),
-                "verified_qualitative_observations": pd.DataFrame(
-                    columns=[
-                        Columns.FORM_ID,
-                        Columns.SITE_ID,
-                        Columns.OBSERVATION_TYPE,
-                        Columns.RANK,
-                        Columns.DESCRIPTION,
-                    ]
-                ).set_index([Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]),
+                "verified_form_metadata": _EMPTY_FORM_METADATA,
+                "verified_investigators": _EMPTY_INVESTIGATORS,
+                "verified_site_visits": _EMPTY_SITE_VISITS,
+                "verified_quantitative_observations": _EMPTY_QUAN_OBS,
+                "verified_qualitative_observations": _EMPTY_QUAL_OBS,
             },
         ),
     ],
