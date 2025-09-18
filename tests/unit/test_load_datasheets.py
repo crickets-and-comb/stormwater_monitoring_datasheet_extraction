@@ -115,23 +115,11 @@ def test_validate_site_creek_maps_in_verify(
         return_value=creek_type_map,
     ):
         maps = fx(**kwargs)
-        site_creek_merged = site_type_map.reset_index().merge(
-            creek_type_map.reset_index(),
-            how="outer",
-            left_on=Columns.CREEK_SITE_ID,
-            right_on=Columns.SITE_ID,
-            suffixes=("_site", "_creek"),
+        site_creek_merged = _merge_site_creek(
+            site_type_map=site_type_map, creek_type_map=creek_type_map
         )
-        returned_site_creek_merged = (
-            maps[-2]
-            .reset_index()
-            .merge(
-                maps[-1].reset_index(),
-                how="outer",
-                left_on=Columns.CREEK_SITE_ID,
-                right_on=Columns.SITE_ID,
-                suffixes=("_site", "_creek"),
-            )
+        returned_site_creek_merged = _merge_site_creek(
+            site_type_map=maps[-2], creek_type_map=maps[-1]
         )
         pd.testing.assert_frame_equal(site_creek_merged, returned_site_creek_merged)
 
@@ -177,22 +165,22 @@ def test_validate_site_creek_maps_in_clean(
     with error_context:
         maps = fx(**kwargs)
         if fx is load_datasheets.clean:
-            site_creek_merged = site_type_map.reset_index().merge(
-                creek_type_map.reset_index(),
-                how="outer",
-                left_on=Columns.CREEK_SITE_ID,
-                right_on=Columns.SITE_ID,
-                suffixes=("_site", "_creek"),
+            site_creek_merged = _merge_site_creek(
+                site_type_map=site_type_map, creek_type_map=creek_type_map
             )
-            returned_site_creek_merged = (
-                maps[-2]
-                .reset_index()
-                .merge(
-                    maps[-1].reset_index(),
-                    how="outer",
-                    left_on=Columns.CREEK_SITE_ID,
-                    right_on=Columns.SITE_ID,
-                    suffixes=("_site", "_creek"),
-                )
+            returned_site_creek_merged = _merge_site_creek(
+                site_type_map=maps[-2], creek_type_map=maps[-1]
             )
             pd.testing.assert_frame_equal(site_creek_merged, returned_site_creek_merged)
+
+
+def _merge_site_creek(
+    site_type_map: pd.DataFrame, creek_type_map: pd.DataFrame
+) -> pd.DataFrame:
+    return site_type_map.reset_index().merge(
+        creek_type_map.reset_index(),
+        how="outer",
+        left_on=Columns.CREEK_SITE_ID,
+        right_on=Columns.SITE_ID,
+        suffixes=("_site", "_creek"),
+    )
