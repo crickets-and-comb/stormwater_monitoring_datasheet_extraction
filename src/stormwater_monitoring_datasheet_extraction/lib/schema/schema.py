@@ -691,12 +691,12 @@ class SiteVisitVerified(SiteVisitPrecleaned):
     #: The arrival time of the investigation. Must be "HH:MM".
     arrival_time: Series[str] = _ARRIVAL_TIME_FIELD(coerce=True)
 
-    @pa.check(Columns.START_TIME, name="arrival_time_is_valid_time")
-    def start_time_is_valid_time(
-        cls, start_time: Series  # noqa: B902 (pa.check makes it a class method)
+    @pa.check(Columns.ARRIVAL_TIME, name="arrival_time_is_valid_time")
+    def arrival_time_is_valid_time(
+        cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
-        """Every `start_time` parses with the given format."""
-        return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
+        """Every `arrival_time` parses with the given format."""
+        return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
 
     class Config:
         """The configuration for the schema.
