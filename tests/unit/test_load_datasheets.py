@@ -3,16 +3,14 @@
 # TODO: Test that returns correct path, using pytest.mark.parametrize.
 from collections.abc import Callable
 from contextlib import AbstractContextManager
-from typing import cast
 from unittest.mock import patch
 
 import pandas as pd
-import pandera.typing as pt
 import pytest
 from tests.unit.conftest import site_creek_type_parametrize
 from typeguard import typechecked
 
-from stormwater_monitoring_datasheet_extraction.lib import load_datasheets, schema
+from stormwater_monitoring_datasheet_extraction.lib import load_datasheets
 from stormwater_monitoring_datasheet_extraction.lib.constants import Columns
 
 # TODO: Test that returns correct path, using pytest.mark.parametrize.
@@ -26,34 +24,21 @@ from stormwater_monitoring_datasheet_extraction.lib.constants import Columns
         (
             load_datasheets.verify,
             {
-                "precleaned_form_metadata": cast(
-                    "pt.DataFrame[schema.FormPrecleaned]",
-                    pd.DataFrame(columns=[Columns.FORM_ID]).set_index(Columns.FORM_ID),
+                "precleaned_form_metadata": pd.DataFrame(columns=[Columns.FORM_ID]).set_index(
+                    Columns.FORM_ID
                 ),
-                "precleaned_investigators": cast(
-                    "pt.DataFrame[schema.FormInvestigatorPrecleaned]",
-                    pd.DataFrame(columns=[Columns.FORM_ID, Columns.INVESTIGATOR]).set_index(
-                        [Columns.FORM_ID, Columns.INVESTIGATOR]
-                    ),
-                ),
-                "precleaned_site_visits": cast(
-                    "pt.DataFrame[schema.SiteVisitPrecleaned]",
-                    pd.DataFrame(columns=[Columns.FORM_ID, Columns.SITE_ID]).set_index(
-                        [Columns.FORM_ID, Columns.SITE_ID]
-                    ),
-                ),
-                "precleaned_quantitative_observations": cast(
-                    "pt.DataFrame[schema.QuantitativeObservationsPrecleaned]",
-                    pd.DataFrame(columns=[Columns.FORM_ID, Columns.SITE_ID]).set_index(
-                        [Columns.FORM_ID, Columns.SITE_ID]
-                    ),
-                ),
-                "precleaned_qualitative_observations": cast(
-                    "pt.DataFrame[schema.QualitativeObservationsPrecleaned]",
-                    pd.DataFrame(
-                        columns=[Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]
-                    ).set_index([Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]),
-                ),
+                "precleaned_investigators": pd.DataFrame(
+                    columns=[Columns.FORM_ID, Columns.INVESTIGATOR]
+                ).set_index([Columns.FORM_ID, Columns.INVESTIGATOR]),
+                "precleaned_site_visits": pd.DataFrame(
+                    columns=[Columns.FORM_ID, Columns.SITE_ID]
+                ).set_index([Columns.FORM_ID, Columns.SITE_ID]),
+                "precleaned_quantitative_observations": pd.DataFrame(
+                    columns=[Columns.FORM_ID, Columns.SITE_ID]
+                ).set_index([Columns.FORM_ID, Columns.SITE_ID]),
+                "precleaned_qualitative_observations": pd.DataFrame(
+                    columns=[Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]
+                ).set_index([Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]),
             },
         ),
     ],
