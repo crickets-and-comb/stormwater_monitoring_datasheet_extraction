@@ -6,8 +6,8 @@ from typing import Annotated, Final, cast
 
 import pandas as pd
 import pandera as pa
+import pandera.pandas as papd
 from pandera.typing import Index, Series
-from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib import constants
 from stormwater_monitoring_datasheet_extraction.lib.constants import (
@@ -127,6 +127,9 @@ _SITE_ID_FIELD: Final[Callable] = partial(
 )
 SITE_ID_FIELD_LAX: Final[Callable] = partial(_SITE_ID_FIELD, **_LAX_KWARGS)
 SITE_ID_FIELD: Final[Callable] = partial(_SITE_ID_FIELD, coerce=True)
+CREEK_SITE_ID_FIELD: Final[Callable] = partial(
+    _SITE_ID_FIELD, alias=Columns.CREEK_SITE_ID, **_NULLABLE_KWARGS
+)
 _BOTTLE_NO_FIELD: Final[Callable] = partial(
     pa.Field,
     alias=Columns.BACTERIA_BOTTLE_NO,
@@ -178,21 +181,36 @@ _DESCRIPTION_FIELD: Final[Callable] = partial(
 )
 
 
-class Site(pa.DataFrameModel):
+class Site(papd.DataFrameModel):
     """Site metadata.
 
     All sites.
 
     Constraints:
         PK: `site_id`.
+        FK: `creek_site_id`: `Creek(site_id)` (unenforced). DEFERRABLE INITIALLY DEFERRED
     """
 
     #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
     #: The outfall type. `constants.OutfallType`.
     outfall_type: Series[
-        Annotated[pd.CategoricalDtype, list(constants.OutfallType), False]
+        Annotated[pd.CategoricalDtype, tuple(constants.OutfallType), False]
     ] = OUTFALL_TYPE_FIELD()
+    #: If a creek, `site_id`, else null.
+    creek_site_id: Series[str] = CREEK_SITE_ID_FIELD()
+
+    @pa.dataframe_check(name="creek_site_id_valid", ignore_na=False)
+    def check_creek_site_id_valid(
+        cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
+    ) -> Series[bool]:
+        """Check that creek_site_id is valid."""
+        is_creek = df[Columns.OUTFALL_TYPE] == constants.OutfallType.CREEK
+        is_valid = (~is_creek & df[Columns.CREEK_SITE_ID].isna()) | (
+            is_creek & df[Columns.CREEK_SITE_ID].eq(df.index)
+        )
+        is_valid = cast("Series[bool]", is_valid)
+        return is_valid
 
     class Config:
         """The configuration for the schema.
@@ -201,28 +219,24 @@ class Site(pa.DataFrameModel):
         """
 
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.SITE_ID]
         strict = True
 
 
-class Creek(pa.DataFrameModel):
+class Creek(papd.DataFrameModel):
     """Creek metadata.
 
     Creek type.
 
     Constraints:
         PK: `site_id`.
-        FK: `site_id`, `outfall_type`: `Site(site_id, outfall_type)` (unenforced).
+        FK: `site_id`,: `Site.creek_site_id` (unenforced). DEFERRABLE INITIALLY DEFERRED
     """
 
     #: The site ID.
     site_id: Index[str] = SITE_ID_FIELD()
-    #: The outfall type. `constants.OutfallType.CREEK`.
-    outfall_type: Series[
-        Annotated[pd.CategoricalDtype, [constants.OutfallType.CREEK], False]
-    ] = OUTFALL_TYPE_FIELD()
     #: The creek type. `constants.CreekType`.
-    creek_type: Series[Annotated[pd.CategoricalDtype, list(constants.CreekType), False]] = (
+    creek_type: Series[Annotated[pd.CategoricalDtype, tuple(constants.CreekType), False]] = (
         CREEK_TYPE_FIELD()
     )
 
@@ -233,28 +247,27 @@ class Creek(pa.DataFrameModel):
         """
 
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.SITE_ID]
         strict = True
 
 
-class FormExtracted(pa.DataFrameModel):
+class FormExtracted(papd.DataFrameModel):
     """Form metadata extracted from the datasheets.
 
     Constraints:
         PK: `form_id`.
     """
 
-    # TODO: May need to loosen the typehints.
     #: The form ID.
-    form_id: Index[str] = FORM_ID_FIELD()
+    form_id: Index[str] = FORM_ID_FIELD(unique=True)
     #: The form type. Nullable. Unenforced `constants.FormType`.
-    form_type: Series[constants.FormType] = _FORM_TYPE_FIELD(**_LAX_KWARGS)
+    form_type: Series[str] = _FORM_TYPE_FIELD(**_LAX_KWARGS)
     #: The form version. Nullable.
     form_version: Series[str] = _FORM_VERSION_FIELD(**_LAX_KWARGS)
     #: The date of observations. Nullable.
     date: Series[str] = _DATE_FIELD(**_LAX_KWARGS)
     #: The city of observations. Nullable. Unenforced `constants.City`.
-    city: Series[constants.City] = _CITY_FIELD(**_LAX_KWARGS)
+    city: Series[str] = _CITY_FIELD(**_LAX_KWARGS)
     #: The tide height at the time of observations. Nullable.
     tide_height: Series[float] = _TIDE_HEIGHT_FIELD(**_LAX_KWARGS)
     #: The tide time at the time of observations. Nullable.
@@ -262,7 +275,7 @@ class FormExtracted(pa.DataFrameModel):
     #: The past 24-hour rainfall. Nullable.
     past_24hr_rainfall: Series[float] = _PAST_24HR_RAINFALL_FIELD(**_LAX_KWARGS)
     #: The weather at the time of observations. Nullable. Unenforced `constants.Weather`.
-    weather: Series[constants.Weather] = _WEATHER_FIELD(**_LAX_KWARGS)
+    weather: Series[str] = _WEATHER_FIELD(**_LAX_KWARGS)
     #: Investigator notes. Nullable.
     notes: Series[str] = _NOTES_FIELD(**_LAX_KWARGS)
 
@@ -275,11 +288,10 @@ class FormExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
-class FormInvestigatorExtracted(pa.DataFrameModel):
+class FormInvestigatorExtracted(papd.DataFrameModel):
     """Investigators on each form extracted from the datasheets.
 
     Constraints:
@@ -303,11 +315,10 @@ class FormInvestigatorExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
-class SiteVisitExtracted(pa.DataFrameModel):
+class SiteVisitExtracted(papd.DataFrameModel):
     """Site visit extracted.
 
     All site visits, including dry outfalls with no observations.
@@ -318,7 +329,6 @@ class SiteVisitExtracted(pa.DataFrameModel):
         FK: `site_id`: `Site.site_id` (unenforced).
     """
 
-    # TODO: May need to loosen the typehints.
     #: The form ID.
     form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
@@ -333,11 +343,10 @@ class SiteVisitExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
-class QuantitativeObservationsExtracted(pa.DataFrameModel):
+class QuantitativeObservationsExtracted(papd.DataFrameModel):
     """Quantitative observations extracted.
 
     All site visits excluding for dry outfalls.
@@ -348,7 +357,6 @@ class QuantitativeObservationsExtracted(pa.DataFrameModel):
         Unique: `form_id`, `bottle_no` (unenforced).
     """
 
-    # TODO: May need to loosen the typehints.
     #: The form ID.
     form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
@@ -356,11 +364,9 @@ class QuantitativeObservationsExtracted(pa.DataFrameModel):
     #: The bottle number.
     bottle_no: Series[str] = _BOTTLE_NO_FIELD(**_LAX_KWARGS)
     #: The flow. Unenforced `constants.Flow`.
-    flow: Series[constants.Flow] = _FLOW_FIELD(**_LAX_KWARGS)
+    flow: Series[str] = _FLOW_FIELD(**_LAX_KWARGS)
     #: The flow compared to expected. Unenforced `constants.FlowComparedToExpected`.
-    flow_compared_to_expected: Series[constants.FlowComparedToExpected] = (
-        _FLOW_COMPARED_TO_EXPECTED_FIELD(**_LAX_KWARGS)
-    )
+    flow_compared_to_expected: Series[str] = _FLOW_COMPARED_TO_EXPECTED_FIELD(**_LAX_KWARGS)
     #: The air temperature.
     air_temp: Series[float] = _AIR_TEMP_FIELD(**_LAX_KWARGS)
     #: The water temperature.
@@ -381,11 +387,10 @@ class QuantitativeObservationsExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
-class QualitativeObservationsExtracted(pa.DataFrameModel):
+class QualitativeObservationsExtracted(papd.DataFrameModel):
     """Qualitative site observations extracted from the datasheets.
 
     Only wet outfalls, but not necessarily all visits.
@@ -395,17 +400,14 @@ class QualitativeObservationsExtracted(pa.DataFrameModel):
         FK: `form_id`, `site_id`: `QuantitativeObservations(form_id, site_id)` (unenforced).
     """
 
-    # TODO: May need to loosen the typehints.
     #: The form ID.
     form_id: Index[str] = FORM_ID_FIELD()
     #: The site ID, part of the primary key, but nullable at this stage.
-    site_id: Series[str] = SITE_ID_FIELD_LAX()
+    site_id: Index[str] = SITE_ID_FIELD_LAX()
     #: The observation type. Nullable. Unenforced `constants.QualitativeSiteObservationTypes`.
-    observation_type: Series[constants.QualitativeSiteObservationTypes] = (
-        _OBSERVATION_TYPE_FIELD(**_LAX_KWARGS)
-    )
+    observation_type: Index[str] = _OBSERVATION_TYPE_FIELD(**_LAX_KWARGS)
     #: The rank of the observation. Nullable. Unenforced `constants.Rank`.
-    rank: Series[constants.Rank] = _RANK_FIELD(**_LAX_KWARGS)
+    rank: Series[int] = _RANK_FIELD(**_LAX_KWARGS)
     #: The description of the observation. Nullable.
     description: Series[str] = _DESCRIPTION_FIELD(**_LAX_KWARGS)
 
@@ -416,7 +418,6 @@ class QualitativeObservationsExtracted(pa.DataFrameModel):
         """
 
         multiindex_strict = False
-        multiindex_unique = False
         strict = False
 
 
@@ -435,7 +436,7 @@ class FormPrecleaned(FormExtracted):
 
         add_missing_columns = True
         multiindex_strict = "filter"
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID]
         strict = "filter"
 
 
@@ -530,7 +531,7 @@ class FormVerified(FormPrecleaned):
     """
 
     #: The form type.
-    form_type: Series[Annotated[pd.CategoricalDtype, list(constants.FormType), False]] = (
+    form_type: Series[Annotated[pd.CategoricalDtype, tuple(constants.FormType), False]] = (
         _FORM_TYPE_FIELD(coerce=True)
     )
     #: The form version.
@@ -542,7 +543,7 @@ class FormVerified(FormPrecleaned):
     #: `date` and `tide_time` must be on or before now.
     date: Series[str] = _DATE_FIELD(coerce=True)
     #: The city of observations.
-    city: Series[Annotated[pd.CategoricalDtype, list(constants.City), False]] = _CITY_FIELD(
+    city: Series[Annotated[pd.CategoricalDtype, tuple(constants.City), False]] = _CITY_FIELD(
         coerce=True
     )
     #: The tide height at the time of observations.
@@ -561,7 +562,7 @@ class FormVerified(FormPrecleaned):
     )
     #: The weather at the time of observations.
     # TODO: Are we going to make weather ordered?
-    weather: Series[Annotated[pd.CategoricalDtype, list(constants.Weather), True]] = (
+    weather: Series[Annotated[pd.CategoricalDtype, tuple(constants.Weather), True]] = (
         _WEATHER_FIELD(coerce=True)
     )
     #: Investigator notes.
@@ -569,24 +570,21 @@ class FormVerified(FormPrecleaned):
         **_NULLABLE_KWARGS, str_length={"max_value": constants.CharLimits.NOTES}
     )
 
-    @pa.check("date", name="date_le_today")
-    @typechecked
+    @pa.check(Columns.DATE, name="date_le_today")
     def date_le_today(
         cls, date: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Every date is on or before today."""
         return field_checks.date_le_today(series=date)
 
-    @pa.check("date", name="is_valid_date")
-    @typechecked
+    @pa.check(Columns.DATE, name="is_valid_date")
     def is_valid_date(
         cls, date: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Every date parses with the given format."""
         return field_checks.is_valid_date(series=date, date_format=constants.DATE_FORMAT)
 
-    @pa.check("tide_time", name="is_valid_time")
-    @typechecked
+    @pa.check(Columns.TIDE_TIME, name="is_valid_time")
     def is_valid_time(
         cls, tide_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -594,9 +592,8 @@ class FormVerified(FormPrecleaned):
         return field_checks.is_valid_time(series=tide_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check(
-        ignore_na=False, name="tide_datetime_le_now"  # Since irrelevant fields are nullable.
+        name="tide_datetime_le_now", ignore_na=False  # Since irrelevant fields are nullable.
     )
-    @typechecked
     def tide_datetime_le_now(
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -617,6 +614,7 @@ class FormVerified(FormPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
+        multiindex_unique = [Columns.FORM_ID]
         strict = True
 
 
@@ -637,16 +635,14 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
     #: `start_time` must be before `end_time`.
     end_time: Series[str] = _END_TIME_FIELD(coerce=True)
 
-    @pa.check("start_time", name="start_time_is_valid_time")
-    @typechecked
+    @pa.check(Columns.START_TIME, name="start_time_is_valid_time")
     def start_time_is_valid_time(
         cls, start_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Every `start_time` parses with the given format."""
         return field_checks.is_valid_time(series=start_time, format=constants.TIME_FORMAT)
 
-    @pa.check("end_time", name="end_time_is_valid_time")
-    @typechecked
+    @pa.check(Columns.END_TIME, name="end_time_is_valid_time")
     def end_time_is_valid_time(
         cls, end_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -654,7 +650,6 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
         return field_checks.is_valid_time(series=end_time, format=constants.TIME_FORMAT)
 
     @pa.dataframe_check(name="start_time_before_end_time")
-    @typechecked
     def start_time_before_end_time(
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -677,7 +672,7 @@ class FormInvestigatorVerified(FormInvestigatorPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID, Columns.INVESTIGATOR]
         strict = True
 
 
@@ -697,8 +692,7 @@ class SiteVisitVerified(SiteVisitPrecleaned):
     #: The arrival time of the investigation. Must be "HH:MM".
     arrival_time: Series[str] = _ARRIVAL_TIME_FIELD(coerce=True)
 
-    @pa.check("arrival_time", name="arrival_time_is_valid_time")
-    @typechecked
+    @pa.check(Columns.ARRIVAL_TIME, name="arrival_time_is_valid_time")
     def arrival_time_is_valid_time(
         cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
@@ -713,7 +707,7 @@ class SiteVisitVerified(SiteVisitPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID, Columns.SITE_ID]
         strict = True
 
 
@@ -734,12 +728,12 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
     #: Must be unique within each `form_id`.
     bottle_no: Series[str] = _BOTTLE_NO_FIELD(coerce=True)
     #: The flow.
-    flow: Series[Annotated[pd.CategoricalDtype, list(constants.Flow), True]] = _FLOW_FIELD(
+    flow: Series[Annotated[pd.CategoricalDtype, tuple(constants.Flow), True]] = _FLOW_FIELD(
         coerce=True
     )
     #: The flow compared to expected.
     flow_compared_to_expected: Series[
-        Annotated[pd.CategoricalDtype, list(constants.FlowComparedToExpected), True]
+        Annotated[pd.CategoricalDtype, tuple(constants.FlowComparedToExpected), True]
     ] = _FLOW_COMPARED_TO_EXPECTED_FIELD(coerce=True)
     #: The air temperature.
     air_temp: Series[float] = _AIR_TEMP_FIELD(coerce=True)
@@ -754,21 +748,13 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
     #: The pH.
     pH: Series[float] = _PH_FIELD(coerce=True, ge=0, le=14)
 
-    @pa.check("arrival_time", name="arrival_time_is_valid_time")
-    @typechecked
-    def arrival_time_is_valid_time(
-        cls, arrival_time: Series  # noqa: B902 (pa.check makes it a class method)
-    ) -> Series[bool]:
-        """Every `arrival_time` parses with the given format."""
-        return field_checks.is_valid_time(series=arrival_time, format=constants.TIME_FORMAT)
-
     @pa.dataframe_check(name="bottle_no_unique_by_form_id")
-    @typechecked
     def bottle_no_unique_by_form_id(
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Every `bottle_no` is unique within each `form_id`."""
-        is_valid = ~df.duplicated(
+        unindexed_df = df.reset_index()
+        is_valid = ~unindexed_df.duplicated(
             subset=[Columns.FORM_ID, Columns.BACTERIA_BOTTLE_NO], keep="first"
         )
         is_valid = cast("Series[bool]", is_valid)
@@ -783,7 +769,7 @@ class QuantitativeObservationsVerified(QuantitativeObservationsPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID, Columns.SITE_ID]
         strict = True
 
 
@@ -801,10 +787,12 @@ class QualitativeObservationsVerified(QualitativeObservationsPrecleaned):
     site_id: Index[str] = SITE_ID_FIELD()
     #: The observation type.
     observation_type: Index[
-        Annotated[pd.CategoricalDtype, list(constants.QualitativeSiteObservationTypes), False]
+        Annotated[
+            pd.CategoricalDtype, tuple(constants.QualitativeSiteObservationTypes), False
+        ]
     ] = _OBSERVATION_TYPE_FIELD(coerce=True)
     #: The rank of the observation.
-    rank: Series[Annotated[pd.CategoricalDtype, list(constants.Rank), True]] = _RANK_FIELD(
+    rank: Series[Annotated[pd.CategoricalDtype, tuple(constants.Rank), True]] = _RANK_FIELD(
         coerce=True
     )
     #: The description of the observation.
@@ -821,7 +809,7 @@ class QualitativeObservationsVerified(QualitativeObservationsPrecleaned):
 
         add_missing_columns = False
         multiindex_strict = True
-        multiindex_unique = True
+        multiindex_unique = [Columns.FORM_ID, Columns.SITE_ID, Columns.OBSERVATION_TYPE]
         strict = True
 
 

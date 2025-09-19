@@ -10,9 +10,9 @@ import pandera.typing as pt
 from typeguard import typechecked
 
 from stormwater_monitoring_datasheet_extraction.lib import constants, schema
-from stormwater_monitoring_datasheet_extraction.lib.db.read import (
-    get_creek_type_map,
-    get_site_type_map,
+from stormwater_monitoring_datasheet_extraction.lib.db import read
+from stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational import (
+    validate_site_creek_map,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -453,9 +453,11 @@ def _get_site_creek_maps() -> tuple[pt.DataFrame[schema.Site], pt.DataFrame[sche
             - A DataFrame mapping site IDs to their outfall types.
             - A DataFrame mapping creek site IDs to their creek types.
     """
-    site_type_map = get_site_type_map()
-    creek_type_map = get_creek_type_map()
-    _validate_site_creek_map(site_type_map=site_type_map, creek_type_map=creek_type_map)
+    # NOTE: At some point, these will return tables from a database that we don't manage.
+    # So, we will continue to need to validate at runtime.
+    site_type_map = read.get_site_type_map()
+    creek_type_map = read.get_creek_type_map()
+    validate_site_creek_map(site_type_map=site_type_map, creek_type_map=creek_type_map)
 
     return site_type_map, creek_type_map
 
@@ -479,20 +481,5 @@ def _validate_thresholds(
     # TODO: Add records to site_type_map to determine thresholds.
     # creek or outfall, and if creek:
     # habitat, spawn, rear, or migrate.
-    _validate_site_creek_map(site_type_map=site_type_map, creek_type_map=creek_type_map)
+    validate_site_creek_map(site_type_map=site_type_map, creek_type_map=creek_type_map)
     ...
-
-
-@pa.check_types(with_pydantic=True, lazy=True)
-def _validate_site_creek_map(
-    site_type_map: pt.DataFrame[schema.Site],
-    creek_type_map: pt.DataFrame[schema.Creek],
-) -> None:
-    """Validate the site and creek type maps.
-
-    Args:
-        site_type_map: A DataFrame mapping site IDs to their outfall types.
-        creek_type_map: A DataFrame mapping creek site IDs to their creek types.
-    """
-    ...
-    # TODO: Validate referential integrity.

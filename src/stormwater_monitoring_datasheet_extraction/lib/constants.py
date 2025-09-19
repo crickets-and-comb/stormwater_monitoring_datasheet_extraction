@@ -59,6 +59,7 @@ class Columns:
 
     # Other
     COLOR: Final[str] = "color"
+    CREEK_SITE_ID: Final[str] = "creek_site_id"
     CREEK_TYPE: Final[str] = "creek_type"
     DATA_TYPE: Final[str] = "data_type"
     FORM_TYPE: Final[str] = "form_type"
