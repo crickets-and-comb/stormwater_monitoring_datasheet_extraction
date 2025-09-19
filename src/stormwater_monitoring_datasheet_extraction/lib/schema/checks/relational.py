@@ -46,4 +46,4 @@ def validate_site_creek_map(
                 f"Creek site IDs in site_type_map not in creek_type_map: "
                 f"{invalid_creek_sites.index.tolist()}"
             )
-        raise ValueError(" ; ".join(error_messages))
+        raise ValueError("; ".join(error_messages))
