@@ -6,6 +6,7 @@ from typing import Annotated, Final, cast
 
 import pandas as pd
 import pandera as pa
+import pandera.pandas as papd
 from pandera.typing import Index, Series
 
 from stormwater_monitoring_datasheet_extraction.lib import constants
@@ -180,7 +181,7 @@ _DESCRIPTION_FIELD: Final[Callable] = partial(
 )
 
 
-class Site(pa.DataFrameModel):
+class Site(papd.DataFrameModel):
     """Site metadata.
 
     All sites.
@@ -222,7 +223,7 @@ class Site(pa.DataFrameModel):
         strict = True
 
 
-class Creek(pa.DataFrameModel):
+class Creek(papd.DataFrameModel):
     """Creek metadata.
 
     Creek type.
@@ -250,7 +251,7 @@ class Creek(pa.DataFrameModel):
         strict = True
 
 
-class FormExtracted(pa.DataFrameModel):
+class FormExtracted(papd.DataFrameModel):
     """Form metadata extracted from the datasheets.
 
     Constraints:
@@ -290,7 +291,7 @@ class FormExtracted(pa.DataFrameModel):
         strict = False
 
 
-class FormInvestigatorExtracted(pa.DataFrameModel):
+class FormInvestigatorExtracted(papd.DataFrameModel):
     """Investigators on each form extracted from the datasheets.
 
     Constraints:
@@ -317,7 +318,7 @@ class FormInvestigatorExtracted(pa.DataFrameModel):
         strict = False
 
 
-class SiteVisitExtracted(pa.DataFrameModel):
+class SiteVisitExtracted(papd.DataFrameModel):
     """Site visit extracted.
 
     All site visits, including dry outfalls with no observations.
@@ -345,7 +346,7 @@ class SiteVisitExtracted(pa.DataFrameModel):
         strict = False
 
 
-class QuantitativeObservationsExtracted(pa.DataFrameModel):
+class QuantitativeObservationsExtracted(papd.DataFrameModel):
     """Quantitative observations extracted.
 
     All site visits excluding for dry outfalls.
@@ -389,7 +390,7 @@ class QuantitativeObservationsExtracted(pa.DataFrameModel):
         strict = False
 
 
-class QualitativeObservationsExtracted(pa.DataFrameModel):
+class QualitativeObservationsExtracted(papd.DataFrameModel):
     """Qualitative site observations extracted from the datasheets.
 
     Only wet outfalls, but not necessarily all visits.
