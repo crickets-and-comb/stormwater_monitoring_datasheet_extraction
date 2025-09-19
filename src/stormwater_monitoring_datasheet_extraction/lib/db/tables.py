@@ -27,11 +27,10 @@ _sites = pd.DataFrame(
         ("Padden", OutfallType.CREEK),
     ],
 )
-_sites[Columns.CREEK_SITE_ID] = _sites.apply(
-    lambda row: (
-        row[Columns.SITE_ID] if row[Columns.OUTFALL_TYPE] == OutfallType.CREEK else pd.NA
-    ),
-    axis=1,
+
+_sites[Columns.CREEK_SITE_ID] = pd.NA
+_sites.loc[_sites[Columns.OUTFALL_TYPE] == OutfallType.CREEK, Columns.CREEK_SITE_ID] = (
+    _sites.loc[_sites[Columns.OUTFALL_TYPE] == OutfallType.CREEK, Columns.SITE_ID]
 )
 _sites.set_index(Columns.SITE_ID, inplace=True)
 
