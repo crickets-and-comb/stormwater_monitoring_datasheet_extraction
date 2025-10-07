@@ -67,3 +67,5 @@ docs/**/*.pickle
 .github/workflows/CI_CD_act.yml
 
 .vscode/
+
+.openapi.json
