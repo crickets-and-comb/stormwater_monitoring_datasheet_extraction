@@ -15,4 +15,12 @@ docs/**/*.pickle
 .pytype/
 .github/workflows/CI_CD_act.yml
 .vscode/
-.openapi.json
+
+# Downloaded from https://<your_fm_domain>.fmphost.com/fmi/admin/apidoc/
+.openapi.admin.json
+.FM_README.txt
+
+# Downloaded from https://<your_fm_domain>.fmphost.com/fmi/data/apidoc/
+.openapi.data.json
+# Example data API call.
+.listlayouts.py
