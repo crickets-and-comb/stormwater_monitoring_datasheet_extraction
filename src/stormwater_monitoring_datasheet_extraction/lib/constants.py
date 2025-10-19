@@ -119,6 +119,13 @@ class DocStrings:
     )
 
 
+class ENV_VARS:
+    """Environment variable names."""
+
+    FMP_USERNAME: Final[str] = "FMP_USERNAME"
+    FMP_PASSWORD: Final[str] = "FMP_PASSWORD"
+
+
 class Flow(StrEnum):
     """Options for the flow field."""
 
