@@ -3,10 +3,10 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="stormwater_monitoring_datasheet_extraction.cli package" href="stormwater_monitoring_datasheet_extraction.cli.html"><link rel="prev" title="stormwater_monitoring_datasheet_extraction package" href="stormwater_monitoring_datasheet_extraction.html">
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="prev" title="stormwater_monitoring_datasheet_extraction.lib.schema package" href="stormwater_monitoring_datasheet_extraction.lib.schema.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
-        <title>stormwater_monitoring_datasheet_extraction.api package - stormwater_monitoring_datasheet_extraction 0.0.13 documentation</title>
+        <title>stormwater_monitoring_datasheet_extraction.lib.schema.checks package - stormwater_monitoring_datasheet_extraction 0.0.13 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -194,12 +194,12 @@
 <li class="toctree-l1"><a class="reference internal" href="CLI.html">CLI</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">stormwater_monitoring_datasheet_extraction</a><input aria-label="Toggle navigation of stormwater_monitoring_datasheet_extraction" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="stormwater_monitoring_datasheet_extraction.html">stormwater_monitoring_datasheet_extraction package</a><input aria-label="Toggle navigation of stormwater_monitoring_datasheet_extraction package" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">stormwater_monitoring_datasheet_extraction.api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stormwater_monitoring_datasheet_extraction.api.html">stormwater_monitoring_datasheet_extraction.api package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stormwater_monitoring_datasheet_extraction.cli.html">stormwater_monitoring_datasheet_extraction.cli package</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="stormwater_monitoring_datasheet_extraction.lib.html">stormwater_monitoring_datasheet_extraction.lib package</a><input aria-label="Toggle navigation of stormwater_monitoring_datasheet_extraction.lib package" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 current has-children"><a class="reference internal" href="stormwater_monitoring_datasheet_extraction.lib.html">stormwater_monitoring_datasheet_extraction.lib package</a><input aria-label="Toggle navigation of stormwater_monitoring_datasheet_extraction.lib package" checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="stormwater_monitoring_datasheet_extraction.lib.db.html">stormwater_monitoring_datasheet_extraction.lib.db package</a></li>
-<li class="toctree-l4 has-children"><a class="reference internal" href="stormwater_monitoring_datasheet_extraction.lib.schema.html">stormwater_monitoring_datasheet_extraction.lib.schema package</a><input aria-label="Toggle navigation of stormwater_monitoring_datasheet_extraction.lib.schema package" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l5"><a class="reference internal" href="stormwater_monitoring_datasheet_extraction.lib.schema.checks.html">stormwater_monitoring_datasheet_extraction.lib.schema.checks package</a></li>
+<li class="toctree-l4 current has-children"><a class="reference internal" href="stormwater_monitoring_datasheet_extraction.lib.schema.html">stormwater_monitoring_datasheet_extraction.lib.schema package</a><input aria-label="Toggle navigation of stormwater_monitoring_datasheet_extraction.lib.schema package" checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l5 current current-page"><a class="current reference internal" href="#">stormwater_monitoring_datasheet_extraction.lib.schema.checks package</a></li>
 </ul>
 </li>
 </ul>
@@ -228,7 +228,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="_sources/stormwater_monitoring_datasheet_extraction.api.rst.txt" title="View this page">
+  <a class="muted-link" href="_sources/stormwater_monitoring_datasheet_extraction.lib.schema.checks.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -246,70 +246,100 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="stormwater-monitoring-datasheet-extraction-api-package">
-<h1>stormwater_monitoring_datasheet_extraction.api package<a class="headerlink" href="#stormwater-monitoring-datasheet-extraction-api-package" title="Link to this heading">¶</a></h1>
+          <section id="stormwater-monitoring-datasheet-extraction-lib-schema-checks-package">
+<h1>stormwater_monitoring_datasheet_extraction.lib.schema.checks package<a class="headerlink" href="#stormwater-monitoring-datasheet-extraction-lib-schema-checks-package" title="Link to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="module-stormwater_monitoring_datasheet_extraction.api.internal">
-<span id="stormwater-monitoring-datasheet-extraction-api-internal-module"></span><h2>stormwater_monitoring_datasheet_extraction.api.internal module<a class="headerlink" href="#module-stormwater_monitoring_datasheet_extraction.api.internal" title="Link to this heading">¶</a></h2>
-<p>Internal functions for the stormwater monitoring datasheet extraction API.</p>
+<section id="module-stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks">
+<span id="stormwater-monitoring-datasheet-extraction-lib-schema-checks-dataframe-checks-module"></span><h2>stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks module<a class="headerlink" href="#module-stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks" title="Link to this heading">¶</a></h2>
+<p>Schema dataframe checks.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="stormwater_monitoring_datasheet_extraction.api.internal.run_etl">
-<span class="sig-prename descclassname"><span class="pre">stormwater_monitoring_datasheet_extraction.api.internal.</span></span><span class="sig-name descname"><span class="pre">run_etl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stormwater_monitoring_datasheet_extraction.api.internal.run_etl" title="Link to this definition">¶</a></dt>
-<dd><p>Extracts, verifies, cleans, and loads datasheet images.</p>
-<blockquote>
-<div><p>Extracts data from the images in the input directory, verifies the extraction with the
-user, cleans and validates the data, and loads it into the output directory.</p>
-</div></blockquote>
+<dt class="sig sig-object py" id="stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks.datetime_lt_now">
+<span class="sig-prename descclassname"><span class="pre">stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks.</span></span><span class="sig-name descname"><span class="pre">datetime_lt_now</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_format</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_format</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks.datetime_lt_now" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if each date:time is before now.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – Path to the input directory containing datasheet images.</p></li>
-<li><p><strong>output_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – Path to the output directory where processed data will be saved. If empty path, defaults to a dated directory in the current working directory.</p></li>
+<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The DataFrame containing the date and time columns.</p></li>
+<li><p><strong>date_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name of the date column.</p></li>
+<li><p><strong>time_col</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name of the time column.</p></li>
+<li><p><strong>date_format</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The format string for parsing the date.</p></li>
+<li><p><strong>time_format</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The format string for parsing the time.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>time is on or before now.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Path to the saved cleaned data file.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean Series indicating whether each date</p>
 </dd>
 </dl>
 </dd></dl>
 
 </section>
-<section id="module-stormwater_monitoring_datasheet_extraction.api.public">
-<span id="stormwater-monitoring-datasheet-extraction-api-public-module"></span><h2>stormwater_monitoring_datasheet_extraction.api.public module<a class="headerlink" href="#module-stormwater_monitoring_datasheet_extraction.api.public" title="Link to this heading">¶</a></h2>
-<p>Public functions for the stormwater monitoring datasheet extraction API.</p>
+<section id="module-stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks">
+<span id="stormwater-monitoring-datasheet-extraction-lib-schema-checks-field-checks-module"></span><h2>stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks module<a class="headerlink" href="#module-stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks" title="Link to this heading">¶</a></h2>
+<p>Schema field checks.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="stormwater_monitoring_datasheet_extraction.api.public.run_etl">
-<span class="sig-prename descclassname"><span class="pre">stormwater_monitoring_datasheet_extraction.api.public.</span></span><span class="sig-name descname"><span class="pre">run_etl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stormwater_monitoring_datasheet_extraction.api.public.run_etl" title="Link to this definition">¶</a></dt>
-<dd><p>Extracts, verifies, cleans, and loads datasheet images.</p>
-<blockquote>
-<div><p>Extracts data from the images in the input directory, verifies the extraction with the
-user, cleans and validates the data, and loads it into the output directory.</p>
-</div></blockquote>
+<dt class="sig sig-object py" id="stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.date_le_today">
+<span class="sig-prename descclassname"><span class="pre">stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.</span></span><span class="sig-name descname"><span class="pre">date_le_today</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.date_le_today" title="Link to this definition">¶</a></dt>
+<dd><p>Every date is on or before today.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – Path to the input directory containing datasheet images.</p></li>
-<li><p><strong>output_dir</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – Path to the output directory where processed data will be saved. If empty path, defaults to a dated directory in the current working directory.</p></li>
-</ul>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]</span></p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span></p>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.is_valid_date">
+<span class="sig-prename descclassname"><span class="pre">stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.</span></span><span class="sig-name descname"><span class="pre">is_valid_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_format</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.is_valid_date" title="Link to this definition">¶</a></dt>
+<dd><p>Every date parses with the given format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]</span></p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Path to the saved cleaned data file.</p>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.is_valid_time">
+<span class="sig-prename descclassname"><span class="pre">stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.</span></span><span class="sig-name descname"><span class="pre">is_valid_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.is_valid_time" title="Link to this definition">¶</a></dt>
+<dd><p>Every time parses with the given format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
 
 </section>
-<section id="module-stormwater_monitoring_datasheet_extraction.api">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-stormwater_monitoring_datasheet_extraction.api" title="Link to this heading">¶</a></h2>
-<p>Top-level public and internal interfaces.</p>
+<section id="module-stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational">
+<span id="stormwater-monitoring-datasheet-extraction-lib-schema-checks-relational-module"></span><h2>stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational module<a class="headerlink" href="#module-stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational" title="Link to this heading">¶</a></h2>
+<p>Checks across the whole schema, between tables, e.g. referential integrity.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational.validate_site_creek_map">
+<span class="sig-prename descclassname"><span class="pre">stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational.</span></span><span class="sig-name descname"><span class="pre">validate_site_creek_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site_type_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">creek_type_map</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational.validate_site_creek_map" title="Link to this definition">¶</a></dt>
+<dd><p>Validate the site and creek type maps.</p>
+<p>Checks mutual referential integrity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>site_type_map</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>[<a class="reference internal" href="stormwater_monitoring_datasheet_extraction.lib.schema.html#stormwater_monitoring_datasheet_extraction.lib.schema.schema.Site" title="stormwater_monitoring_datasheet_extraction.lib.schema.schema.Site"><code class="xref py py-class docutils literal notranslate"><span class="pre">Site</span></code></a>]</span>) – A DataFrame mapping site IDs to their outfall types.</p></li>
+<li><p><strong>creek_type_map</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>[<a class="reference internal" href="stormwater_monitoring_datasheet_extraction.lib.schema.html#stormwater_monitoring_datasheet_extraction.lib.schema.schema.Creek" title="stormwater_monitoring_datasheet_extraction.lib.schema.schema.Creek"><code class="xref py py-class docutils literal notranslate"><span class="pre">Creek</span></code></a>]</span>) – A DataFrame mapping creek site IDs to their creek types.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-stormwater_monitoring_datasheet_extraction.lib.schema.checks">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-stormwater_monitoring_datasheet_extraction.lib.schema.checks" title="Link to this heading">¶</a></h2>
+<p>Schema checks.</p>
 </section>
 </section>
 
@@ -318,23 +348,15 @@ user, cleans and validates the data, and loads it into the output directory.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="stormwater_monitoring_datasheet_extraction.cli.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">stormwater_monitoring_datasheet_extraction.cli package</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="stormwater_monitoring_datasheet_extraction.html">
+          
+          <a class="prev-page" href="stormwater_monitoring_datasheet_extraction.lib.schema.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">stormwater_monitoring_datasheet_extraction package</div>
+                <div class="title">stormwater_monitoring_datasheet_extraction.lib.schema package</div>
                 
               </div>
             </a>
@@ -368,17 +390,23 @@ user, cleans and validates the data, and loads it into the output directory.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">stormwater_monitoring_datasheet_extraction.api package</a><ul>
+<li><a class="reference internal" href="#">stormwater_monitoring_datasheet_extraction.lib.schema.checks package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-stormwater_monitoring_datasheet_extraction.api.internal">stormwater_monitoring_datasheet_extraction.api.internal module</a><ul>
-<li><a class="reference internal" href="#stormwater_monitoring_datasheet_extraction.api.internal.run_etl"><code class="docutils literal notranslate"><span class="pre">run_etl()</span></code></a></li>
+<li><a class="reference internal" href="#module-stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks">stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks module</a><ul>
+<li><a class="reference internal" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks.datetime_lt_now"><code class="docutils literal notranslate"><span class="pre">datetime_lt_now()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-stormwater_monitoring_datasheet_extraction.api.public">stormwater_monitoring_datasheet_extraction.api.public module</a><ul>
-<li><a class="reference internal" href="#stormwater_monitoring_datasheet_extraction.api.public.run_etl"><code class="docutils literal notranslate"><span class="pre">run_etl()</span></code></a></li>
+<li><a class="reference internal" href="#module-stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks">stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks module</a><ul>
+<li><a class="reference internal" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.date_le_today"><code class="docutils literal notranslate"><span class="pre">date_le_today()</span></code></a></li>
+<li><a class="reference internal" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.is_valid_date"><code class="docutils literal notranslate"><span class="pre">is_valid_date()</span></code></a></li>
+<li><a class="reference internal" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks.is_valid_time"><code class="docutils literal notranslate"><span class="pre">is_valid_time()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-stormwater_monitoring_datasheet_extraction.api">Module contents</a></li>
+<li><a class="reference internal" href="#module-stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational">stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational module</a><ul>
+<li><a class="reference internal" href="#stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational.validate_site_creek_map"><code class="docutils literal notranslate"><span class="pre">validate_site_creek_map()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-stormwater_monitoring_datasheet_extraction.lib.schema.checks">Module contents</a></li>
 </ul>
 </li>
 </ul>

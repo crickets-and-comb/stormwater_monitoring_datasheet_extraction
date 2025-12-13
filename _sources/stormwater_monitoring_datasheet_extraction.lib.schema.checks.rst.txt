@@ -1,0 +1,37 @@
+stormwater\_monitoring\_datasheet\_extraction.lib.schema.checks package
+=======================================================================
+
+Submodules
+----------
+
+stormwater\_monitoring\_datasheet\_extraction.lib.schema.checks.dataframe\_checks module
+----------------------------------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.schema.checks.dataframe_checks
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+stormwater\_monitoring\_datasheet\_extraction.lib.schema.checks.field\_checks module
+------------------------------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.schema.checks.field_checks
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+stormwater\_monitoring\_datasheet\_extraction.lib.schema.checks.relational module
+---------------------------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.schema.checks.relational
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.schema.checks
+   :members:
+   :show-inheritance:
+   :undoc-members:

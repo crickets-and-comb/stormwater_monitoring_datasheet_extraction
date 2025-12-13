@@ -4,10 +4,10 @@ stormwater\_monitoring\_datasheet\_extraction.cli package
 Submodules
 ----------
 
-stormwater\_monitoring\_datasheet\_extraction.cli.example module
-----------------------------------------------------------------
+stormwater\_monitoring\_datasheet\_extraction.cli.run\_etl module
+-----------------------------------------------------------------
 
-.. automodule:: stormwater_monitoring_datasheet_extraction.cli.example
+.. automodule:: stormwater_monitoring_datasheet_extraction.cli.run_etl
    :members:
    :show-inheritance:
    :undoc-members:

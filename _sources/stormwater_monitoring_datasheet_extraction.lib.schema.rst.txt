@@ -1,0 +1,29 @@
+stormwater\_monitoring\_datasheet\_extraction.lib.schema package
+================================================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   stormwater_monitoring_datasheet_extraction.lib.schema.checks
+
+Submodules
+----------
+
+stormwater\_monitoring\_datasheet\_extraction.lib.schema.schema module
+----------------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.schema.schema
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.schema
+   :members:
+   :show-inheritance:
+   :undoc-members:

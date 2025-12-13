@@ -1,0 +1,29 @@
+stormwater\_monitoring\_datasheet\_extraction.lib.db package
+============================================================
+
+Submodules
+----------
+
+stormwater\_monitoring\_datasheet\_extraction.lib.db.read module
+----------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.db.read
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+stormwater\_monitoring\_datasheet\_extraction.lib.db.tables module
+------------------------------------------------------------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.db.tables
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: stormwater_monitoring_datasheet_extraction.lib.db
+   :members:
+   :show-inheritance:
+   :undoc-members:
