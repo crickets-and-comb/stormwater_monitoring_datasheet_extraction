@@ -8,7 +8,7 @@ from unittest.mock import patch
 import pytest
 from typeguard import typechecked
 
-from stormwater_monitoring_datasheet_extraction.lib.constants import ENV_VARS
+from stormwater_monitoring_datasheet_extraction.lib.constants import EnvVars
 
 
 def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
@@ -41,8 +41,8 @@ def mock_get_FMP_credentials(
     """Mock get_FMP_credentials."""
     env_path = tmp_path / ".env"
     env_path.write_text(
-        f"{ENV_VARS.FMP_USERNAME}={mock_FMP_credentials[0]}"
-        f"\n{ENV_VARS.FMP_PASSWORD}={mock_FMP_credentials[1]}"
+        f"{EnvVars.FMP_USERNAME}={mock_FMP_credentials[0]}"
+        f"\n{EnvVars.FMP_PASSWORD}={mock_FMP_credentials[1]}"
     )
 
     with patch(

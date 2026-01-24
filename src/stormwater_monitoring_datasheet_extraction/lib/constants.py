@@ -6,6 +6,8 @@ from typing import Any, Final
 from comb_utils import DocString
 
 
+FMP_DATA_API_VERSION: Final[str] = "vLatest"
+
 class CharLimits:
     """Character limits for fields."""
 
@@ -119,11 +121,13 @@ class DocStrings:
     )
 
 
-class ENV_VARS:
+class EnvVars:
     """Environment variable names."""
 
-    FMP_USERNAME: Final[str] = "FMP_USERNAME"
+    FMP_DATABASE_NAME: Final[str] = "FMP_DATABASE_NAME"
+    FMP_HOSTNAME: Final[str] = "FMP_HOSTNAME"
     FMP_PASSWORD: Final[str] = "FMP_PASSWORD"
+    FMP_USERNAME: Final[str] = "FMP_USERNAME"
 
 
 class Flow(StrEnum):
