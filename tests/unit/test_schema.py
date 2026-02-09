@@ -21,5 +21,6 @@ def test_validate_site_creek_map(
     """Tests that the site/creek map validation works."""
     with error_context:
         relational.validate_site_creek_map(
-            site_type_map=site_type_map, creek_type_map=creek_type_map
+            site_type_map=site_type_map,  # type: ignore[arg-type]
+            creek_type_map=creek_type_map,  # type: ignore[arg-type]
         )

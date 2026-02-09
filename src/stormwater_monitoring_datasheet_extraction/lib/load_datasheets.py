@@ -413,7 +413,7 @@ def restructure_extraction(
     """
     logger.info("Restructuring cleaned data into JSON schema...")
 
-    restructured_json = {}
+    restructured_json: dict[str, Any] = {}
 
     ...
     return restructured_json
