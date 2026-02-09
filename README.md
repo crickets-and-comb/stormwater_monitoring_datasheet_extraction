@@ -157,13 +157,13 @@ When making smaller commits, you might just want to run some of the smaller comm
 
 #### Type checking
 
-This repository uses multiple type checkers to ensure code quality. See [docs/TYPECHECK_COMPARISON.md](docs/TYPECHECK_COMPARISON.md) for a detailed comparison of the type checkers used and recommendations.
+This repository uses type checkers to ensure code quality. See [docs/TYPECHECK_COMPARISON.md](docs/TYPECHECK_COMPARISON.md) for a detailed comparison of the type checkers used and recommendations.
 
 The type checkers can be run with:
 
     $ make typecheck
 
-Currently enabled: `pytype`, `pyright`, `mypy`, `basedpyright`
+Currently enabled: `pytype`, `mypy`
 
 ### Workflows: usage and limitations
 
