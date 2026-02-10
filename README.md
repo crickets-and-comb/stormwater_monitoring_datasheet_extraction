@@ -155,6 +155,16 @@ When making smaller commits, you might just want to run some of the smaller comm
 
     $ make clean format full-qc full-test
 
+#### Type checking
+
+This repository uses type checkers to ensure code quality. See [docs/TYPECHECK_COMPARISON.md](docs/TYPECHECK_COMPARISON.md) for a detailed comparison of the type checkers used and recommendations.
+
+The type checkers can be run with:
+
+    $ make typecheck
+
+Currently enabled: `pytype`, `mypy`
+
 ### Workflows: usage and limitations
 
 Using the workflows found in `.github/workflows`, QC, tests, builds, and deployment run on GitHub on certain events (e.g., pull requests, pushes to main, manual dispatches).
