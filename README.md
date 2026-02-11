@@ -155,6 +155,14 @@ When making smaller commits, you might just want to run some of the smaller comm
 
     $ make clean format full-qc full-test
 
+#### Type checking
+
+This project uses [mypy](https://mypy-lang.org) for typechecking. Run it with:
+
+```bash
+    $ make typecheck
+```
+
 ### Workflows: usage and limitations
 
 Using the workflows found in `.github/workflows`, QC, tests, builds, and deployment run on GitHub on certain events (e.g., pull requests, pushes to main, manual dispatches).
