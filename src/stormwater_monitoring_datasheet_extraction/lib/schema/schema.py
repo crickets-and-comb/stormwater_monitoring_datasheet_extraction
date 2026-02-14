@@ -205,9 +205,10 @@ class Site(papd.DataFrameModel):
         cls, df: pd.DataFrame  # noqa: B902 (pa.check makes it a class method)
     ) -> Series[bool]:
         """Check that creek_site_id is valid."""
+        index_srs = df.index.to_series()
         is_creek = df[Columns.OUTFALL_TYPE] == constants.OutfallType.CREEK
         is_valid = (~is_creek & df[Columns.CREEK_SITE_ID].isna()) | (
-            is_creek & df[Columns.CREEK_SITE_ID].eq(df.index)  # type: ignore[arg-type]
+            is_creek & df[Columns.CREEK_SITE_ID].fillna("").eq(index_srs)
         )
         is_valid = cast("Series[bool]", is_valid)
         return is_valid
