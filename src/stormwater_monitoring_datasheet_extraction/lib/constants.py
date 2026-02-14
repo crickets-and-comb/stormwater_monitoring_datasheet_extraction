@@ -3,7 +3,7 @@
 from enum import IntEnum, StrEnum
 from typing import Any, Final
 
-from comb_utils import DocString  # type: ignore[import-untyped]
+from comb_utils import DocString
 
 
 class CharLimits:
