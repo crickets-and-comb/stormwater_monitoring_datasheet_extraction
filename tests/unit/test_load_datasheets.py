@@ -104,7 +104,7 @@ def test_validate_site_creek_maps_in_verify(
     creek_type_map: pd.DataFrame,
     error_context: AbstractContextManager,
     fx: Callable,
-    kwargs: dict[str, Any],
+    kwargs: dict,
 ) -> None:
     """Tests that _get_site_creek_maps returns valid tables."""
     with error_context, patch(
