@@ -19,7 +19,7 @@ from stormwater_monitoring_datasheet_extraction.lib.schema.checks import relatio
 def test_validate_site_creek_map(
     site_type_map: pd.DataFrame,
     creek_type_map: pd.DataFrame,
-    error_context: AbstractContextManager[None],
+    error_context: AbstractContextManager,
 ) -> None:
     """Tests that the site/creek map validation works."""
     with error_context:
