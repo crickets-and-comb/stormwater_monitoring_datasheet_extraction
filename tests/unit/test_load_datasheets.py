@@ -3,7 +3,7 @@
 # TODO: Test that returns correct path, using pytest.mark.parametrize.
 from collections.abc import Callable
 from contextlib import AbstractContextManager
-from typing import Any, Final
+from typing import Final
 from unittest.mock import patch
 
 import pandas as pd
@@ -150,9 +150,9 @@ def test_validate_site_creek_maps_in_verify(
 def test_validate_site_creek_maps_in_clean(
     site_type_map: pd.DataFrame,
     creek_type_map: pd.DataFrame,
-    error_context: AbstractContextManager[None],
-    fx: Callable[..., Any],
-    kwargs: dict[str, Any],
+    error_context: AbstractContextManager,
+    fx: Callable,
+    kwargs: dict,
 ) -> None:
     """Tests that _validate_thresholds uses valid tables."""
     if fx is load_datasheets._validate_thresholds:
