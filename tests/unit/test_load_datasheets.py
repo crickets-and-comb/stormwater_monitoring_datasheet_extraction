@@ -102,7 +102,7 @@ _EMPTY_QUAL_OBS: Final[pd.DataFrame] = pd.DataFrame(
 def test_validate_site_creek_maps_in_verify(
     site_type_map: pd.DataFrame,
     creek_type_map: pd.DataFrame,
-    error_context: AbstractContextManager[None],
+    error_context: AbstractContextManager,
     fx: Callable[..., Any],
     kwargs: dict[str, Any],
 ) -> None:
