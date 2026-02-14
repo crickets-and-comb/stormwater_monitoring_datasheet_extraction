@@ -1,11 +1,14 @@
 """Test the schema module."""
 
 from contextlib import AbstractContextManager
+from typing import cast
 
 import pandas as pd
+import pandera.typing as pt
 from tests.unit.conftest import site_creek_type_parametrize
 from typeguard import typechecked
 
+from stormwater_monitoring_datasheet_extraction.lib import schema
 from stormwater_monitoring_datasheet_extraction.lib.schema.checks import relational
 
 # TODO: Test that returns correct path, using pytest.mark.parametrize.
@@ -21,6 +24,6 @@ def test_validate_site_creek_map(
     """Tests that the site/creek map validation works."""
     with error_context:
         relational.validate_site_creek_map(
-            site_type_map=site_type_map,  # type: ignore[arg-type]
-            creek_type_map=creek_type_map,  # type: ignore[arg-type]
+            site_type_map=cast(pt.DataFrame[schema.Site], site_type_map),
+            creek_type_map=cast(pt.DataFrame[schema.Creek], creek_type_map),
         )
