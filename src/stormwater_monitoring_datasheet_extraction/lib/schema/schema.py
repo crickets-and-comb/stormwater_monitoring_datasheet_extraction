@@ -5,7 +5,7 @@ from functools import partial
 from typing import Annotated, Final, cast
 
 import pandas as pd
-import pandera as pa
+import pandera.pandas as pa
 import pandera.pandas as papd
 from pandera.typing import Index, Series
 

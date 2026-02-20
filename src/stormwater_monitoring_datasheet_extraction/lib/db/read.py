@@ -1,6 +1,6 @@
 """Database read utilities and queries."""
 
-import pandera as pa
+import pandera.pandas as pa
 import pandera.typing as pt
 
 from stormwater_monitoring_datasheet_extraction.lib import schema
