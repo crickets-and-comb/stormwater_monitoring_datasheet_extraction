@@ -1,6 +1,6 @@
 """Checks across the whole schema, between tables, e.g. referential integrity."""
 
-import pandera as pa
+import pandera.pandas as pa
 import pandera.typing as pt
 
 from stormwater_monitoring_datasheet_extraction.lib import constants, schema
